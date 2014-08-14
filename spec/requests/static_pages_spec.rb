@@ -14,6 +14,12 @@ describe "Static Pages" do
       expect(page).not_to have_title('| Home')
       expect(page).to have_title('Wamibrew')
     end
+
+    it "should link to the recipe page" do
+          expect do
+            click_button "What Am I Brewing?"
+          end.to redirect_to(new_recipe_path)
+    end
   end
 
   describe "Help Page" do
