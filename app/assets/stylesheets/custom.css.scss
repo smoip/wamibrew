@@ -69,15 +69,15 @@ p {
 #logo {
   float: left;
   margin-right: 10px;
-  font-size: 1.7em;
+  font-size: 1.9em;
   color: #fff;
-  text-transform: uppercase;
-  letter-spacing: -1px;
+  text-transform: lowercase;
+  letter-spacing: 2px;
   padding-top: 9px;
   font-weight: bold;
   line-height: 1;
   &:hover {
-    color: cyan;
+    color: yellow;
     text-decoration: none;
   }
 }
@@ -116,4 +116,18 @@ footer {
   width: 100%;
   margin-top: 45px;
   @include box_sizing;
+}
+
+/* recipe contents */
+
+recipe_format {
+  font-size: 1.9em;
+  float: right;
+  ul {
+    list-style: square;
+    li {
+      float: right;
+      margin-right: 10px;
+    }
+  }
 }

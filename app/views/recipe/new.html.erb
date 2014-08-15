@@ -1,7 +1,16 @@
-<% provide(:title, "Brewing...") %>
-<h1>You're Brewing...</h1>
+<% provide(:title, "Try Brewing...") %>
+<h1>Try Brewing...</h1>
 
 <div class="center hero-unit">
   <p> This recipe!
+  </p>
+</div>
+<div class="recipe_format">
+  <%= render 'recipe_table' %>
+</div>
+<div class="center hero-unit">
+  <p><h2>Not what you had in mind?</h2>
+  <%= link_to "What Else Am I Brewing?", new_recipe_path,
+                                class: "btn btn-large btn-default" %>
   </p>
 </div>
