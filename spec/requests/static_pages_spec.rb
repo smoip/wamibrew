@@ -16,9 +16,10 @@ describe "Static Pages" do
     end
 
     it "should link to the recipe page" do
-          expect do
-            click_button "What Am I Brewing?"
-          end.to redirect_to(new_recipe_path)
+      expect do
+        click_button "What Am I Brewing?"
+        expect(response).to redirect_to(new_recipe_path)
+      end
     end
   end
 
