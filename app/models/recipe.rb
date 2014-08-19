@@ -1,9 +1,21 @@
 class Recipe < ActiveRecord::Base
 
+  attr_accessor :name, :style, :abv, :ibu, :srm
+
   def create
   end
 
-  def name_gen(style)
-    recipe_name = "#{RandomWordGenerator.word} #{RandomWordGenerator.word} #{style}"
+  def generate_name(style)
+    @name = "#{style}"
   end
+
+  def calc_abv
+  end
+
+  def calc_ibu
+  end
+
+  def calc_srm
+  end
+
 end

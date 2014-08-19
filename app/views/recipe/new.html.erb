@@ -1,8 +1,8 @@
 <% provide(:title, "Try Brewing...") %>
 <h1>Try Brewing...</h1>
-
+<% @recipe = Recipe.new %>
 <div class="center hero-unit">
-  <p><%= recipe.name_gen('IPA') %>
+  <p><%= @recipe.generate_name('IPA') %>
   </p>
 </div>
 <div class="recipe_format">
