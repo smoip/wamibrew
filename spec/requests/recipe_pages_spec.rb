@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "Recipe Pages" do
 
-  describe "new recipe page format" do
+  describe "new recipe page" do
     before { visit new_recipe_path }
 
     it "should have correct title and header" do
@@ -32,6 +32,24 @@ describe "Recipe Pages" do
         expect(page).to have_selector('li', text: 'abv')
         expect(page).to have_selector('li', text: 'ibu')
         expect(page).to have_selector('li', text: 'color')
+      end
+    end
+
+    describe "ingredients" do
+      before do
+        @recipe = Recipe.new
+      end
+
+      describe "malt" do
+
+        describe "choose_malt" do
+          before do
+            malt = @recipe.choose_malt
+          end
+          it "should choose a malt" do
+            expect(malt).not_to be_empty
+          end
+        end
       end
     end
 

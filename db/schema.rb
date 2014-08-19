@@ -11,9 +11,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140815230703) do
+ActiveRecord::Schema.define(version: 20140819230040) do
+
+  create_table "hops", force: true do |t|
+    t.string   "name"
+    t.float    "alpha"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "malts", force: true do |t|
+    t.string   "name"
+    t.float    "potential"
+    t.float    "yield"
+    t.float    "srm"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "recipes", force: true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "yeasts", force: true do |t|
+    t.string   "name"
+    t.string   "type"
+    t.integer  "attenuation"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

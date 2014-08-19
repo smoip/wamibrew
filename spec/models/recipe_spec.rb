@@ -3,7 +3,7 @@ require 'rails_helper'
 describe "Recipe" do
   before { @recipe = Recipe.new }
 
-  subject  {@recipe }
+  subject  { @recipe }
 
   it { should respond_to(:name) }
   it { should respond_to(:style) }
