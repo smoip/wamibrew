@@ -9,6 +9,18 @@ class Recipe < ActiveRecord::Base
     @name = "#{style}"
   end
 
+  def choose_malt
+    @malt = Malt.find_by(id: 1)
+  end
+
+  def choose_hops
+    @hops
+  end
+
+  def choose_yeast
+    @yeast
+  end
+
   def calc_abv
   end
 

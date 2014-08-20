@@ -44,13 +44,36 @@ describe "Recipe Pages" do
 
         describe "choose_malt" do
           before do
-            malt = @recipe.choose_malt
+            @malt = @recipe.choose_malt
           end
           it "should choose a malt" do
-            expect(malt).not_to be_empty
+            expect(@malt).not_to be_nil
           end
         end
       end
+
+      describe "hops" do
+        describe "choose_hops" do
+          before do
+            @hop = @recipe.choose_hops
+          end
+          it "should choose a hop" do
+            expect(@hop).not_to be_nil
+          end
+        end
+      end
+
+      describe "yeast" do
+        describe "choose_yeast" do
+          before do
+            @yeast = @recipe.choose_yeast
+          end
+          it "should choose a yeast" do
+            expect(@yeast).not_to be_nil
+          end
+        end
+      end
+
     end
 
   end

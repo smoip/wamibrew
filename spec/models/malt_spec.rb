@@ -9,5 +9,6 @@ describe "Malt" do
   it { should respond_to(:potential) }
   it { should respond_to(:yield) }
   it { should respond_to(:srm) }
+  it { should respond_to(:base_malt?) }
 
 end

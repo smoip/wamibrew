@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140819230040) do
+ActiveRecord::Schema.define(version: 20140820034533) do
 
   create_table "hops", force: true do |t|
     t.string   "name"
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20140819230040) do
     t.float    "srm"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "base_malt?", default: false
   end
 
   create_table "recipes", force: true do |t|
@@ -40,6 +41,7 @@ ActiveRecord::Schema.define(version: 20140819230040) do
     t.integer  "attenuation"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "family",      default: "ale"
   end
 
 end

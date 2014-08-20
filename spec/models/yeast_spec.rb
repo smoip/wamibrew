@@ -6,6 +6,6 @@ describe "Yeast" do
   subject { @yeast }
 
   it { should respond_to(:name) }
-  it { should respond_to(:type) }
+  it { should respond_to(:family) }
   it { should respond_to(:attenuation) }
 end
