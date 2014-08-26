@@ -1,10 +1,7 @@
 require 'rails_helper'
 
 describe "Recipe" do
-  let(:recipe) { FactoryGirl.create(:recipe) }
-  let(:malt)   { FactoryGirl.create(:malt) }
-  let(:hop)    { FactoryGirl.create(:hop) }
-  let(:yeast)  { FactoryGirl.create(:yeast) }
+  let(:recipe) { Recipe.new }
 
   subject  { recipe }
 
@@ -28,15 +25,14 @@ describe "Recipe" do
 
     describe "malt" do
 
+      let(:malt) { recipe.choose_malt(true) }
+
       describe "choose_malt" do
-        before do
-          malt = recipe.choose_malt
-        end
         it "should choose a malt" do
           expect(malt).not_to be_nil
         end
         it "should choose quantities" do
-          expect(malt[malt.name]).to be_float
+          expect(malt.to_a[0][1]).to be_between(0.5, 15).inclusive
         end
       end
 
@@ -48,20 +44,25 @@ describe "Recipe" do
         it { should be_present }
         it { should have_key :base }
         it { should have_key :specialty }
+        it "should assign base malts" do
+          expect(recipe.malts[:base].to_a[0][0].base_malt?).to eq(true)
+        end
+        it "should assign specialty grains" do
+          expect(recipe.malts[:specialty].to_a[0][0].base_malt?).to eq(false)
+        end
       end
     end
 
     describe "hops" do
 
-      describe "choose_hops" do
-        before do
-          hop = recipe.choose_hop
-        end
+      let(:hop) { recipe.choose_hop }
+
+      describe "choose_hop" do
         it "should choose a hop" do
           expect(hop).not_to be_nil
         end
         it "should choose quantities" do
-          expect(hop[hop.name]).to be_float
+          expect(hop.to_a[0][1]).to be_between(0.5, 3).inclusive
         end
       end
 
@@ -78,10 +79,9 @@ describe "Recipe" do
 
     describe "yeast" do
 
+      let(:yeast) { recipe.choose_yeast }
+
       describe "choose_yeast" do
-        before do
-          yeast = recipe.choose_yeast
-        end
         it "should choose a yeast" do
           expect(yeast).not_to be_nil
         end

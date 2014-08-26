@@ -3,6 +3,9 @@ FactoryGirl.define do
   end
 
   factory :malt do
+  end
+
+  factory :base_malt do
     name       "2-row"
     potential  "1.037"
     malt_yield "0.8"

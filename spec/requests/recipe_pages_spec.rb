@@ -5,10 +5,10 @@ describe "Recipe Pages" do
   describe "new recipe page" do
     before { visit new_recipe_path }
 
-    it "should have correct title and header" do
-      expect(page).to have_title("Try Brewing...")
-      expect(page).to have_content("Try Brewing...")
-    end
+    subject { page }
+
+    it { shoud have_title("Try Brewing...") }
+    it { should have_content("Try Brewing...") }
 
     describe "re-submit button" do
 
@@ -32,6 +32,10 @@ describe "Recipe Pages" do
         expect(page).to have_selector('li', text: 'abv')
         expect(page).to have_selector('li', text: 'ibu')
         expect(page).to have_selector('li', text: 'color')
+      end
+
+      it "should show malt names" do
+        # needs testing!
       end
     end
 

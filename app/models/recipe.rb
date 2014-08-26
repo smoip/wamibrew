@@ -9,8 +9,14 @@ class Recipe < ActiveRecord::Base
     @name = "#{style}"
   end
 
-  def choose_malt
-    malt = Malt.find_by(id: rand(Malt.count) + 1)
+  def choose_malt(malt_type)
+    match = false
+    until match == true
+      malt = Malt.find_by(id: rand(Malt.count) + 1)
+      if malt.base_malt? == malt_type
+        match = true
+      end
+    end
     malt_hash = { malt => malt_amount(malt) }
   end
 
@@ -24,7 +30,7 @@ class Recipe < ActiveRecord::Base
   end
 
   def assign_malts
-    @malts = { :base => nil, :specialty => nil }
+    @malts = { :base => choose_malt(true), :specialty => choose_malt(false) }
   end
 
   def assign_hops
@@ -50,7 +56,7 @@ private
     if malt.base_malt?
       rand(15) + 1.0
     else
-      (rand(2) + 1) / 2.0
+      (rand(4) + 1) / 2.0
     end
   end
 
