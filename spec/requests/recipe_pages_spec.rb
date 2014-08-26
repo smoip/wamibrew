@@ -37,6 +37,14 @@ describe "Recipe Pages" do
       it "should show malt names" do
         # needs testing!
       end
+
+      it "should show hop names" do
+        # needs testing!
+      end
+
+      it "should show yeast names" do
+        # needs testing!
+      end
     end
 
   end

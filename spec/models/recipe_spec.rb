@@ -98,4 +98,8 @@ describe "Recipe" do
 
   end
 
+  describe "calculations" do
+    # tests for calculations
+  end
+
 end

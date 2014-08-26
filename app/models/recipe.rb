@@ -17,12 +17,12 @@ class Recipe < ActiveRecord::Base
         match = true
       end
     end
-    malt_hash = { malt => malt_amount(malt) }
+    { malt => malt_amount(malt) }
   end
 
   def choose_hop
     hop = Hop.find_by(id: rand(Hop.count) + 1)
-    hop_hash = { hop => hop_amount(hop) }
+    { hop => hop_amount(hop) }
   end
 
   def choose_yeast
@@ -34,7 +34,7 @@ class Recipe < ActiveRecord::Base
   end
 
   def assign_hops
-    @hops = { :bittering => nil, :aroma => nil }
+    @hops = { :bittering => choose_hop, :aroma => choose_hop }
   end
 
   def assign_yeast

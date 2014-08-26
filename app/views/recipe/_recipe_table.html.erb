@@ -1,6 +1,10 @@
 <% @recipe.assign_malts %>
+<% @recipe.assign_hops %>
+<% @recipe.assign_yeast %>
 <% base_malt = @recipe.malts[:base].to_a[0][0] %>
 <% specialty = @recipe.malts[:specialty].to_a[0][0] %>
+<% bittering = @recipe.hops[:bittering].to_a[0][0] %>
+<% aroma =     @recipe.hops[:aroma].to_a[0][0] %>
 
 <div class="ingredients">
   <h3>Ingredients</h3>
@@ -9,8 +13,13 @@
       malt: <%= base_malt.name %>, <%= @recipe.malts[:base][base_malt] %>lbs,
       <%= specialty.name %>, <%= @recipe.malts[:specialty][specialty] %>lbs
     </li>
-    <li>hops:</li>
-    <li>yeast:</li>
+    <li>
+      hops: <%= @recipe.hops[:bittering][bittering] %> oz <%= bittering.name %> @60 min,
+      <%= @recipe.hops[:aroma][aroma] %> oz <%= aroma.name %> @10 min
+    </li>
+    <li>
+      yeast: <%= @recipe.yeast.name %>
+    </li>
   </ul>
 </div>
 <div class="specifications">
