@@ -1,13 +1,13 @@
 require 'rails_helper'
 
 describe "Malt" do
-  before { @malt = Malt.new }
+  let(:malt) { FactoryGirl.create(:malt) }
 
-  subject { @malt }
+  subject { malt }
 
   it { should respond_to(:name) }
   it { should respond_to(:potential) }
-  it { should respond_to(:yield) }
+  it { should respond_to(:malt_yield) }
   it { should respond_to(:srm) }
   it { should respond_to(:base_malt?) }
 
