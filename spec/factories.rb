@@ -1,6 +1,4 @@
 FactoryGirl.define do
-  factory :recipe do
-  end
 
   factory :malt do
     name       "2-row"

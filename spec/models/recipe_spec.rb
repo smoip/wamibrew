@@ -18,6 +18,7 @@ describe "Recipe" do
 
     describe "name" do
       before { recipe.generate_name("Porter") }
+      # placeholder test
       it "should generate a name" do
         expect(recipe.name).to eq("Porter")
       end
@@ -101,17 +102,8 @@ describe "Recipe" do
   describe "calculations" do
     let(:malt) { FactoryGirl.create(:malt) }
     let(:malt_hash) { { malt => 10 } }
+    let(:small_malt_hash) { { malt => 1 } }
 
-    describe "temp tests" do
-      # temp tests for hash extraction
-      it "should pull out a malt object" do
-        expect(malt_hash.to_a[0][0]).to be_kind_of(Malt)
-      end
-
-      it "should pull out an integer" do
-        expect(malt_hash[malt]).to eq(10)
-      end
-    end
     describe "original gravity calculations" do
       it "should convert potential gravity to extract potential" do
         expect(recipe.pg_to_ep(1.037)).to be_within(0.01).of(37)
@@ -119,6 +111,32 @@ describe "Recipe" do
 
       it "should calculate original gravity" do
         expect(recipe.calc_og( malt_hash )).to eq(1.0592)
+      end
+    end
+
+    describe "abv calculations" do
+      before do
+        recipe.yeast = FactoryGirl.create(:yeast)
+        recipe.malts = { :base => malt_hash, :specialty => small_malt_hash }
+      end
+
+      it "should combine all original gravities" do
+        expect(recipe.combine_og).to be_within(0.0001).of(1.0651)
+        # high value from using malt_hash for both types
+      end
+
+      it "should calculate final gravity" do
+        expect(recipe.calc_fg(1.0592)).to be_within(0.0001).of(1.0148)
+        # fails due to yeast.attenuation?
+      end
+
+      it "should calculate abv" do
+        expect(recipe.calc_abv).to be_within(0.01).of(6.39)
+      end
+
+      it "should assign abv" do
+        recipe.calc_abv
+        expect(recipe.abv).to be_within(0.01).of(6.39)
       end
     end
   end

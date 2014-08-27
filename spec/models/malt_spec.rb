@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 describe "Malt" do
-  let(:malt) { FactoryGirl.create(:malt) }
+  before { @malt = Malt.new }
 
-  subject { malt }
+  subject { @malt }
 
   it { should respond_to(:name) }
   it { should respond_to(:potential) }

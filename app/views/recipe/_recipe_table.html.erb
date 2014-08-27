@@ -1,6 +1,7 @@
 <% @recipe.assign_malts %>
 <% @recipe.assign_hops %>
 <% @recipe.assign_yeast %>
+<% @recipe.calc_abv %>
 <% base_malt = @recipe.malts[:base].to_a[0][0] %>
 <% specialty = @recipe.malts[:specialty].to_a[0][0] %>
 <% bittering = @recipe.hops[:bittering].to_a[0][0] %>
@@ -25,7 +26,7 @@
 <div class="specifications">
   <h3>Specifications</h3>
   <ul>
-    <li>abv:</li>
+    <li>abv: <%= @recipe.abv %>%</li>
     <li>ibu:</li>
     <li>color:</li>
   </ul>
