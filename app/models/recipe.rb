@@ -42,6 +42,17 @@ class Recipe < ActiveRecord::Base
   end
 
   def calc_abv
+    # needs to call calc_og for each malt
+  end
+
+  def calc_og(malt_and_weight)
+    malt = malt_and_weight.to_a[0][0]
+    weight = malt_and_weight[malt]
+    ((weight * pg_to_ep(malt.potential) * malt.malt_yield / 5) / 1000) + 1
+  end
+
+  def pg_to_ep(potential)
+    (potential - 1) * 1000
   end
 
   def calc_ibu

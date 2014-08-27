@@ -7,7 +7,7 @@ describe "Recipe Pages" do
 
     subject { page }
 
-    it { shoud have_title("Try Brewing...") }
+    it { should have_title("Try Brewing...") }
     it { should have_content("Try Brewing...") }
 
     describe "re-submit button" do

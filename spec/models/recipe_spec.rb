@@ -99,7 +99,28 @@ describe "Recipe" do
   end
 
   describe "calculations" do
-    # tests for calculations
+    let(:malt) { FactoryGirl.create(:malt) }
+    let(:malt_hash) { { malt => 10 } }
+
+    describe "temp tests" do
+      # temp tests for hash extraction
+      it "should pull out a malt object" do
+        expect(malt_hash.to_a[0][0]).to be_kind_of(Malt)
+      end
+
+      it "should pull out an integer" do
+        expect(malt_hash[malt]).to eq(10)
+      end
+    end
+    describe "original gravity calculations" do
+      it "should convert potential gravity to extract potential" do
+        expect(recipe.pg_to_ep(1.037)).to be_within(0.01).of(37)
+      end
+
+      it "should calculate original gravity" do
+        expect(recipe.calc_og( malt_hash )).to eq(1.0592)
+      end
+    end
   end
 
 end
