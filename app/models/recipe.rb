@@ -44,15 +44,15 @@ class Recipe < ActiveRecord::Base
   def calc_abv
     # (og - fg) * weight of ethanol / fg * 100 = ABW
     # ABW / 0.79 = ABV
-    og = combine_og
+    og = combine_og + 1.0
     fg = calc_fg(og)
-    @abv = (og - fg) * 1.05 / fg * 100 / 0.79
+    @abv = ((og - fg) * 1.05 / fg * 100 / 0.79).round(1)
   end
 
   def calc_og(malt_and_weight)
     malt = malt_and_weight.to_a[0][0]
     weight = malt_and_weight[malt]
-    ((weight * pg_to_ep(malt.potential) * malt.malt_yield / 5.0) / 1000.0) + 1.0
+    ((weight * pg_to_ep(malt.potential) * malt.malt_yield / 5.0) / 1000.0)
   end
 
   def calc_fg(og)
@@ -66,7 +66,6 @@ class Recipe < ActiveRecord::Base
     # same structure as below
     @malts[:specialty].each do | malt, amount |
        combined += calc_og({ malt => amount })
-       combined -= 1.0
     end
     return combined
   end
@@ -78,7 +77,26 @@ class Recipe < ActiveRecord::Base
   def calc_ibu
   end
 
+  def calc_mcu(malt_and_weight)
+    malt = malt_and_weight.to_a[0][0]
+    weight = malt_and_weight[malt]
+    malt.srm * weight / 5.0
+  end
+
+  def combine_mcu
+    combined = 0.0
+    combined += calc_mcu(@malts[:base])
+    # refactor to include multiple basemalts
+    # same structure as below
+    @malts[:specialty].each do | malt, amount |
+       combined += calc_mcu({ malt => amount })
+    end
+    return combined
+  end
+
   def calc_srm
+    @srm = ((combine_mcu ** 0.69) * 1.49).round(1)
+    # Morey's logarithmic srm conversion
   end
 
 private

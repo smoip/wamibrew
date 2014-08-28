@@ -2,6 +2,7 @@
 <% @recipe.assign_hops %>
 <% @recipe.assign_yeast %>
 <% @recipe.calc_abv %>
+<% @recipe.calc_srm %>
 <% base_malt = @recipe.malts[:base].to_a[0][0] %>
 <% specialty = @recipe.malts[:specialty].to_a[0][0] %>
 <% bittering = @recipe.hops[:bittering].to_a[0][0] %>
@@ -28,6 +29,6 @@
   <ul>
     <li>abv: <%= @recipe.abv %>%</li>
     <li>ibu:</li>
-    <li>color:</li>
+    <li>color: <%= @recipe.srm %> srm</li>
   </ul>
 </div>

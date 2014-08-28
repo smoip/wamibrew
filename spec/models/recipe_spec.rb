@@ -100,9 +100,13 @@ describe "Recipe" do
   end
 
   describe "calculations" do
-    let(:malt) { FactoryGirl.create(:malt) }
+    let(:malt) { Malt.find(1) }
     let(:malt_hash) { { malt => 10 } }
-    let(:small_malt_hash) { { malt => 1 } }
+    let(:small_malt_hash) { { Malt.find(2) => 1 } }
+    before do
+      recipe.yeast = FactoryGirl.create(:yeast)
+      recipe.malts = { :base => malt_hash, :specialty => small_malt_hash }
+    end
 
     describe "original gravity calculations" do
       it "should convert potential gravity to extract potential" do
@@ -110,18 +114,14 @@ describe "Recipe" do
       end
 
       it "should calculate original gravity" do
-        expect(recipe.calc_og( malt_hash )).to eq(1.0592)
+        expect(recipe.calc_og( malt_hash )).to be_within(0.0001).of(0.0592)
+        expect(recipe.calc_og( { Malt.find(2) => 1 } )).to be_within(0.0001).of(0.004964)
       end
     end
 
     describe "abv calculations" do
-      before do
-        recipe.yeast = FactoryGirl.create(:yeast)
-        recipe.malts = { :base => malt_hash, :specialty => small_malt_hash }
-      end
-
       it "should combine all original gravities" do
-        expect(recipe.combine_og).to be_within(0.0001).of(1.0651)
+        expect(recipe.combine_og).to be_within(0.0001).of(0.06416)
         # high value from using malt_hash for both types
       end
 
@@ -131,12 +131,24 @@ describe "Recipe" do
       end
 
       it "should calculate abv" do
-        expect(recipe.calc_abv).to be_within(0.01).of(6.39)
+        expect(recipe.calc_abv).to be_within(0.1).of(6.3)
+        expect(recipe.abv).to be_within(0.1).of(6.3)
       end
 
-      it "should assign abv" do
-        recipe.calc_abv
-        expect(recipe.abv).to be_within(0.01).of(6.39)
+    end
+
+    describe "srm calculations" do
+      it "should calculate mcu" do
+        expect(recipe.calc_mcu(malt_hash)).to be_within(0.1).of(3.6)
+      end
+
+      it "should add mcu from all malts" do
+        expect(recipe.combine_mcu).to be_within(0.1).of(15.6)
+      end
+
+      it "should calculate srm" do
+        expect(recipe.calc_srm).to be_within(0.01).of(9.91)
+        expect(recipe.srm).to be_within(0.01).of(9.91)
       end
     end
   end
