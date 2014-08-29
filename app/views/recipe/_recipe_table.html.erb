@@ -3,6 +3,7 @@
 <% @recipe.assign_yeast %>
 <% @recipe.calc_abv %>
 <% @recipe.calc_srm %>
+<% @recipe.calc_ibu %>
 <% base_malt = @recipe.malts[:base].to_a[0][0] %>
 <% specialty = @recipe.malts[:specialty].to_a[0][0] %>
 <% bittering = @recipe.hops[:bittering].to_a[0][0] %>
@@ -16,8 +17,8 @@
       <%= specialty.name %>, <%= @recipe.malts[:specialty][specialty] %>lbs
     </li>
     <li>
-      hops: <%= @recipe.hops[:bittering][bittering] %> oz <%= bittering.name %> @60 min,
-      <%= @recipe.hops[:aroma][aroma] %> oz <%= aroma.name %> @10 min
+      hops: <%= @recipe.hops[:bittering][bittering][0] %> oz <%= bittering.name %> @<%= @recipe.hops[:bittering][bittering][1] %> min,
+      <%= @recipe.hops[:aroma][aroma][0] %> oz <%= aroma.name %> @<%= @recipe.hops[:aroma][aroma][1] %> min
     </li>
     <li>
       yeast: <%= @recipe.yeast.name %>
@@ -28,7 +29,7 @@
   <h3>Specifications</h3>
   <ul>
     <li>abv: <%= @recipe.abv %>%</li>
-    <li>ibu:</li>
+    <li>ibu: <%= @recipe.ibu %></li>
     <li>color: <%= @recipe.srm %> srm</li>
   </ul>
 </div>

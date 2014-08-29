@@ -13,6 +13,7 @@ describe "Recipe" do
   it { should respond_to(:malts) }
   it { should respond_to(:hops) }
   it { should respond_to(:yeast) }
+  it { should respond_to(:og) }
 
   describe "ingredient methods" do
 
@@ -56,14 +57,21 @@ describe "Recipe" do
 
     describe "hops" do
 
-      let(:hop) { recipe.choose_hop }
+      let(:hop) { recipe.choose_hop(true) }
+      let(:another_hop) { recipe.choose_hop(false) }
 
       describe "choose_hop" do
         it "should choose a hop" do
           expect(hop).not_to be_nil
         end
         it "should choose quantities" do
-          expect(hop.to_a[0][1]).to be_between(0.5, 3).inclusive
+          expect(hop.to_a[0][1][0]).to be_between(0.5, 3).inclusive
+        end
+        it "should choose appropriate bittering times" do
+          expect(hop.to_a[0][1][1]).to be_between(40, 60).inclusive
+        end
+        it "should choose appropriate aroma times" do
+          expect(another_hop.to_a[0][1][1]).to be_between(0, 30).inclusive
         end
       end
 
@@ -149,6 +157,38 @@ describe "Recipe" do
       it "should calculate srm" do
         expect(recipe.calc_srm).to be_within(0.01).of(9.91)
         expect(recipe.srm).to be_within(0.01).of(9.91)
+      end
+    end
+
+    describe "ibu calculations" do
+      let(:hop) { FactoryGirl.create(:hop) }
+      let(:hops) { { :bittering => { hop => [2, 60] }, :aroma => { hop => [1, 10] } } }
+
+      it "should calculate ibus" do
+        recipe.hops = hops
+        recipe.og = 1.040
+        expect(recipe.calc_ibu).to be_within(2).of(55)
+        expect(recipe.ibu).to be_within(2).of(55)
+      end
+
+      it "should calculate individual hop addition ibus" do
+        recipe.og = 1.040
+        expect(recipe.calc_indiv_ibu(hops[:bittering])).to be_within(0.01).of(50.59)
+      end
+
+      it "should calculate hop utilization" do
+        expect(recipe.calc_hop_util(60)).to be_within(0.0001).of(0.3082)
+      end
+
+      describe "gravity adjustments" do
+        it "should return a gravity adjustment for og > 1.058" do
+          recipe.og = 1.059
+          expect(recipe.calc_hop_ga).to be_within(0.0001).of(0.005)
+        end
+        it "should return zero for og <= 1.058" do
+          recipe.og = 1.058
+          expect(recipe.calc_hop_ga).to eq(0)
+        end
       end
     end
   end
