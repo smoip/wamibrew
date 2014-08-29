@@ -18,15 +18,25 @@ def make_malts
              malt_yield: 0.73,
              srm: 60,
              base_malt?: false)
+  Malt.create!(name: "chocolate",
+               potential: 1.034,
+               malt_yield: 0.75,
+               srm: 350,
+               base_malt?: false)
 end
 
 def make_hops
   Hop.create!(name: "cascade",
               alpha: 5.5)
+  Hop.create!(name: "centennial",
+              alpha: 10.0)
 end
 
 def make_yeasts
   Yeast.create!(name: "WY1056",
                 attenuation: 75,
+                family: "ale")
+  Yeast.create!(name: "WLP090",
+                attenuation: 80,
                 family: "ale")
 end
