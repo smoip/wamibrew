@@ -8,4 +8,6 @@ describe "Yeast" do
   it { should respond_to(:name) }
   it { should respond_to(:family) }
   it { should respond_to(:attenuation) }
+
+  it { should be_valid }
 end

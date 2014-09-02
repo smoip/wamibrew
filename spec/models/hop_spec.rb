@@ -7,4 +7,6 @@ describe "Hop" do
 
   it { should respond_to(:name) }
   it { should respond_to(:alpha) }
+
+  it { should be_valid }
 end
