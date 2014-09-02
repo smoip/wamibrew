@@ -24,25 +24,19 @@ describe "Malt" do
     describe "with out of range potential value" do
       before { @malt.potential = 1.080 }
       after { @malt.potential = 1.037 }
-      it "should be invalid" do
-       expect(@malt).not_to be_valid
-      end
+      it { should_not be_valid }
     end
 
     describe "with out of range malt_yield" do
       before { @malt.malt_yield = 1.2 }
       after { @malt.malt_yield = 0.8 }
-      it "should be invalid" do
-        expect(@malt).not_to be_valid
-      end
+      it { should_not be_valid }
     end
 
     describe "with out of range srm" do
       before { @malt.srm = 1100 }
       after { @malt.srm = 1.8 }
-      it "should be invalid" do
-        expect(@malt).not_to be_valid
-      end
+      it { should_not be_valid }
     end
   end
 
