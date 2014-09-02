@@ -46,10 +46,31 @@ class Recipe < ActiveRecord::Base
 
   def assign_hops
     @hops = { :bittering => choose_hop(true), :aroma => choose_hop(false) }
+    # :aroma => choose_aroma_hops
+    # then refactor any method that pulls info from @recipe.hops[:aroma] to accomodate an array
+    # then a new method to order the aroma hop array by hop_time
+    # then copy structure to allow for multiple specialty malts
   end
 
   def assign_yeast
     @yeast = choose_yeast
+  end
+
+  def num_aroma_hops
+    rand(5)
+  end
+
+  def choose_aroma_hops
+    late_additions = num_aroma_hops
+    if late_additions == 0
+      return nil
+    else
+      aroma_hops = []
+      late_additions.times do
+        aroma_hops << choose_hop(false)
+      end
+    end
+    return aroma_hops
   end
 
   def calc_abv

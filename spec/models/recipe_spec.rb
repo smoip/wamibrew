@@ -59,9 +59,11 @@ describe "Recipe" do
     describe "hops" do
 
       let(:hop) { @recipe.choose_hop(true) }
-      let(:another_hop) { @recipe.choose_hop(false) }
 
       describe "choose_hop" do
+        before { allow(@recipe).to receive(:num_aroma_hops).and_return(1) }
+        let(:another_hop) { @recipe.choose_hop(false) }
+
         it "should choose a hop" do
           expect(hop).not_to be_nil
         end
@@ -76,14 +78,50 @@ describe "Recipe" do
         end
       end
 
+      describe "choose aroma hopping" do
+
+        describe "choose number of aroma hops" do
+          it "should choose some number of aroma hops" do
+            expect(@recipe.num_aroma_hops).to be_between(0, 4).inclusive
+          end
+        end
+
+        it "should choose one aroma hop" do
+          allow(@recipe).to receive(:num_aroma_hops).and_return(1)
+          expect(@recipe.choose_aroma_hops.length).to eq(1)
+          # expect a one element array
+        end
+
+        it "should choose two aroma hops" do
+          allow(@recipe).to receive(:num_aroma_hops).and_return(2)
+          expect(@recipe.choose_aroma_hops.length).to eq(2)
+          # expect a two element array
+        end
+
+        it "should choose no aroma hops" do
+          allow(@recipe).to receive(:num_aroma_hops).and_return(0)
+          expect(@recipe.choose_aroma_hops).to eq(nil)
+          # expect nil
+        end
+      end
+
       describe "assign hops" do
-        before { @recipe.assign_hops }
+        before do
+          allow(@recipe).to receive(:num_aroma_hops).and_return(3)
+          @recipe.assign_hops
+        end
 
         subject { @recipe.hops }
 
         it { should be_present }
         it { should have_key :bittering }
         it { should have_key :aroma }
+        it "should choose a bittering hop" do
+          expect(@recipe.hops[:bittering].to_a[0][0]).to be_kind_of(Hop)
+        end
+        it "should choose an aroma hop" do
+          expect(@recipe.hops[:aroma].to_a[0][2]).to be_kind_of(Hop)
+        end
       end
     end
 
