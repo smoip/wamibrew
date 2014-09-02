@@ -192,6 +192,22 @@ describe "Recipe" do
         end
       end
     end
+
+    describe "choose_attributes" do
+      let(:another_recipe) { Recipe.new }
+      before { another_recipe.choose_attributes }
+
+      it "should populate instance variables with values" do
+        expect(another_recipe.malts).to be_present
+        expect(another_recipe.hops).to be_present
+        expect(another_recipe.yeast).to be_present
+        expect(another_recipe.og).to be_present
+        expect(another_recipe.abv).to be_present
+        expect(another_recipe.srm).to be_present
+        expect(another_recipe.ibu).to be_present
+        # expect(another_recipe.style).to be_present
+      end
+    end
   end
 
 end

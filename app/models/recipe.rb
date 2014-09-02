@@ -2,7 +2,14 @@ class Recipe < ActiveRecord::Base
 
   attr_accessor :name, :style, :abv, :ibu, :srm, :malts, :hops, :yeast, :og
 
-  def create
+  def choose_attributes
+    self.assign_malts
+    self.assign_hops
+    self.assign_yeast
+    self.calc_abv
+    self.calc_srm
+    self.calc_ibu
+    # needs to call generate name once Style is done
   end
 
   def generate_name(style)
@@ -26,7 +33,11 @@ class Recipe < ActiveRecord::Base
   end
 
   def choose_yeast
-    Yeast.find_by(id: rand(Yeast.count) + 1)
+    yeast = nil
+    until yeast != nil do
+      yeast = Yeast.find_by(id: rand(Yeast.count) + 1)
+    end
+    return yeast
   end
 
   def assign_malts
