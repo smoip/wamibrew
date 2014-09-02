@@ -9,12 +9,12 @@ FactoryGirl.define do
   end
 
   factory :hop do
-    name  "cascade"
+    name  "cascade test"
     alpha 5.5
   end
 
   factory :yeast do
-    name        "WY1056"
+    name        "WY1056 test"
     attenuation 75
     family      "ale"
   end
