@@ -1,7 +1,11 @@
 require 'rails_helper'
 
 describe "Recipe" do
-  before { @recipe = Recipe.new }
+  before do
+    @recipe = Recipe.new
+    @recipe.save!
+  end
+  after { @recipe.destroy! }
 
   subject  { @recipe }
 
@@ -117,11 +121,52 @@ describe "Recipe" do
         it { should have_key :bittering }
         it { should have_key :aroma }
         it "should choose a bittering hop" do
-          expect(@recipe.hops[:bittering].to_a[0][0]).to be_kind_of(Hop)
+          expect(@recipe.pull_hops(:bittering)[0]).to be_kind_of(Hop)
         end
         it "should choose an aroma hop" do
-          expect(@recipe.hops[:aroma].to_a[0][2]).to be_kind_of(Hop)
+          expect(@recipe.pull_hops(:aroma)[0]).to be_kind_of(Hop)
         end
+      end
+    end
+
+    describe "ingredient helper methods" do
+      describe "hop array helpers" do
+        before do
+          allow(@recipe).to receive(:num_aroma_hops).and_return(1)
+          @recipe.assign_hops
+        end
+
+        describe "pull_hops" do
+          it "should pull hop arrays from @hops" do
+            expect(@recipe.pull_hops(:bittering)[0]).to be_kind_of(Hop)
+            expect(@recipe.pull_hops(:aroma)[0]).to be_kind_of(Hop)
+          end
+        end
+
+        describe "individual hop info" do
+          let(:hop) { @recipe.pull_hops(:bittering) }
+
+          describe "pull_hop_name" do
+            it "should return a string" do
+              expect(@recipe.pull_hop_name(hop)).to be_kind_of(String)
+            end
+          end
+
+          describe "pull_hop_amt" do
+            it "should return an Integer" do
+              expect(@recipe.pull_hop_amt(hop)).to be_kind_of(Float)
+            end
+          end
+
+          describe "pull_hop_time" do
+            it "should return a Float" do
+              expect(@recipe.pull_hop_time(hop)).to be_kind_of(Integer)
+            end
+          end
+        end
+      end
+
+      describe "pull malt arrays from @malts" do
       end
     end
 
@@ -201,7 +246,7 @@ describe "Recipe" do
 
     describe "ibu calculations" do
       let(:hop) { FactoryGirl.create(:hop) }
-      let(:hops) { { :bittering => { hop => [2, 60] }, :aroma => { hop => [1, 10] } } }
+      let(:hops) { { :bittering => { hop => [2, 60] }, :aroma => [{ hop => [1, 10] }] } }
 
       it "should calculate ibus" do
         @recipe.hops = hops

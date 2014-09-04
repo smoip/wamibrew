@@ -1,6 +1,6 @@
 <% base_malt = @recipe.malts[:base].to_a[0][0] %>
 <% specialty = @recipe.malts[:specialty].to_a[0][0] %>
-<% bittering = @recipe.hops[:bittering].to_a[0][0] %>
+<% bittering = @recipe.pull_hops(:bittering) %>
 <% aroma =     @recipe.hops[:aroma].to_a[0][0] %>
 
 <div class="ingredients">
@@ -11,7 +11,7 @@
       <%= specialty.name %>, <%= @recipe.malts[:specialty][specialty] %>lbs
     </li>
     <li>
-      hops: <%= @recipe.hops[:bittering][bittering][0] %> oz <%= bittering.name %> @<%= @recipe.hops[:bittering][bittering][1] %> min,
+      hops: <%= @recipe.pull_hop_amt(bittering) %> oz <%= @recipe.pull_hop_name(bittering) %> @<%= @recipe.pull_hop_time(bittering) %> min,
       <%= @recipe.hops[:aroma][aroma][0] %> oz <%= aroma.name %> @<%= @recipe.hops[:aroma][aroma][1] %> min
     </li>
     <li>
