@@ -55,13 +55,9 @@ class Recipe < ActiveRecord::Base
   end
 
   def pull_hops(type)
-    if type == :bittering
-      @hops[type].to_a[0]
-    elsif type == :aroma
-      @hops[type][0].to_a[0]
-      # needs to be reworked to allow for an EACH to pull multiple aroma hops out
-      # could just return the array containing all aroma hops?
-    end
+# needs to format @hops thusly: [[hop, [amt, time]], [hop, [amt, time]]]
+# this way you can get at each hop for calculations and display in a uniform way
+# start by re-writing tests
   end
 
   def pull_hop_name(hop_ary)
