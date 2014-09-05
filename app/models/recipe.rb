@@ -199,6 +199,14 @@ class Recipe < ActiveRecord::Base
     # Morey's logarithmic srm conversion
   end
 
+  def display_hops
+    display_string = ""
+    hops_to_array.each do |hop_ary|
+      display_string += "#{pull_hop_amt(hop_ary)} oz #{pull_hop_name(hop_ary)} @ #{pull_hop_time(hop_ary)} min, "
+    end
+    return display_string
+  end
+
 private
 
   def malt_amount(malt)

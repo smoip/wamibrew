@@ -310,4 +310,16 @@ describe "Recipe" do
     end
   end
 
+  describe "display helpers" do
+
+    describe "hop display helper" do
+      let(:hop) { FactoryGirl.create(:hop) }
+      before { @recipe.hops = {:bittering => { hop => [1.5, 60] }, :aroma => [ { hop => [1.0, 10] }, { hop => [0.25, 5] } ] } }
+
+      it "should return a display formatted list of hops" do
+        expect(@recipe.display_hops).to eq("1.5 oz cascade test @ 60 min, 1.0 oz cascade test @ 10 min, 0.25 oz cascade test @ 5 min, ")
+      end
+    end
+  end
+
 end
