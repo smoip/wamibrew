@@ -43,6 +43,15 @@ describe "Recipe" do
         end
       end
 
+      describe "specialty malts" do
+        describe "choose_specialty_malts" do
+          it "should choose one specialty grain" do
+            allow(@recipe).to receive(:num_specialty_malts).and_return(1)
+            expect(@recipe.choose_specialty_malts[0].to_a[0][0].base_malt?).to eq(false)
+          end
+        end
+      end
+
       describe "assign malts" do
         before { @recipe.assign_malts }
 
@@ -55,7 +64,7 @@ describe "Recipe" do
           expect(@recipe.malts[:base].to_a[0][0].base_malt?).to eq(true)
         end
         it "should assign specialty grains" do
-          expect(@recipe.malts[:specialty].to_a[0][0].base_malt?).to eq(false)
+          expect(@recipe.malts[:specialty][0].to_a[0][0].base_malt?).to eq(false)
         end
       end
     end
@@ -183,7 +192,48 @@ describe "Recipe" do
         end
       end
 
-      describe "pull malt arrays from @malts" do
+      describe "malts array helpers" do
+        before do
+          allow(@recipe).to receive(:num_specialty_malts).and_return(1)
+          @recipe.assign_malts
+        end
+
+        describe "malts_to_array" do
+          it "should construct an array from @malts" do
+            expect(@recipe.malts_to_array).to be_kind_of(Array)
+          end
+          it "should pull individual malt arrays from @malts" do
+            expect(@recipe.malts_to_array[0][0]).to be_kind_of(Malt)
+            # base malt
+            expect(@recipe.malts_to_array[0][1]).to be_kind_of(Float)
+            # base malt amount
+          end
+        end
+
+        describe "individual malt info" do
+          let(:malt) { @recipe.malts[:base].to_a[0] }
+          let(:malt_ary) { @recipe.malts_to_array }
+
+          describe "pull_malt_object" do
+            it "should return a malt object" do
+              expect(@recipe.pull_malt_object(malt_ary[0])).to be_kind_of(Malt)
+            end
+          end
+
+          describe "pull_malt_name" do
+            it "should return a string" do
+              expect(@recipe.pull_malt_name(malt)).to be_kind_of(String)
+              # expect(@recipe.pull_malt_name(malt_ary[0])).to be_kind_of(String)
+            end
+          end
+
+          describe "pull_malt_amt" do
+            it "should return a float" do
+              expect(@recipe.pull_malt_amt(malt)).to be_kind_of(Float)
+              # expect(@recipe.pull_malt_amt(malt_ary[0])).to be_kind_of(Float)
+            end
+          end
+        end
       end
     end
 
@@ -212,9 +262,10 @@ describe "Recipe" do
     let(:malt) { Malt.find(1) }
     let(:malt_hash) { { malt => 10 } }
     let(:small_malt_hash) { { Malt.find(2) => 1 } }
+    let(:malt_ary) { [ Malt.find(1), 10 ] }
     before do
       @recipe.yeast = FactoryGirl.create(:yeast)
-      @recipe.malts = { :base => malt_hash, :specialty => small_malt_hash }
+      @recipe.malts = { :base => malt_hash, :specialty => [ small_malt_hash ] }
     end
 
     describe "original gravity calculations" do
@@ -223,7 +274,7 @@ describe "Recipe" do
       end
 
       it "should calculate original gravity" do
-        expect(@recipe.calc_og( malt_hash )).to be_within(0.0001).of(0.0592)
+        expect(@recipe.calc_og( malt_ary )).to be_within(0.0001).of(0.0592)
         expect(@recipe.calc_og( { Malt.find(2) => 1 } )).to be_within(0.0001).of(0.004964)
       end
     end
