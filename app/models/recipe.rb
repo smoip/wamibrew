@@ -54,10 +54,22 @@ class Recipe < ActiveRecord::Base
     # stub out or use before block to fix hops
   end
 
-  def pull_hops(type)
+  def hops_to_array
+    hop_ary = []
+    unless @hops[:aroma] == nil
+      @hops[:aroma].each do |aroma_hash|
+        hop_ary << aroma_hash.to_a
+      end
+      hop_ary = hop_ary.flatten(1)
+    end
+    hop_ary.unshift(@hops[:bittering].to_a[0])
 # needs to format @hops thusly: [[hop, [amt, time]], [hop, [amt, time]]]
 # this way you can get at each hop for calculations and display in a uniform way
 # start by re-writing tests
+  end
+
+  def pull_hop_object(hop_ary)
+    hop_ary[0]
   end
 
   def pull_hop_name(hop_ary)
@@ -127,18 +139,25 @@ class Recipe < ActiveRecord::Base
   end
 
   def calc_ibu
+    # refactor using hops array
     combined = 0.0
-    combined += calc_indiv_ibu(@hops[:bittering])
-    @hops[:aroma].each do | hop |
-       combined += calc_indiv_ibu(hop)
+    hops_to_array.each do |hop_ary|
+      combined += calc_indiv_ibu(hop_ary)
     end
+    # combined += calc_indiv_ibu(@hops[:bittering])
+    # @hops[:aroma].each do | hop |
+    #    combined += calc_indiv_ibu(hop)
+    # end
     @ibu = combined.round(1)
   end
 
-  def calc_indiv_ibu(hop_weight_time)
-    hop = hop_weight_time.to_a[0][0]
-    weight = hop_weight_time[hop][0]
-    time = hop_weight_time[hop][1]
+  def calc_indiv_ibu(hop_ary)
+    hop = pull_hop_object(hop_ary)
+    # hop = hop_weight_time.to_a[0][0]
+    weight = pull_hop_amt(hop_ary)
+    # weight = hop_weight_time[hop][0]
+    time = pull_hop_time(hop_ary)
+    # time = hop_weight_time[hop][1]
     ( weight * (calc_hop_util(time)) * (hop.alpha / 100) * 7462 ) / ( 5 * ( 1 + calc_hop_ga ) )
   end
 

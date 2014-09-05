@@ -121,10 +121,10 @@ describe "Recipe" do
         it { should have_key :bittering }
         it { should have_key :aroma }
         it "should choose a bittering hop" do
-          expect(@recipe.pull_hops(:bittering)[0]).to be_kind_of(Hop)
+          expect(@recipe.hops[:bittering].to_a[0][0]).to be_kind_of(Hop)
         end
         it "should choose an aroma hop" do
-          expect(@recipe.pull_hops(:aroma)[0]).to be_kind_of(Hop)
+          expect(@recipe.hops[:aroma][0].to_a[0][0]).to be_kind_of(Hop)
         end
       end
     end
@@ -132,35 +132,52 @@ describe "Recipe" do
     describe "ingredient helper methods" do
       describe "hop array helpers" do
         before do
-          allow(@recipe).to receive(:num_aroma_hops).and_return(1)
+          allow(@recipe).to receive(:num_aroma_hops).and_return(2)
           @recipe.assign_hops
         end
 
-        describe "pull_hops" do
-          it "should pull hop arrays from @hops" do
-            expect(@recipe.pull_hops(:bittering)[0]).to be_kind_of(Hop)
-            expect(@recipe.pull_hops(:aroma)[0]).to be_kind_of(Hop)
+        describe "hops_to_array" do
+          it "should pull construct an array from @hops" do
+            expect(@recipe.hops_to_array).to be_kind_of(Array)
+          end
+          it "should pull individual hop arrays from @hops" do
+            expect(@recipe.hops_to_array[0][0]).to be_kind_of(Hop)
+            # bittering hop
+            expect(@recipe.hops_to_array[0][1][1]).to be_kind_of(Integer)
+            # bittering time
+            expect(@recipe.hops_to_array[2][0]).to be_kind_of(Hop)
+            # 2nd aroma hop
           end
         end
 
         describe "individual hop info" do
-          let(:hop) { @recipe.pull_hops(:bittering) }
+          let(:hop) { @recipe.hops[:bittering].to_a[0] }
+          let(:hops_ary) { @recipe.hops_to_array }
+
+          describe "pull_hop_object" do
+            it "should return a hop object" do
+              expect(@recipe.pull_hop_object(hops_ary[0])).to be_kind_of(Hop)
+            end
+          end
 
           describe "pull_hop_name" do
             it "should return a string" do
               expect(@recipe.pull_hop_name(hop)).to be_kind_of(String)
+              expect(@recipe.pull_hop_name(hops_ary[1])).to be_kind_of(String)
             end
           end
 
           describe "pull_hop_amt" do
-            it "should return an Integer" do
+            it "should return an Float" do
               expect(@recipe.pull_hop_amt(hop)).to be_kind_of(Float)
+              expect(@recipe.pull_hop_amt(hops_ary[0])).to be_kind_of(Float)
             end
           end
 
           describe "pull_hop_time" do
-            it "should return a Float" do
+            it "should return a Integer" do
               expect(@recipe.pull_hop_time(hop)).to be_kind_of(Integer)
+              expect(@recipe.pull_hop_time(hops_ary[2])).to be_kind_of(Integer)
             end
           end
         end
@@ -257,7 +274,7 @@ describe "Recipe" do
 
       it "should calculate individual hop addition ibus" do
         @recipe.og = 1.040
-        expect(@recipe.calc_indiv_ibu(hops[:bittering])).to be_within(0.01).of(50.59)
+        expect(@recipe.calc_indiv_ibu(hops[:bittering].to_a[0])).to be_within(0.01).of(50.59)
       end
 
       it "should calculate hop utilization" do
