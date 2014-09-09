@@ -1,12 +1,8 @@
-<% base_malt = @recipe.malts[:base].to_a[0][0] %>
-<% specialty = @recipe.malts[:specialty].to_a[0][0] %>
-
 <div class="ingredients">
   <h3>Ingredients</h3>
   <ul>
     <li>
-      malt: <%= base_malt.name %>, <%= @recipe.malts[:base][base_malt] %>lbs,
-      <%= specialty.name %>, <%= @recipe.malts[:specialty][specialty] %>lbs
+      malt: <%= @recipe.display_malts %>
     </li>
     <li>
       hops: <%= @recipe.display_hops %>

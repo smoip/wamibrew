@@ -371,6 +371,15 @@ describe "Recipe" do
         expect(@recipe.display_hops).to eq("1.5 oz cascade test @ 60 min, 1.0 oz cascade test @ 10 min, 0.25 oz cascade test @ 5 min, ")
       end
     end
+
+    describe "malt display helper" do
+      let(:malt) { FactoryGirl.create(:malt) }
+      before { @recipe.malts = { :base => { malt => 10 }, :specialty => [ { malt => 1 }, { malt => 0.5 } ] } }
+
+      it "should return a display formatted list of malts" do
+        expect(@recipe.display_malts).to eq("10 lb 2-row test, 1 lb 2-row test, 0.5 lb 2-row test, ")
+      end
+    end
   end
 
 end

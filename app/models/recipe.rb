@@ -261,6 +261,14 @@ class Recipe < ActiveRecord::Base
     return display_string
   end
 
+  def display_malts
+    display_string = ""
+    malts_to_array.each do |malt_ary|
+      display_string += "#{pull_malt_amt(malt_ary)} lb #{pull_malt_name(malt_ary)}, "
+    end
+    return display_string
+  end
+
 private
 
   def malt_amount(malt)
