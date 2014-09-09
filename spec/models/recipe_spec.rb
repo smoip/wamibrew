@@ -50,10 +50,19 @@ describe "Recipe" do
             expect(@recipe.choose_specialty_malts[0].to_a[0][0].base_malt?).to eq(false)
           end
         end
+
+        describe "combine duplicate assigned specialty malts" do
+          it "should sum any duplicated specialty malts into one entry" do
+            expect(@recipe.sum_duplicate_malts([ { malt => 2 }, { malt => 0.5 } ])).to eq([ { malt => 2.5 } ])
+          end
+        end
       end
 
       describe "assign malts" do
-        before { @recipe.assign_malts }
+        before do
+          allow(@recipe).to receive(:num_specialty_malts).and_return(1)
+          @recipe.assign_malts
+        end
 
         subject { @recipe.malts }
 

@@ -42,6 +42,33 @@ class Recipe < ActiveRecord::Base
     return specialty_malts
   end
 
+  def sum_duplicate_malts(specialty_malts)
+    if specialty_malts.length == 1
+      return specialty_malts
+    end
+    # check for duplicates
+    # sum duplicates
+    # return array
+  end
+
+  def find_duplicate_malts(malts_ary)
+    i = 0
+    duplicate_array = []
+    malts_ary.length.times do
+      compare_against = malts_ary[i]
+      malts_ary -= [compare_against]
+      malts_ary.each do |compare_to|
+        if compare_against == compare_to
+          duplicate_array[i] = 1
+        else
+          duplicate_array[i] = 0
+        end
+      end
+      i += 1
+    end
+    return duplicate_array
+  end
+
   def num_specialty_malts
     rand(4)
     # needs probability weighting table
