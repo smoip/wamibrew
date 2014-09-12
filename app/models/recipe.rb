@@ -50,25 +50,6 @@ class Recipe < ActiveRecord::Base
     return key
   end
 
-  # def find_duplicate_malts(malts_ary)
-  #   # remove me
-  #   i = 0
-  #   duplicate_array = []
-  #   malts_ary.length.times do
-  #     compare_against = malts_ary[i]
-  #     malts_ary -= [compare_against]
-  #     malts_ary.each do |compare_to|
-  #       if compare_against == compare_to
-  #         duplicate_array[i] = 1
-  #       else
-  #         duplicate_array[i] = 0
-  #       end
-  #     end
-  #     i += 1
-  #   end
-  #   return duplicate_array
-  # end
-
   def num_specialty_malts
     rand(4)
     # needs probability weighting table
@@ -88,7 +69,6 @@ class Recipe < ActiveRecord::Base
   end
 
   def assign_malts
-    # @malts = { :base => {}, :specialty => {} }
     choose_malt(true)
     num_specialty_malts.times { choose_malt(false) }
   end
@@ -96,11 +76,9 @@ class Recipe < ActiveRecord::Base
   def malts_to_array
     malt_ary = []
     unless @malts[:specialty] == {}
-      # this is the problem - running an array each on a hash now
       @malts[:specialty].each do |malt_obj, amt|
         malt_ary << [malt_obj, amt]
       end
-      # malt_ary = malt_ary.flatten(1)
     end
     malt_ary.unshift(@malts[:base].to_a[0])
   end
@@ -182,11 +160,9 @@ class Recipe < ActiveRecord::Base
   def calc_og(malt_ary)
     return 0 if malt_ary == nil
     malt = pull_malt_object(malt_ary)
-    # malt = malt_and_weight.to_a[0][0]
     weight = pull_malt_amt(malt_ary)
     # weight = malt_and_weight[malt]
     ((weight * pg_to_ep(malt.potential) * malt.malt_yield / 5.0) / 1000.0)
-    # getting a nil here - might be testing issue
   end
 
   def calc_fg(og)
@@ -198,12 +174,6 @@ class Recipe < ActiveRecord::Base
     malts_to_array.each do | malt_ary |
       combined += calc_og(malt_ary)
     end
-    # combined += calc_og(@malts[:base])
-    # # refactor to include multiple basemalts
-    # # same structure as below
-    # @malts[:specialty].each do | malt, amount |
-    #    combined += calc_og({ malt => amount })
-    # end
     return combined
   end
 
@@ -217,20 +187,13 @@ class Recipe < ActiveRecord::Base
     hops_to_array.each do |hop_ary|
       combined += calc_indiv_ibu(hop_ary)
     end
-    # combined += calc_indiv_ibu(@hops[:bittering])
-    # @hops[:aroma].each do | hop |
-    #    combined += calc_indiv_ibu(hop)
-    # end
     @ibu = combined.round(1)
   end
 
   def calc_indiv_ibu(hop_ary)
     hop = pull_hop_object(hop_ary)
-    # hop = hop_weight_time.to_a[0][0]
     weight = pull_hop_amt(hop_ary)
-    # weight = hop_weight_time[hop][0]
     time = pull_hop_time(hop_ary)
-    # time = hop_weight_time[hop][1]
     ( weight * (calc_hop_util(time)) * (hop.alpha / 100) * 7462 ) / ( 5 * ( 1 + calc_hop_ga ) )
   end
 
@@ -250,28 +213,17 @@ class Recipe < ActiveRecord::Base
   end
 
   def calc_mcu(malt_ary)
-    # refactor for pull_malt_object, pull_malt_amt
     # calculates malt color units
     malt = pull_malt_object(malt_ary)
-    # malt = malt_and_weight.to_a[0][0]
     weight = pull_malt_amt(malt_ary)
-    # weight = malt_and_weight[malt]
     malt.srm * weight / 5.0
-    # getting a nil here - might be a testing issue
   end
 
   def combine_mcu
-    # refactor for malts_to_array
     combined = 0.0
     malts_to_array.each do | malt_ary |
       combined += calc_mcu(malt_ary)
     end
-    # combined += calc_mcu(@malts[:base])
-    # # refactor to include multiple basemalts
-    # # same structure as below
-    # @malts[:specialty].each do | malt, amount |
-    #    combined += calc_mcu({ malt => amount })
-    # end
     return combined
   end
 
