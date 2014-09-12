@@ -2,6 +2,11 @@ class Recipe < ActiveRecord::Base
 
   attr_accessor :name, :style, :abv, :ibu, :srm, :malts, :hops, :yeast, :og
 
+  def initialize
+    @malts = { :base => {}, :specialty => {} }
+    super
+  end
+
   def choose_attributes
     self.assign_malts
     self.assign_hops
@@ -24,50 +29,45 @@ class Recipe < ActiveRecord::Base
         match = true
       end
     end
-    { malt => malt_amount(malt) }
+    type_key = malt_type_to_key(malt_type)
+    store_malt(type_key, malt)
   end
 
-  def choose_specialty_malts
-    specialties = num_specialty_malts
-    if specialties == 0
-      return nil
+  def store_malt(type_key, malt)
+    if @malts[type_key][malt] == nil
+      @malts[type_key][malt]= malt_amount(malt)
     else
-      specialty_malts = []
-      specialties.times do
-        specialty_malts << choose_malt(false)
-        # build something to prevent choosing the same specialty malt twice
-        # OR it can just add doubles together
-      end
+      @malts[type_key][malt]+= malt_amount(malt)
     end
-    return specialty_malts
   end
 
-  def sum_duplicate_malts(specialty_malts)
-    if specialty_malts.length == 1
-      return specialty_malts
+  def malt_type_to_key(malt_type)
+    if malt_type == true
+      key = :base
+    else
+      key = :specialty
     end
-    # check for duplicates
-    # sum duplicates
-    # return array
+    return key
   end
 
-  def find_duplicate_malts(malts_ary)
-    i = 0
-    duplicate_array = []
-    malts_ary.length.times do
-      compare_against = malts_ary[i]
-      malts_ary -= [compare_against]
-      malts_ary.each do |compare_to|
-        if compare_against == compare_to
-          duplicate_array[i] = 1
-        else
-          duplicate_array[i] = 0
-        end
-      end
-      i += 1
-    end
-    return duplicate_array
-  end
+  # def find_duplicate_malts(malts_ary)
+  #   # remove me
+  #   i = 0
+  #   duplicate_array = []
+  #   malts_ary.length.times do
+  #     compare_against = malts_ary[i]
+  #     malts_ary -= [compare_against]
+  #     malts_ary.each do |compare_to|
+  #       if compare_against == compare_to
+  #         duplicate_array[i] = 1
+  #       else
+  #         duplicate_array[i] = 0
+  #       end
+  #     end
+  #     i += 1
+  #   end
+  #   return duplicate_array
+  # end
 
   def num_specialty_malts
     rand(4)
@@ -88,17 +88,19 @@ class Recipe < ActiveRecord::Base
   end
 
   def assign_malts
-    @malts = { :base => choose_malt(true), :specialty => choose_specialty_malts }
-    # refactor any method that pulls info from @recipe.malts[:specialty] to accommodate array
+    # @malts = { :base => {}, :specialty => {} }
+    choose_malt(true)
+    num_specialty_malts.times { choose_malt(false) }
   end
 
   def malts_to_array
     malt_ary = []
-    unless @malts[:specialty] == nil
-      @malts[:specialty].each do |specialty_hash|
-        malt_ary << specialty_hash.to_a
+    unless @malts[:specialty] == {}
+      # this is the problem - running an array each on a hash now
+      @malts[:specialty].each do |malt_obj, amt|
+        malt_ary << [malt_obj, amt]
       end
-      malt_ary = malt_ary.flatten(1)
+      # malt_ary = malt_ary.flatten(1)
     end
     malt_ary.unshift(@malts[:base].to_a[0])
   end
@@ -117,10 +119,7 @@ class Recipe < ActiveRecord::Base
 
   def assign_hops
     @hops = { :bittering => choose_hop(true), :aroma => choose_aroma_hops }
-    # :aroma => choose_aroma_hops
-    # then refactor any method that pulls info from @recipe.hops[:aroma] to accommodate an array
-    # need new method to order the aroma hop array by hop_time
-    # copy structure to allow for multiple specialty malts (started)
+    # probably want to refactor to mirror new malt structure (initialize @hops, assign to hash)
   end
 
   def hops_to_array
@@ -181,6 +180,7 @@ class Recipe < ActiveRecord::Base
   end
 
   def calc_og(malt_ary)
+    return 0 if malt_ary == nil
     malt = pull_malt_object(malt_ary)
     # malt = malt_and_weight.to_a[0][0]
     weight = pull_malt_amt(malt_ary)
@@ -302,7 +302,7 @@ private
     if malt.base_malt?
       rand(15) + 1.0
     else
-      (rand(4) + 1) / 2.0
+      (rand(8) + 1) / 4.0
     end
   end
 

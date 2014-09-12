@@ -32,11 +32,13 @@ describe "Recipe" do
 
     describe "malt" do
 
-      let(:malt) { @recipe.choose_malt(true) }
-
       describe "choose_malt" do
+        before { @recipe.choose_malt(true) }
+        let(:malt) { @recipe.malts[:base] }
+
         it "should choose a malt" do
           expect(malt).not_to be_nil
+          expect(malt.to_a[0][0]).to be_kind_of(Malt)
         end
         it "should choose quantities" do
           expect(malt.to_a[0][1]).to be_between(0.5, 15).inclusive
@@ -47,15 +49,12 @@ describe "Recipe" do
         describe "choose_specialty_malts" do
           it "should choose one specialty grain" do
             allow(@recipe).to receive(:num_specialty_malts).and_return(1)
-            expect(@recipe.choose_specialty_malts[0].to_a[0][0].base_malt?).to eq(false)
+            @recipe.assign_malts
+            expect(@recipe.malts[:specialty].to_a[0][0]).to be_kind_of(Malt)
+            expect(@recipe.malts[:specialty].to_a.length).to eq(1)
           end
         end
 
-        describe "combine duplicate assigned specialty malts" do
-          it "should sum any duplicated specialty malts into one entry" do
-            expect(@recipe.sum_duplicate_malts([ { malt => 2 }, { malt => 0.5 } ])).to eq([ { malt => 2.5 } ])
-          end
-        end
       end
 
       describe "assign malts" do
@@ -73,7 +72,7 @@ describe "Recipe" do
           expect(@recipe.malts[:base].to_a[0][0].base_malt?).to eq(true)
         end
         it "should assign specialty grains" do
-          expect(@recipe.malts[:specialty][0].to_a[0][0].base_malt?).to eq(false)
+          expect(@recipe.malts[:specialty].to_a[0][0].base_malt?).to eq(false)
         end
       end
     end
