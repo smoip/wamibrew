@@ -392,4 +392,11 @@ describe "Recipe" do
     end
   end
 
+  describe "style chooser" do
+    describe "select_abv" do
+      it "should return all styles whose range covers the supplied abv" do
+        expect(@recipe.select_abv).to eq( [  ] )
+      end
+    end
+  end
 end

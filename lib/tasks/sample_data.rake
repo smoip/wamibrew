@@ -4,6 +4,7 @@ namespace :db do
     make_malts
     make_hops
     make_yeasts
+    make_styles
   end
 end
 
@@ -39,4 +40,17 @@ def make_yeasts
   Yeast.create!(name: "WLP090",
                 attenuation: 80,
                 family: "ale")
+end
+
+def make_styles
+  Style.create!(name: "IPA",
+                yeast_family: "ale",
+                abv: [5.5, 7.5],
+                ibu: [40, 70],
+                srm: [6, 15],
+                required_malts: nil,
+                required_hops: nil,
+                common_malts: ["2-row"],
+                common_hops: ["cascade"],
+                aroma_required?: true)
 end

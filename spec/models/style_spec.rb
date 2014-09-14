@@ -3,22 +3,19 @@ require 'rails_helper'
 describe "Styles" do
   before do
     @style = Style.new
-    @recipe = recipe.new
+    @recipe = Recipe.new
   end
 
-  describe "comparison methods" do
+  subject { @style }
 
-    describe "check_ibu" do
-      before { style.ibu = [40, 70] }
+  it { should respond_to(:name) }
+  it { should respond_to(:yeast_family) }
+  it { should respond_to(:abv) }
+  it { should respond_to(:ibu) }
+  it { should respond_to(:srm) }
+  it { should respond_to(:required_malts) }
+  it { should respond_to(:required_hops) }
+  it { should respond_to(:common_malts) }
+  it { should respond_to(:common_hops) }
 
-      it "should return '1' for an ibu value in style range" do
-        allow(recipe).to recieve(:ibu).and_return(50)
-        expect(style.check_ibu(recipe)).to eq(1)
-      end
-
-      it "should return '0' for an ibu value out of style range" do
-        expect(style.check_ibu(recipe)).to eq(0)
-      end
-    end
-  end
 end
