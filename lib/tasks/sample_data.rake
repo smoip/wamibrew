@@ -45,12 +45,15 @@ end
 def make_styles
   Style.create!(name: "IPA",
                 yeast_family: "ale",
-                abv: [5.5, 7.5],
-                ibu: [40, 70],
-                srm: [6, 15],
                 required_malts: nil,
                 required_hops: nil,
                 common_malts: ["2-row"],
                 common_hops: ["cascade"],
-                aroma_required?: true)
+                aroma_required?: true,
+                abv_upper: 7.5,
+                abv_lower: 5.5,
+                ibu_upper: 70,
+                ibu_lower: 40,
+                srm_upper: 15,
+                srm_lower: 6)
 end

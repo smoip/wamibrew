@@ -248,6 +248,16 @@ class Recipe < ActiveRecord::Base
     return display_string
   end
 
+  def select_yeast
+    style_list = []
+    style_list << Style.find_by(yeast_family: "ale")
+  end
+
+  def select_abv
+    # style_list = []
+    # style_list << Style.where()
+  end
+
 private
 
   def malt_amount(malt)

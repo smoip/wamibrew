@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140914191141) do
+ActiveRecord::Schema.define(version: 20140914211859) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,12 @@ ActiveRecord::Schema.define(version: 20140914191141) do
     t.string   "required_hops",   array: true
     t.string   "common_malts",    array: true
     t.string   "common_hops",     array: true
+    t.float    "abv_upper"
+    t.float    "abv_lower"
+    t.float    "ibu_upper"
+    t.float    "ibu_lower"
+    t.float    "srm_upper"
+    t.float    "srm_lower"
   end
 
   create_table "yeasts", force: true do |t|

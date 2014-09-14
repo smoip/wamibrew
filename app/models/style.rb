@@ -1,4 +1,3 @@
 class Style < ActiveRecord::Base
-  store_accessor :calc_attributes, :abv, :ibu, :srm
-
+  validates( :name, { :uniqueness => { :case_sensitive => false } } )
 end
