@@ -273,7 +273,7 @@ describe "Recipe" do
     let(:malt_ary) { [ Malt.find(1), 10 ] }
     before do
       @recipe.yeast = FactoryGirl.create(:yeast)
-      @recipe.malts = { :base => malt_hash, :specialty => [ small_malt_hash ] }
+      @recipe.malts = { :base => malt_hash, :specialty => small_malt_hash }
     end
 
     describe "original gravity calculations" do
@@ -381,11 +381,13 @@ describe "Recipe" do
     end
 
     describe "malt display helper" do
-      let(:malt) { FactoryGirl.create(:malt) }
-      before { @recipe.malts = { :base => { malt => 10 }, :specialty => [ { malt => 1 }, { malt => 0.5 } ] } }
+      let(:malt) { Malt.find(1) }
+      let(:malt_1) { Malt.find(2) }
+      let(:malt_2) { Malt.find(3) }
+      before { @recipe.malts = { :base => { malt => 10 }, :specialty => { malt_1 => 1, malt_2 => 0.5 } } }
 
       it "should return a display formatted list of malts" do
-        expect(@recipe.display_malts).to eq("10 lb 2-row test, 1 lb 2-row test, 0.5 lb 2-row test, ")
+        expect(@recipe.display_malts).to eq("10 lb 2-row, 1 lb caramel 60, 0.5 lb chocolate, ")
       end
     end
   end
