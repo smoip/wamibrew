@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140826181509) do
+ActiveRecord::Schema.define(version: 20140914191141) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "hops", force: true do |t|
     t.string   "name"
@@ -36,6 +37,20 @@ ActiveRecord::Schema.define(version: 20140826181509) do
   create_table "recipes", force: true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "styles", force: true do |t|
+    t.string   "name"
+    t.string   "yeast_family"
+    t.boolean  "aroma_required?"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.hstore   "calc_attributes"
+    t.hstore   "ingredients"
+    t.string   "required_malts",  array: true
+    t.string   "required_hops",   array: true
+    t.string   "common_malts",    array: true
+    t.string   "common_hops",     array: true
   end
 
   create_table "yeasts", force: true do |t|

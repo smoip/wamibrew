@@ -182,7 +182,6 @@ class Recipe < ActiveRecord::Base
   end
 
   def calc_ibu
-    # refactor using hops array
     combined = 0.0
     hops_to_array.each do |hop_ary|
       combined += calc_indiv_ibu(hop_ary)
@@ -199,6 +198,7 @@ class Recipe < ActiveRecord::Base
 
   def calc_hop_util(minutes)
     # rager hop utilization
+    # double check - and think about switch to Tinseth
     (18.11 + (13.86 * Math.tanh((minutes - 31.32)/18.27))) / 100
   end
 
