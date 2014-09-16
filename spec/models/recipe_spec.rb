@@ -393,6 +393,7 @@ describe "Recipe" do
   end
 
   describe "style chooser" do
+    let(:style) { Style.find_by_name("IPA") }
     # strategy: each select method returns an array of all styles whose guidelines cover
     # supplied range.  Then all arrays are compared, and only duplicates are kept.
     # The remaining style is assigned to the recipe.
@@ -404,15 +405,50 @@ describe "Recipe" do
 
     describe "select_yeast" do
       it "should return all styles whose yeast_family matches the supplied value" do
-        allow(@recipe).to receive(:yeast).and_return("ale")
+        allow(@recipe.yeast).to receive(:family).and_return("ale")
         expect(@recipe.select_yeast).to eq( [ Style.find_by_name("IPA") ] )
       end
     end
 
     describe "select_abv" do
-      it "should return all styles whose range covers the supplied abv" do
-        allow(@recipe).to receive(:abv).and_return(6.0)
-        expect(@recipe.select_abv).to eq( [ Style.find_by_name("IPA") ] )
+      before { @recipe.abv = 6 }
+
+      it "should return a style whose range covers the supplied abv" do
+        expect(@recipe.select_abv).to eq( [ style ] )
+      end
+      it "should return ALL styles whose range covers the supplied abv" do
+        # test once there are multiple styles
+      end
+      it "should return ONLY styles whose range covers the supplied abv" do
+        #  ditto
+      end
+    end
+
+    describe "select_ibu" do
+      before { @recipe.ibu = 60 }
+
+      it "should return a style whose range covers the supplied ibu" do
+        expect(@recipe.select_ibu).to eq( [ style ] )
+      end
+      it "should return ALL styles whose range covers the supplied ibu" do
+        # test once there are multiple styles
+      end
+      it "should return ONLY styles whose range covers the supplied ibu" do
+        #  ditto
+      end
+    end
+
+    describe "select_srm" do
+      before { @recipe.srm = 10 }
+
+      it "should return a style whose range covers the supplied srm" do
+        expect(@recipe.select_srm).to eq( [ style ] )
+      end
+      it "should return ALL styles whose range covers the supplied srm" do
+        # test once there are multiple styles
+      end
+      it "should return ONLY styles whose range covers the supplied srm" do
+        #  ditto
       end
     end
   end

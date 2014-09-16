@@ -250,13 +250,39 @@ class Recipe < ActiveRecord::Base
 
   def select_yeast
     style_list = []
-    style_list << Style.find_by(yeast_family: "ale")
+    style_list << Style.find_by(yeast_family: "#{@yeast.family}")
   end
 
   def select_abv
-    # style_list = []
-    # style_list << Style.where()
+    style_list = []
+    Style.find_each do |style|
+      if ((style.abv_lower)..(style.abv_upper)).cover?(@abv)
+        style_list << style
+      end
+    end
+    return style_list
   end
+
+    def select_ibu
+    style_list = []
+    Style.find_each do |style|
+      if ((style.ibu_lower)..(style.ibu_upper)).cover?(@ibu)
+        style_list << style
+      end
+    end
+    return style_list
+  end
+
+  def select_srm
+    style_list = []
+    Style.find_each do |style|
+      if ((style.srm_lower)..(style.srm_upper)).cover?(@srm)
+        style_list << style
+      end
+    end
+    return style_list
+  end
+
 
 private
 

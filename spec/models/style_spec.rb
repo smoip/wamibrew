@@ -10,9 +10,12 @@ describe "Styles" do
 
   it { should respond_to(:name) }
   it { should respond_to(:yeast_family) }
-  it { should respond_to(:abv) }
-  it { should respond_to(:ibu) }
-  it { should respond_to(:srm) }
+  it { should respond_to(:abv_upper) }
+  it { should respond_to(:abv_lower) }
+  it { should respond_to(:ibu_upper) }
+  it { should respond_to(:ibu_lower) }
+  it { should respond_to(:srm_upper) }
+  it { should respond_to(:srm_lower) }
   it { should respond_to(:required_malts) }
   it { should respond_to(:required_hops) }
   it { should respond_to(:common_malts) }
