@@ -322,7 +322,7 @@ describe "Recipe" do
 
     describe "ibu calculations" do
       let(:hop) { FactoryGirl.create(:hop) }
-      let(:hops) { { :bittering => { hop => [2, 60] }, :aroma => [{ hop => [1, 10] }] } }
+      let(:hops) { { :bittering => { hop => [2, 60] }, :aroma => [ { hop => [1, 10] } ] } }
 
       it "should calculate ibus" do
         @recipe.hops = hops
@@ -393,7 +393,14 @@ describe "Recipe" do
   end
 
   describe "style chooser" do
-    let(:style) { Style.find_by_name("IPA") }
+    let(:style) { Style.find_by_name( "IPA" ) }
+    let(:style_list) { [ style, Style.find_by_name( "Stout" ) ] }
+    before do
+      @recipe.abv = 6
+      @recipe.ibu = 60
+      @recipe.srm = 10
+      @recipe.yeast = Yeast.find_by_name('WY1056')
+    end
     # strategy: each select method returns an array of all styles whose guidelines cover
     # supplied range.  Then all arrays are compared, and only duplicates are kept.
     # The remaining style is assigned to the recipe.
@@ -403,18 +410,36 @@ describe "Recipe" do
     # you need to be able to select styles by these values
     # Refactor later to include 'closest-to' calculations
 
-    describe "select_yeast" do
+    describe "select_by_yeast" do
       it "should return all styles whose yeast_family matches the supplied value" do
-        allow(@recipe.yeast).to receive(:family).and_return("ale")
-        expect(@recipe.select_yeast).to eq( [ Style.find_by_name("IPA") ] )
+        expect(@recipe.select_by_yeast).to include( style )
+        expect(@recipe.select_by_yeast).to include( Style.find_by_name("Stout") )
       end
     end
 
-    describe "select_abv" do
-      before { @recipe.abv = 6 }
+    describe "select_by_aroma" do
+      let(:hop) { FactoryGirl.create(:hop) }
 
+      describe "recipe has aroma hops" do
+        before { @recipe.hops = { :bittering => { hop => [2, 60] }, :aroma => [ { hop => [1, 10] } ] } }
+
+        it "should return only a subset of styles which do require aroma hops" do
+          expect(@recipe.select_by_aroma( style_list )).to eq( [ style ] )
+        end
+      end
+
+      describe "recipe does not have aroma hops" do
+        before { @recipe.hops = { :bittering => { hop => [2, 60] }, :aroma => nil } }
+
+        it "should return the input array unchanged" do
+          expect(@recipe.select_by_aroma( style_list )).to include( Style.find_by_name("Stout") )
+        end
+      end
+    end
+
+    describe "select_by_abv" do
       it "should return a style whose range covers the supplied abv" do
-        expect(@recipe.select_abv).to eq( [ style ] )
+        expect(@recipe.select_by_abv( style_list )).to include( style )
       end
       it "should return ALL styles whose range covers the supplied abv" do
         # test once there are multiple styles
@@ -424,11 +449,9 @@ describe "Recipe" do
       end
     end
 
-    describe "select_ibu" do
-      before { @recipe.ibu = 60 }
-
+    describe "selec_by_ibu" do
       it "should return a style whose range covers the supplied ibu" do
-        expect(@recipe.select_ibu).to eq( [ style ] )
+        expect(@recipe.select_by_ibu( style_list )).to include( style )
       end
       it "should return ALL styles whose range covers the supplied ibu" do
         # test once there are multiple styles
@@ -438,17 +461,22 @@ describe "Recipe" do
       end
     end
 
-    describe "select_srm" do
-      before { @recipe.srm = 10 }
-
+    describe "select_by_srm" do
       it "should return a style whose range covers the supplied srm" do
-        expect(@recipe.select_srm).to eq( [ style ] )
+        expect(@recipe.select_by_srm( style_list )).to include( style )
       end
       it "should return ALL styles whose range covers the supplied srm" do
         # test once there are multiple styles
       end
       it "should return ONLY styles whose range covers the supplied srm" do
-        #  ditto
+        expect(@recipe.select_by_srm( style_list )).not_to include( Style.find_by_name("Stout") )
+      end
+    end
+
+    describe "filter_possible_styles" do
+      it "should return an array of only styles which match abv, ibu, and srm ranges" do
+        expect(@recipe.filter_possible_styles).to include( style )
+        expect(@recipe.filter_possible_styles).not_to include( Style.find_by_name("Stout") )
       end
     end
   end

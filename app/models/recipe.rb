@@ -98,6 +98,7 @@ class Recipe < ActiveRecord::Base
   def assign_hops
     @hops = { :bittering => choose_hop(true), :aroma => choose_aroma_hops }
     # probably want to refactor to mirror new malt structure (initialize @hops, assign to hash)
+    # yes, do that
   end
 
   def hops_to_array
@@ -248,39 +249,58 @@ class Recipe < ActiveRecord::Base
     return display_string
   end
 
-  def select_yeast
-    style_list = []
-    style_list << Style.find_by(yeast_family: "#{@yeast.family}")
-  end
-
-  def select_abv
+  def select_by_yeast
     style_list = []
     Style.find_each do |style|
-      if ((style.abv_lower)..(style.abv_upper)).cover?(@abv)
-        style_list << style
-      end
+      style_list << style if (style.yeast_family == "#{@yeast.family}")
     end
     return style_list
   end
 
-    def select_ibu
-    style_list = []
-    Style.find_each do |style|
-      if ((style.ibu_lower)..(style.ibu_upper)).cover?(@ibu)
-        style_list << style
-      end
-    end
-    return style_list
+  def select_by_malt
+
   end
 
-  def select_srm
-    style_list = []
-    Style.find_each do |style|
-      if ((style.srm_lower)..(style.srm_upper)).cover?(@srm)
-        style_list << style
-      end
+  def select_by_aroma(style_list)
+    subset = []
+    aroma_present = false
+    aroma_present = true if @hops[:aroma] != nil
+    if aroma_present
+      style_list.each { |style| subset << style if style.aroma_required? }
+    else
+      subset = style_list
     end
-    return style_list
+    return subset
+  end
+
+  def select_by_abv(style_list)
+    subset = []
+    style_list.each do |style|
+      subset << style if ((style.abv_lower)..(style.abv_upper)).cover?(@abv)
+    end
+    return subset
+  end
+
+    def select_by_ibu(style_list)
+    subset = []
+    style_list.each do |style|
+      subset << style if ((style.ibu_lower)..(style.ibu_upper)).cover?(@ibu)
+    end
+    return subset
+  end
+
+  def select_by_srm(style_list)
+    subset = []
+    style_list.each do |style|
+      subset << style if ((style.srm_lower)..(style.srm_upper)).cover?(@srm)
+    end
+    return subset
+  end
+
+
+  def filter_possible_styles
+    style_list = select_by_yeast
+    select_by_abv(style_list) & select_by_ibu(style_list) & select_by_srm(style_list)
   end
 
 
