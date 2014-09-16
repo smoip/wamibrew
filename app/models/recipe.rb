@@ -257,8 +257,17 @@ class Recipe < ActiveRecord::Base
     return style_list
   end
 
-  def select_by_malt
-
+  def select_by_malt(style_list)
+    subset = []
+    style_list.each do |style|
+      if style.required_malts = nil
+        subset << style
+      elsif style.required_malts != nil
+        # not sure what's happening here
+        subset << style if malts_to_array.flatten.include?( Malt.find_by_name( style.required_malts[0] ) )
+      end
+    end
+    return subset
   end
 
   def select_by_aroma(style_list)

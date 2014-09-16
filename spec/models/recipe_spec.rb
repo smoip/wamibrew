@@ -437,6 +437,27 @@ describe "Recipe" do
       end
     end
 
+    describe "select_by_malt" do
+      let(:pilsner) { Style.find_by_name("Pilsner") }
+      let(:style_list) { [ style, Style.find_by_name( "Stout" ), pilsner ] }
+
+      describe "recipe includes a malt required by a style" do
+        before { @recipe.malts = { :base => { Malt.find_by_name( "pilsen" ) => 10 }, :specialty => {} } }
+
+        it "should return the style which requires that malt" do
+          expect(@recipe.select_by_malt(style_list)).to include( pilsner )
+        end
+      end
+
+      describe "recipe does not include a malt required by a style" do
+        before { @recipe.malts = { :base => { Malt.find_by_name( "2-row" ) => 10 }, :specialty => {} } }
+
+        it "should NOT return the style which requires that malt" do
+          expect(@recipe.select_by_malt(style_list)).not_to include( pilsner )
+        end
+      end
+    end
+
     describe "select_by_abv" do
       it "should return a style whose range covers the supplied abv" do
         expect(@recipe.select_by_abv( style_list )).to include( style )
