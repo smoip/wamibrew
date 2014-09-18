@@ -260,10 +260,9 @@ class Recipe < ActiveRecord::Base
   def select_by_malt(style_list)
     subset = []
     style_list.each do |style|
-      if style.required_malts = nil
+      if style.required_malts == nil
         subset << style
       elsif style.required_malts != nil
-        # not sure what's happening here
         subset << style if malts_to_array.flatten.include?( Malt.find_by_name( style.required_malts[0] ) )
       end
     end
@@ -308,7 +307,7 @@ class Recipe < ActiveRecord::Base
 
 
   def filter_possible_styles
-    style_list = select_by_yeast
+    style_list = select_by_malt(select_by_yeast)
     select_by_abv(style_list) & select_by_ibu(style_list) & select_by_srm(style_list)
   end
 
