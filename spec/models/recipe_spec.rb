@@ -24,9 +24,12 @@ describe "Recipe" do
   describe "ingredient methods" do
 
     describe "name" do
-      before { @recipe.generate_name("Porter") }
+      let(:style) { Style.find_by_name( "IPA" ) }
+      before { @recipe.style = style }
+
       it "should generate a name" do
-        expect(@recipe.name).to eq("Porter")
+        allow(@recipe.style).to receive(:name).and_return( "IPA" )
+        expect(@recipe.name).to eq("IPA")
       end
     end
 
@@ -395,6 +398,7 @@ describe "Recipe" do
   describe "style chooser" do
     let(:style) { Style.find_by_name( "IPA" ) }
     let(:style_list) { [ style, Style.find_by_name( "Stout" ) ] }
+    let(:hop) { FactoryGirl.create(:hop) }
     before do
       @recipe.abv = 6
       @recipe.ibu = 60
@@ -418,7 +422,6 @@ describe "Recipe" do
     end
 
     describe "select_by_aroma" do
-      let(:hop) { FactoryGirl.create(:hop) }
 
       describe "recipe has aroma hops" do
         before { @recipe.hops = { :bittering => { hop => [2, 60] }, :aroma => [ { hop => [1, 10] } ] } }
@@ -495,9 +498,20 @@ describe "Recipe" do
     end
 
     describe "filter_possible_styles" do
-      it "should return an array of only styles which match abv, ibu, and srm ranges" do
+      before { @recipe.hops = { :bittering => { hop => [2, 60] }, :aroma => [ { hop => [1, 10] } ] } }
+
+      it "should return an array of only styles which match yeast, aroma, and malt stipulations, and abv, ibu, and srm ranges" do
         expect(@recipe.filter_possible_styles).to include( style )
         expect(@recipe.filter_possible_styles).not_to include( Style.find_by_name("Stout") )
+      end
+    end
+
+    describe "assign_style" do
+      before { @recipe.hops = { :bittering => { hop => [2, 60] }, :aroma => [ { hop => [1, 10] } ] } }
+
+      it "should assign a style" do
+        @recipe.assign_style
+        expect(@recipe.style).to eq( style )
       end
     end
   end

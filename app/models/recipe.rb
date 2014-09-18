@@ -4,6 +4,7 @@ class Recipe < ActiveRecord::Base
 
   def initialize
     @malts = { :base => {}, :specialty => {} }
+    @name = "a beer"
     super
   end
 
@@ -14,11 +15,12 @@ class Recipe < ActiveRecord::Base
     self.calc_abv
     self.calc_srm
     self.calc_ibu
-    # needs to call generate name once Style is done
+    self.assign_style
+    self.generate_name
   end
 
-  def generate_name(style)
-    @name = "#{style}"
+  def generate_name
+    @name = @style.name unless @style == nil
   end
 
   def choose_malt(malt_type)
@@ -307,8 +309,18 @@ class Recipe < ActiveRecord::Base
 
 
   def filter_possible_styles
-    style_list = select_by_malt(select_by_yeast)
+    style_list = select_by_aroma(select_by_malt(select_by_yeast))
     select_by_abv(style_list) & select_by_ibu(style_list) & select_by_srm(style_list)
+  end
+
+  def assign_style
+    list = filter_possible_styles
+    if list.length == 1
+      @style = list[0]
+    else
+      # needs case handling for two possible style assignments
+      @style = list[0]
+    end
   end
 
 
