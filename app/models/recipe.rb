@@ -198,9 +198,11 @@ class Recipe < ActiveRecord::Base
     time = pull_hop_time(hop_ary)
     rager_ibu = ( weight * (calc_hop_util(time)) * (hop.alpha / 100) * 7462 ) / ( 5 * ( 1 + calc_hop_ga ) )
     rager_to_tinseth_q_and_d(time, rager_ibu)
+    # remove last line to reset to Rager
   end
 
   def rager_to_tinseth_q_and_d(time, rager_ibu)
+    # need to match BJCP IBU style guidelines
     faux_tinseth = 0
     if time > 30
       faux_tinseth = rager_ibu * 0.78
@@ -212,7 +214,6 @@ class Recipe < ActiveRecord::Base
 
   def calc_hop_util(minutes)
     # rager hop utilization
-    # double check - and think about switch to Tinseth
     (18.11 + (13.86 * Math.tanh((minutes - 31.32)/18.27))) / 100
   end
 

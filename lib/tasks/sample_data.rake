@@ -29,6 +29,16 @@ def make_malts
                malt_yield: 0.8,
                srm: 1.0,
                base_malt?: true)
+  Malt.create!(name: "maris otter",
+               potential: 1.038,
+               malt_yield: 0.82,
+               srm: 3.0,
+               base_malt?: true)
+  Malt.create!(name: "honey malt",
+               potential: 1.037,
+               malt_yield: 0.8,
+               srm: 25.0,
+               base_malt?: false)
 end
 
 def make_hops
@@ -38,6 +48,10 @@ def make_hops
               alpha: 10.0)
   Hop.create!(name: "hallertau",
               alpha: 4.8)
+  Hop.create!(name: "citra",
+              alpha: 12.0)
+  Hop.create!(name: "east kent goldings",
+              alpha: 5.0)
 end
 
 def make_yeasts
@@ -50,10 +64,13 @@ def make_yeasts
   Yeast.create!(name: "WY2007",
                 attenuation: 73,
                 family: "lager")
+  Yeast.create!(name: "WY1099",
+                attenuation: 70,
+                family: "ale")
 end
 
 def make_styles
-  Style.create!(name: "IPA",
+  Style.create!(name: "American IPA",
                 yeast_family: "ale",
                 required_malts: nil,
                 required_hops: nil,
@@ -66,7 +83,7 @@ def make_styles
                 ibu_lower: 40,
                 srm_upper: 15,
                 srm_lower: 6)
-  Style.create!(name: "Stout",
+  Style.create!(name: "American Stout",
                 yeast_family: "ale",
                 required_malts: nil,
                 required_hops: nil,
@@ -92,4 +109,30 @@ def make_styles
                 ibu_lower: 25,
                 srm_upper: 2,
                 srm_lower: 5)
+  Style.create!(name: "American Pale",
+                yeast_family: "ale",
+                required_malts: nil,
+                required_hops: nil,
+                common_malts: nil,
+                common_hops: ["centennial"],
+                aroma_required?: false,
+                abv_upper: 6.2,
+                abv_lower: 4.5,
+                ibu_upper: 45,
+                ibu_lower: 30,
+                srm_upper: 14,
+                srm_lower: 5)
+  Style.create!(name: "Imperial Stout",
+                yeast_family: "ale",
+                required_malts: nil,
+                required_hops: nil,
+                common_malts: ["chocolate"],
+                common_hops: nil,
+                aroma_required?: false,
+                abv_upper: 12.0,
+                abv_lower: 8.0,
+                ibu_upper: 90,
+                ibu_lower: 50,
+                srm_upper: 40,
+                srm_lower: 30)
 end
