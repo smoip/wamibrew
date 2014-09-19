@@ -196,7 +196,18 @@ class Recipe < ActiveRecord::Base
     hop = pull_hop_object(hop_ary)
     weight = pull_hop_amt(hop_ary)
     time = pull_hop_time(hop_ary)
-    ( weight * (calc_hop_util(time)) * (hop.alpha / 100) * 7462 ) / ( 5 * ( 1 + calc_hop_ga ) )
+    rager_ibu = ( weight * (calc_hop_util(time)) * (hop.alpha / 100) * 7462 ) / ( 5 * ( 1 + calc_hop_ga ) )
+    rager_to_tinseth_q_and_d(time, rager_ibu)
+  end
+
+  def rager_to_tinseth_q_and_d(time, rager_ibu)
+    faux_tinseth = 0
+    if time > 30
+      faux_tinseth = rager_ibu * 0.78
+    else
+      faux_tinseth = rager_ibu * 1.16
+    end
+    return faux_tinseth
   end
 
   def calc_hop_util(minutes)

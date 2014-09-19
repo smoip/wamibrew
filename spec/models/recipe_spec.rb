@@ -330,13 +330,30 @@ describe "Recipe" do
       it "should calculate ibus" do
         @recipe.hops = hops
         @recipe.og = 1.040
-        expect(@recipe.calc_ibu).to be_within(2).of(55)
-        expect(@recipe.ibu).to be_within(2).of(55)
+        # rager numbers:
+        # expect(@recipe.calc_ibu).to be_within(2).of(55)
+        # expect(@recipe.ibu).to be_within(2).of(55)
+        # semi-tinseth numbers:
+        expect(@recipe.calc_ibu).to be_within(2).of(45)
+        expect(@recipe.ibu).to be_within(2).of(45)
       end
 
       it "should calculate individual hop addition ibus" do
         @recipe.og = 1.040
-        expect(@recipe.calc_indiv_ibu(hops[:bittering].to_a[0])).to be_within(0.01).of(50.59)
+        # rager numbers:
+        # expect(@recipe.calc_indiv_ibu(hops[:bittering].to_a[0])).to be_within(0.01).of(50.59)
+        # semi-tinseth numbers:
+        expect(@recipe.calc_indiv_ibu(hops[:bittering].to_a[0])).to be_within(0.01).of(39.46)
+      end
+
+      describe "Q&D rager to tinseth correction" do
+        it "should use bittering percentage for times > 30 min" do
+          expect(@recipe.rager_to_tinseth_q_and_d(60, 75)).to be_within(0.1).of(58.5)
+        end
+
+        it "should use aroma percentage for times <= 30 min" do
+          expect(@recipe.rager_to_tinseth_q_and_d(30, 75)).to be_within(0.1).of(87)
+        end
       end
 
       it "should calculate hop utilization" do
