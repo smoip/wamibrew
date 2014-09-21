@@ -135,4 +135,17 @@ def make_styles
                 ibu_lower: 50,
                 srm_upper: 40,
                 srm_lower: 30)
+  Style.create!(name: "Red Ale",
+                yeast_family: "ale",
+                required_malts: nil,
+                required_hops: nil,
+                common_malts: ["maris otter"],
+                common_hops: ["east kent goldings"],
+                aroma_required?: false,
+                abv_upper: 6.0,
+                abv_lower: 4.0,
+                ibu_upper: 28,
+                ibu_lower: 17,
+                srm_upper: 18,
+                srm_lower: 9)
 end
