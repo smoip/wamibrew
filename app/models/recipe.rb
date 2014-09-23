@@ -70,6 +70,17 @@ class Recipe < ActiveRecord::Base
     return yeast
   end
 
+  def associate_yeast
+    base_malt_name = pull_malt_name(@malts[:base].to_a[0])
+    malt_associations = { "2-row" => "ale", "pilsen" => "lager", "white wheat" => "wheat", "maris otter" => "ale" }
+    if malt_associations[base_malt_name] != nil
+      yeast = Yeast.find_by(family: "#{malt_associations[base_malt_name]}")
+      return yeast
+    else
+      choose_yeast
+    end
+  end
+
   def assign_malts
     choose_malt(true)
     num_specialty_malts.times { choose_malt(false) }
@@ -131,7 +142,11 @@ class Recipe < ActiveRecord::Base
   end
 
   def assign_yeast
-    @yeast = choose_yeast
+    if rand(3) == 0
+      @yeast = associate_yeast
+    else
+      @yeast = choose_yeast
+    end
   end
 
   def num_aroma_hops

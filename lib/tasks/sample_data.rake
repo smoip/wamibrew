@@ -158,7 +158,7 @@ def make_styles
                 ibu_lower: 17,
                 srm_upper: 18,
                 srm_lower: 9)
-    Style.create!(name: "Weizen",
+  Style.create!(name: "Weizen",
                 yeast_family: "wheat",
                 required_malts: ["white wheat"],
                 required_hops: nil,
@@ -171,7 +171,7 @@ def make_styles
                 ibu_lower: 8,
                 srm_upper: 8,
                 srm_lower: 2)
-      Style.create!(name: "Imperial IPA",
+  Style.create!(name: "Imperial IPA",
                 yeast_family: "ale",
                 required_malts: nil,
                 required_hops: nil,

@@ -270,6 +270,16 @@ describe "Recipe" do
         it "should return a yeast" do
           expect(@recipe.yeast).to be_present
         end
+
+        describe "malt-yeast associations" do
+          before do
+            @recipe.malts[:base] = { Malt.find_by_name("pilsen") => 10 }
+          end
+
+          it "should pick an appropriate yeast for base malt" do
+            expect(@recipe.associate_yeast.family).to eq("lager")
+          end
+        end
       end
     end
 
