@@ -340,7 +340,7 @@ private
 
   def malt_amount(malt)
     if malt.base_malt?
-      rand(15) + 1.0
+      rand(10) + 5.0
     else
       (rand(8) + 1) / 4.0
     end

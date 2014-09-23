@@ -24,12 +24,12 @@ describe "Recipe" do
   describe "ingredient methods" do
 
     describe "name" do
-      let(:style) { Style.find_by_name( "IPA" ) }
+      let(:style) { Style.find_by_name( "American IPA" ) }
       before { @recipe.style = style }
 
       it "should generate a name" do
-        allow(@recipe.style).to receive(:name).and_return( "IPA" )
-        expect(@recipe.name).to eq("IPA")
+        allow(@recipe.style).to receive(:name).and_return( "American IPA" )
+        expect(@recipe.name).to eq("American IPA")
       end
     end
 
@@ -43,18 +43,24 @@ describe "Recipe" do
           expect(malt).not_to be_nil
           expect(malt.to_a[0][0]).to be_kind_of(Malt)
         end
-        it "should choose quantities" do
-          expect(malt.to_a[0][1]).to be_between(0.5, 15).inclusive
+        it "should choose base malt quantities" do
+          expect(malt.to_a[0][1]).to be_between(5, 15).inclusive
         end
       end
 
       describe "specialty malts" do
         describe "choose_specialty_malts" do
-          it "should choose one specialty grain" do
+          before do
             allow(@recipe).to receive(:num_specialty_malts).and_return(1)
             @recipe.assign_malts
+          end
+          it "should choose one specialty grain" do
             expect(@recipe.malts[:specialty].to_a[0][0]).to be_kind_of(Malt)
             expect(@recipe.malts[:specialty].to_a.length).to eq(1)
+          end
+
+          it "should choose specialty malt quantities" do
+            expect(@recipe.malts[:specialty].to_a[0][1]).to be_between(0.25, 2).inclusive
           end
         end
 
@@ -413,8 +419,8 @@ describe "Recipe" do
   end
 
   describe "style chooser" do
-    let(:style) { Style.find_by_name( "IPA" ) }
-    let(:style_list) { [ style, Style.find_by_name( "Stout" ) ] }
+    let(:style) { Style.find_by_name( "American IPA" ) }
+    let(:style_list) { [ style, Style.find_by_name( "American Stout" ) ] }
     let(:hop) { FactoryGirl.create(:hop) }
     before do
       @recipe.abv = 6
@@ -434,7 +440,7 @@ describe "Recipe" do
     describe "select_by_yeast" do
       it "should return all styles whose yeast_family matches the supplied value" do
         expect(@recipe.select_by_yeast).to include( style )
-        expect(@recipe.select_by_yeast).to include( Style.find_by_name("Stout") )
+        expect(@recipe.select_by_yeast).to include( Style.find_by_name("American Stout") )
       end
     end
 
@@ -452,14 +458,14 @@ describe "Recipe" do
         before { @recipe.hops = { :bittering => { hop => [2, 60] }, :aroma => nil } }
 
         it "should return the input array unchanged" do
-          expect(@recipe.select_by_aroma( style_list )).to include( Style.find_by_name("Stout") )
+          expect(@recipe.select_by_aroma( style_list )).to include( Style.find_by_name("American Stout") )
         end
       end
     end
 
     describe "select_by_malt" do
       let(:pilsner) { Style.find_by_name("Pilsner") }
-      let(:style_list) { [ style, Style.find_by_name( "Stout" ), pilsner ] }
+      let(:style_list) { [ style, Style.find_by_name( "American Stout" ), pilsner ] }
 
       describe "recipe includes a malt required by a style" do
         before { @recipe.malts = { :base => { Malt.find_by_name( "pilsen" ) => 10 }, :specialty => {} } }
@@ -510,7 +516,7 @@ describe "Recipe" do
         # test once there are multiple styles
       end
       it "should return ONLY styles whose range covers the supplied srm" do
-        expect(@recipe.select_by_srm( style_list )).not_to include( Style.find_by_name("Stout") )
+        expect(@recipe.select_by_srm( style_list )).not_to include( Style.find_by_name("American Stout") )
       end
     end
 
@@ -519,7 +525,7 @@ describe "Recipe" do
 
       it "should return an array of only styles which match yeast, aroma, and malt stipulations, and abv, ibu, and srm ranges" do
         expect(@recipe.filter_possible_styles).to include( style )
-        expect(@recipe.filter_possible_styles).not_to include( Style.find_by_name("Stout") )
+        expect(@recipe.filter_possible_styles).not_to include( Style.find_by_name("American Stout") )
       end
     end
 
