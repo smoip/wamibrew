@@ -39,6 +39,11 @@ def make_malts
                malt_yield: 0.8,
                srm: 25.0,
                base_malt?: false)
+  Malt.create!(name: "white wheat",
+               potential: 1.040,
+               malt_yield: 0.86,
+               srm: 2.4,
+               base_malt?: true)
 end
 
 def make_hops
@@ -52,6 +57,8 @@ def make_hops
               alpha: 12.0)
   Hop.create!(name: "east kent goldings",
               alpha: 5.0)
+  Hop.create!(name: "saaz",
+              alpha: 3.75)
 end
 
 def make_yeasts
@@ -67,6 +74,9 @@ def make_yeasts
   Yeast.create!(name: "WY1099",
                 attenuation: 70,
                 family: "ale")
+  Yeast.create!(name: "WY3056",
+                attenuation: 75,
+                family: "wheat")
 end
 
 def make_styles
@@ -148,4 +158,18 @@ def make_styles
                 ibu_lower: 17,
                 srm_upper: 18,
                 srm_lower: 9)
+    Style.create!(name: "Weizen",
+                yeast_family: "wheat",
+                required_malts: ["white wheat"],
+                required_hops: nil,
+                common_malts: ["pilsen"],
+                common_hops: ["hallertau"],
+                aroma_required?: false,
+                abv_upper: 5.6,
+                abv_lower: 4.3,
+                ibu_upper: 15,
+                ibu_lower: 8,
+                srm_upper: 8,
+                srm_lower: 2)
+
 end
