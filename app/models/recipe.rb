@@ -263,19 +263,19 @@ class Recipe < ActiveRecord::Base
   end
 
   def display_hops
-    display_string = ""
+    display_array = []
     hops_to_array.each do |hop_ary|
-      display_string += "#{pull_hop_amt(hop_ary)} oz #{pull_hop_name(hop_ary)} @ #{pull_hop_time(hop_ary)} min, "
+      display_array << "#{pull_hop_amt(hop_ary)} oz #{pull_hop_name(hop_ary)} @ #{pull_hop_time(hop_ary)} min"
     end
-    return display_string
+    display_array.join(", ")
   end
 
   def display_malts
-    display_string = ""
+    display_array = []
     malts_to_array.each do |malt_ary|
-      display_string += "#{pull_malt_amt(malt_ary)} lb #{pull_malt_name(malt_ary)}, "
+      display_array << "#{pull_malt_amt(malt_ary)} lb #{pull_malt_name(malt_ary)}"
     end
-    return display_string
+    display_array.join(", ")
   end
 
   def select_by_yeast

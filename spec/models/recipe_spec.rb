@@ -265,7 +265,10 @@ describe "Recipe" do
       end
 
       describe "assign yeast" do
-        before { @recipe.assign_yeast }
+        before do
+          @recipe.assign_malts
+          @recipe.assign_yeast
+        end
 
         it "should return a yeast" do
           expect(@recipe.yeast).to be_present
@@ -412,7 +415,7 @@ describe "Recipe" do
       before { @recipe.hops = {:bittering => { hop => [1.5, 60] }, :aroma => [ { hop => [1.0, 10] }, { hop => [0.25, 5] } ] } }
 
       it "should return a display formatted list of hops" do
-        expect(@recipe.display_hops).to eq("1.5 oz cascade test @ 60 min, 1.0 oz cascade test @ 10 min, 0.25 oz cascade test @ 5 min, ")
+        expect(@recipe.display_hops).to eq("1.5 oz cascade test @ 60 min, 1.0 oz cascade test @ 10 min, 0.25 oz cascade test @ 5 min")
       end
     end
 
@@ -423,7 +426,7 @@ describe "Recipe" do
       before { @recipe.malts = { :base => { malt => 10 }, :specialty => { malt_1 => 1, malt_2 => 0.5 } } }
 
       it "should return a display formatted list of malts" do
-        expect(@recipe.display_malts).to eq("10 lb 2-row, 1 lb caramel 60, 0.5 lb chocolate, ")
+        expect(@recipe.display_malts).to eq("10 lb 2-row, 1 lb caramel 60, 0.5 lb chocolate")
       end
     end
   end
