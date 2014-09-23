@@ -123,7 +123,7 @@ def make_styles
                 yeast_family: "ale",
                 required_malts: nil,
                 required_hops: nil,
-                common_malts: nil,
+                common_malts: ["2-row"],
                 common_hops: ["centennial"],
                 aroma_required?: false,
                 abv_upper: 6.2,

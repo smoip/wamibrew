@@ -334,7 +334,6 @@ class Recipe < ActiveRecord::Base
     return subset
   end
 
-
   def filter_possible_styles
     style_list = select_by_aroma(select_by_malt(select_by_yeast))
     select_by_abv(style_list) & select_by_ibu(style_list) & select_by_srm(style_list)
@@ -348,6 +347,43 @@ class Recipe < ActiveRecord::Base
       # needs case handling for two possible style assignments
       @style = list[0]
     end
+  end
+
+  def filter_style_by_ingredients(style_list)
+    malt_tally = {}
+    hop_tally = {}
+    style_list.each do |style|
+      tally_common_malts(style)
+      tally_common_hops(style)
+    end
+    tally = malt_tally.merge(hop_tally) { |style, m_count, h_count| m_count + h_count }
+    tally = ( tally.sort_by { |style, count| -count } )
+    tally = tally.first
+    return tally[0]
+  end
+
+  def tally_common_malts(style)
+    tally = {}
+    unless style.common_malts == nil
+      style.common_malts.each do |malt|
+        if malts_to_array.flatten.include?(malt)
+          tally[style] += 1
+        end
+      end
+    end
+    return tally
+  end
+
+  def tally_common_hops(style)
+    tally = {}
+    unless style.common_hops == nil
+      style.common_hops.each do |hop|
+        if hops_to_array.flatten.include?(hop)
+          tally[style] += 1
+        end
+      end
+    end
+    return tally
   end
 
 

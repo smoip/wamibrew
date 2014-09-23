@@ -509,7 +509,7 @@ describe "Recipe" do
       end
     end
 
-    describe "selec_by_ibu" do
+    describe "select_by_ibu" do
       it "should return a style whose range covers the supplied ibu" do
         expect(@recipe.select_by_ibu( style_list )).to include( style )
       end
@@ -548,6 +548,41 @@ describe "Recipe" do
       it "should assign a style" do
         @recipe.assign_style
         expect(@recipe.style).to eq( style )
+      end
+
+      describe "choose between overlapping styles" do
+        before do
+          # should fit both IPA and Pale
+          @recipe.malts = { :base => { Malt.find_by_name("2-row") => 10 }, :specialty => { Malt.find_by_name("caramel 60") => 0.5 } }
+          @recipe.hops = { :bittering => { Hop.find_by_name("cascade") => [2, 60] }, :aroma => [ { Hop.find_by_name("cascade") => [1, 5] } ] }
+          @recipe.yeast = Yeast.find_by_name("WY1056")
+          @recipe.calc_abv
+          @recipe.calc_ibu
+          @recipe.calc_srm
+        end
+
+        let(:style2) { Style.find_by_name("American Pale") }
+
+        describe "tally_common_malts" do
+          it "should return a tally of 1 for matching styles" do
+            expect(@recipe.tally_common_malts( style  )).to eq( { style => 1 } )
+            expect(@recipe.tally_common_malts( style2 )).to eq( { style2 => 1 } )
+          end
+        end
+
+        describe "tally_common_hops" do
+          it "should return a tally of 1 for matching styles" do
+            expect(@recipe.tally_common_hops( style  )).to eq( { style => 1 } )
+            expect(@recipe.tally_common_hops( style2 )).no_to eq( { style2 => 1 } )
+          end
+        end
+
+        describe "filter_style_by_ingredients" do
+          let(:two_styles) { [ Style.find_by_name("American Pale"), Style.find_by_name("American IPA") ] }
+          it "should choose the style with the most matching 'common ingredients'" do
+            expect(@recipe.filter_style_by_ingredients( two_styles )).to eq( Style.find_by_name("American IPA") )
+          end
+        end
       end
     end
   end
