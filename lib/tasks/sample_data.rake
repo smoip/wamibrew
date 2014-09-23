@@ -171,5 +171,18 @@ def make_styles
                 ibu_lower: 8,
                 srm_upper: 8,
                 srm_lower: 2)
+      Style.create!(name: "Imperial IPA",
+                yeast_family: "ale",
+                required_malts: nil,
+                required_hops: nil,
+                common_malts: ["2-row"],
+                common_hops: ["cascade"],
+                aroma_required?: true,
+                abv_upper: 12.0,
+                abv_lower: 7.5,
+                ibu_upper: 130,
+                ibu_lower: 60,
+                srm_upper: 15,
+                srm_lower: 8)
 
 end
