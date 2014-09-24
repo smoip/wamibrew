@@ -562,6 +562,7 @@ describe "Recipe" do
         end
 
         let(:style2) { Style.find_by_name("American Pale") }
+        let(:two_styles) { [ style2, style ] }
 
         describe "tally_common_malts" do
           it "should return a tally of 1 for matching styles" do
@@ -573,12 +574,17 @@ describe "Recipe" do
         describe "tally_common_hops" do
           it "should return a tally of 1 for matching styles" do
             expect(@recipe.tally_common_hops( style  )).to eq( { style => 1 } )
-            expect(@recipe.tally_common_hops( style2 )).no_to eq( { style2 => 1 } )
+            expect(@recipe.tally_common_hops( style2 )).not_to eq( { style2 => 1 } )
+          end
+        end
+
+        describe "tally_common_ingredients" do
+          it "should return an array of two hashes with appropriate tally values" do
+            expect(@recipe.tally_common_ingredients( two_styles )).to eq( [ { style2 => 1, style => 1 }, { style2 => 0, style => 1 } ] )
           end
         end
 
         describe "filter_style_by_ingredients" do
-          let(:two_styles) { [ Style.find_by_name("American Pale"), Style.find_by_name("American IPA") ] }
           it "should choose the style with the most matching 'common ingredients'" do
             expect(@recipe.filter_style_by_ingredients( two_styles )).to eq( Style.find_by_name("American IPA") )
           end
