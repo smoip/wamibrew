@@ -340,13 +340,13 @@ class Recipe < ActiveRecord::Base
   end
 
   def assign_style
-    list = filter_possible_styles
-    if list.length == 1
-      @style = list[0]
-    else
-      # needs case handling for two possible style assignments
-      @style = list[0]
+    style_list = filter_possible_styles
+    if style_list.length == 1
+      @style = style_list[0]
+    elsif style_list.length > 1
+      @style = filter_style_by_ingredients(style_list)
     end
+    # needs case handling for no style match - approximate styles
   end
 
   def filter_style_by_ingredients(style_list)
