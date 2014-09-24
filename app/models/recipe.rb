@@ -20,7 +20,7 @@ class Recipe < ActiveRecord::Base
   end
 
   def generate_name
-    @name = @style.name unless @style == nil
+    @name = @style.name unless @style.nil?
   end
 
   def choose_malt(malt_type)
