@@ -15,6 +15,7 @@ class Recipe < ActiveRecord::Base
     self.calc_abv
     self.calc_srm
     self.calc_ibu
+    self.extreme_ibu_check
     self.assign_style
     self.generate_name
   end
@@ -60,6 +61,18 @@ class Recipe < ActiveRecord::Base
   def choose_hop(hop_type)
     hop = Hop.find_by(id: rand(Hop.count) + 1)
     { hop => [ hop_amount(hop), hop_time(hop_type) ] }
+  end
+
+  def extreme_ibu_check
+    if @ibu > 120
+      re_assign_hops
+    end
+  end
+
+  def re_assign_hops
+    self.hops = nil
+    self.assign_hops
+    self.calc_ibu
   end
 
   def choose_yeast
