@@ -44,6 +44,31 @@ def make_malts
                malt_yield: 0.86,
                srm: 2.4,
                base_malt?: true)
+  Malt.create!(name: "victory",
+               potential: 1.034,
+               malt_yield: 0.73,
+               srm: 28,
+               base_malt?: false)
+  Malt.create!(name: "brown malt",
+               potential: 1.032,
+               malt_yield: 0.70,
+               srm: 65,
+               base_malt?: false)
+  Malt.create!(name: "black malt",
+               potential: 1.025,
+               malt_yield: 0.55,
+               srm: 500,
+               base_malt?: false)
+  Malt.create!(name: "munich 10",
+               potential: 1.035,
+               malt_yield: 0.76,
+               srm: 10,
+               base_malt?: false)
+  Malt.create!(name: "carafa I",
+               potential: 1.032,
+               malt_yield: 0.70,
+               srm: 337,
+               base_malt?: false)
 end
 
 def make_hops
@@ -59,6 +84,8 @@ def make_hops
               alpha: 5.0)
   Hop.create!(name: "saaz",
               alpha: 3.75)
+  Hop.create!(name: "amarillo",
+              alpha: 9.0)
 end
 
 def make_yeasts
@@ -184,5 +211,95 @@ def make_styles
                 ibu_lower: 60,
                 srm_upper: 15,
                 srm_lower: 8)
-
+  Style.create!(name: "Session IPA",
+                yeast_family: "ale",
+                required_malts: nil,
+                required_hops: nil,
+                common_malts: ["2-row"],
+                common_hops: ["amarillo"],
+                aroma_required?: true,
+                abv_upper: 4.8,
+                abv_lower: 3.5,
+                ibu_upper: 50,
+                ibu_lower: 35,
+                srm_upper: 12,
+                srm_lower: 3)
+  Style.create!(name: "Brown Porter",
+                yeast_family: "ale",
+                required_malts: nil,
+                required_hops: nil,
+                common_malts: ["brown malt", "maris otter"],
+                common_hops: ["east kent goldings"],
+                aroma_required?: false,
+                abv_upper: 5.4,
+                abv_lower: 4,
+                ibu_upper: 35,
+                ibu_lower: 18,
+                srm_upper: 30,
+                srm_lower: 20)
+  Style.create!(name: "Robust Porter",
+                yeast_family: "ale",
+                required_malts: nil,
+                required_hops: nil,
+                common_malts: ["black malt"],
+                common_hops: nil,
+                aroma_required?: false,
+                abv_upper: 6.5,
+                abv_lower: 4.8,
+                ibu_upper: 50,
+                ibu_lower: 25,
+                srm_upper: 35,
+                srm_lower: 22)
+  Style.create!(name: "Schwarzbier",
+                yeast_family: "lager",
+                required_malts: ["pilsen"],
+                required_hops: nil,
+                common_malts: ["munich 10", "carafa I"],
+                common_hops: nil,
+                aroma_required?: false,
+                abv_upper: 5.4,
+                abv_lower: 4.4,
+                ibu_upper: 32,
+                ibu_lower: 22,
+                srm_upper: 30,
+                srm_lower: 17)
+  Style.create!(name: "Dunkelweizen",
+                yeast_family: "wheat",
+                required_malts: ["white wheat"],
+                required_hops: nil,
+                common_malts: ["munich 10"],
+                common_hops: ["hallertau"],
+                aroma_required?: false,
+                abv_upper: 5.6,
+                abv_lower: 4.3,
+                ibu_upper: 18,
+                ibu_lower: 10,
+                srm_upper: 23,
+                srm_lower: 10)
+  Style.create!(name: "American Wheat",
+                yeast_family: "ale",
+                required_malts: ["white wheat"],
+                required_hops: nil,
+                common_malts: ["2-row"],
+                common_hops: ["amarillo", "cascade"],
+                aroma_required?: false,
+                abv_upper: 5.5,
+                abv_lower: 4.0,
+                ibu_upper: 30,
+                ibu_lower: 15,
+                srm_upper: 6,
+                srm_lower: 3)
+  Style.create!(name: "Wheat Wine",
+                yeast_family: "ale",
+                required_malts: ["white wheat"],
+                required_hops: nil,
+                common_malts: ["caramel 60"],
+                common_hops: nil,
+                aroma_required?: false,
+                abv_upper: 9.6,
+                abv_lower: 6.7,
+                ibu_upper: 85,
+                ibu_lower: 50,
+                srm_upper: 15,
+                srm_lower: 8)
 end
