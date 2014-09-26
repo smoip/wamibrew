@@ -1,18 +1,28 @@
 <% provide(:title, 'About') %>
-<div class="center hero-unit">
+<div class="left hero-unit">
   <h1>About</h1>
   <p>What Am I Brewing? (Wamibrew) is a smart beer recipe generator for homebrewers.</p>
+  <p>By <a href="https://github.com/smoip">David Roberts</a></p>
   <p>How it works...</p>
   <p>
-    When you ask Wamibrew what to brew, it randomly generates a brew-able recipe and then attempts to heuristically
-     determine what style of beer most closely matches the generated recipe based on calculated attributes.  Every recipe is guaranteed to make beer!...
-     of some kind.
+    <ul>
+      <li>
+        When you ask Wamibrew what to brew, it randomly generates a brew-able recipe and then attempts to heuristically
+        determine what style of beer most closely matches the generated recipe based on calculated attributes.  Every recipe is guaranteed to make beer!...
+        of some kind.
+      </li>
+      <li>
+        Wamibrew uses the spontaneity of random numbers to suggest fun and interesting takes on beer styles - it is not meant to generate the "perfect" porter,
+        stout, or IPA, and your results may differ.
+      </li>
+   </ul>
   </p>
-  <p>By <a href="https://github.com/smoip">David Roberts</a></p>
-</div>
-<div>
   <p>Calculations:
     <ul>
+      <li>
+        Equipment: Wamibrew generates five gallon all-grain recipes and assumes a standard mash efficiency of 70%.
+        Information regarding conversions for malt extract or batch size can be found through links in the <%= link_to "help", help_path %> section.
+      </li>
       <li>
         Bitterness: Wamibrew uses a modified version of Jackie Rager's method to calculate IBUs, adjusted to
         more closely match Glenn Tinseth's more recent method.  For a full discussion and source formulae see
@@ -28,12 +38,21 @@
         Yeast: Wamibrew uses a standard Alcohol by Volume calculation based on an averaged yeast attenuation value by strain.
         Values from <a href="https://www.wyeastlab.com/">Wyeast</a> and <a href="http://www.whitelabs.com/">White Labs</a> respectively.
       </li>
+      <li>
+        Style: Styles are based on<a href="http://www.bjcp.org/">BJCP</a> guidelines with additions made for newer/hybrid styles (Session IPA, Wheat Wine, etc.)
+      </li>
     </ul>
   </p>
   <p>Planned Features:
     <ul>
       <li>
         Generate recipes by style, season, and other attributes
+      </li>
+      <li>
+        Approximate recipe assignments (e.g. White IPA-ish)
+      </li>
+      <li>
+        Fun names
       </li>
       <li>
         Ability to retain or 'freeze' ingredients from one recipe to the next
