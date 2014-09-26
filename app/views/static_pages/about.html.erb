@@ -5,7 +5,7 @@
   <p>How it works...</p>
   <p>
     When you ask Wamibrew what to brew, it randomly generates a brew-able recipe and then attempts to heuristically
-     determine what style of beer most closely matches the generated recipe.  Every recipe is guaranteed to make beer!...
+     determine what style of beer most closely matches the generated recipe based on calculated attributes.  Every recipe is guaranteed to make beer!...
      of some kind.
   </p>
   <p>By <a href="https://github.com/smoip">David Roberts</a></p>
@@ -16,10 +16,10 @@
       <li>
         Bitterness: Wamibrew uses a modified version of Jackie Rager's method to calculate IBUs, adjusted to
         more closely match Glenn Tinseth's more recent method.  For a full discussion and source formulae see
-        <a href="http://www.realbeer.com/hops/FAQ.html#units">Norm Pyle's excellent article</a> on the subject.
+        Norm Pyle's <a href="http://www.realbeer.com/hops/FAQ.html#units">excellent article</a> on the subject.
       </li>
       <li>
-        Grains: Malt potential, yield, and SRM values are based on <a href="http://www.briess.com/">Briess Malting</a> grains where applicable.
+        Grains: Malt potential, yield, and SRM values are based manufacturer data when possible, e.g. <a href="http://www.briess.com/">Briess Malting</a>.
       </li>
       <li>
         Yeast: Wamibrew uses a standard Alcohol by Volume calculation based on an averaged yeast attenuation value by strain.
