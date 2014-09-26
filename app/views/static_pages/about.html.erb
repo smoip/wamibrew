@@ -2,15 +2,38 @@
 <div class="center hero-unit">
   <h1>About</h1>
   <p>What Am I Brewing? (Wamibrew) is a smart beer recipe generator for homebrewers.</p>
+  <p>How it works...</p>
+  <p>
+    When you ask Wamibrew what to brew, it randomly generates a brew-able recipe and then attempts to heuristically
+     determine what style of beer most closely matches the generated recipe.  Every recipe is guaranteed to make beer!...
+     of some kind.
+  </p>
   <p>By <a href="https://github.com/smoip">David Roberts</a></p>
 </div>
 <div>
   <p>Calculations:
     <ul>
       <li>
-        IBU: Wamibrew uses the Rager method for IBU calculation, and may yield higher values than
-        predicted by Garetz or Tinseth (default in many recipe design programs).  For a full discussion and source formulae see
+        Bitterness: Wamibrew uses a modified version of Jackie Rager's method to calculate IBUs, adjusted to
+        more closely match Glenn Tinseth's more recent method.  For a full discussion and source formulae see
         <a href="http://www.realbeer.com/hops/FAQ.html#units">Norm Pyle's excellent article</a> on the subject.
+      </li>
+      <li>
+        Grains: Malt potential, yield, and SRM values are based on <a href="http://www.briess.com/">Briess Malting</a> grains where applicable.
+      </li>
+      <li>
+        Yeast: Wamibrew uses a standard Alcohol by Volume calculation based on an averaged yeast attenuation value by strain.
+        Values from <a href="https://www.wyeastlab.com/">Wyeast</a> and <a href="http://www.whitelabs.com/">White Labs</a> respectively.
+      </li>
+    </ul>
+  </p>
+  <p>Planned Features:
+    <ul>
+      <li>
+        Generate recipes by style, season, and other attributes
+      </li>
+      <li>
+        Ability to retain or 'freeze' ingredients from one recipe to the next
       </li>
     </ul>
   </p>
