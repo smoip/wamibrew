@@ -69,6 +69,21 @@ def make_malts
                malt_yield: 0.70,
                srm: 337,
                base_malt?: false)
+  Malt.create!(name: "caramel 20",
+               potential: 1.034,
+               malt_yield: 0.73,
+               srm: 20,
+               base_malt?: false)
+  Malt.create!(name: "rye malt",
+               potential: 1.029,
+               malt_yield: 0.63,
+               srm: 4.7,
+               base_malt?: false)
+  Malt.create!(name: "vienna",
+               potential: 1.036,
+               malt_yield: 0.77,
+               srm: 3.5,
+               base_malt?: true)
 end
 
 def make_hops
@@ -86,6 +101,10 @@ def make_hops
               alpha: 3.75)
   Hop.create!(name: "amarillo",
               alpha: 9.0)
+  Hop.create!(name: "willamette",
+              alpha: 5.5)
+  Hop.create!(name: "tettnang",
+              alpha: 4.5)
 end
 
 def make_yeasts
@@ -104,6 +123,9 @@ def make_yeasts
   Yeast.create!(name: "WY3056",
                 attenuation: 75,
                 family: "wheat")
+  Yeast.create!(name: "WY2001",
+                attenuation: 74,
+                family: "lager")
 end
 
 def make_styles
@@ -190,7 +212,7 @@ def make_styles
                 required_malts: ["white wheat"],
                 required_hops: nil,
                 common_malts: ["pilsen"],
-                common_hops: ["hallertau"],
+                common_hops: ["hallertau", "saaz"],
                 aroma_required?: false,
                 abv_upper: 5.6,
                 abv_lower: 4.3,
@@ -302,4 +324,17 @@ def make_styles
                 ibu_lower: 50,
                 srm_upper: 15,
                 srm_lower: 8)
+  Style.create!(name: "Bock",
+                yeast_family: "lager",
+                required_malts: ["vienna"],
+                required_hops: nil,
+                common_malts: ["munich 10"],
+                common_hops: ["hallertau", "tettnang"],
+                aroma_required?: false,
+                abv_upper: 7.2,
+                abv_lower: 6.3,
+                ibu_upper: 27,
+                ibu_lower: 20,
+                srm_upper: 22,
+                srm_lower: 14)
 end
