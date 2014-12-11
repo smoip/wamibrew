@@ -25,11 +25,39 @@ describe "Recipe" do
 
     describe "name" do
       let(:style) { Style.find_by_name( "American IPA" ) }
-      before { @recipe.style = style }
+      before do
+        @recipe.style = style
+        two_row =
+        @recipe.malts[:base]= two_row
+      end
 
       it "should generate a name" do
-        allow(@recipe.style).to receive(:name).and_return( "American IPA" )
+        allow(@recipe).to receive(:pull_malt_name).and_return('2-row')
+        @recipe.generate_name
         expect(@recipe.name).to eq("American IPA")
+      end
+
+      describe "name additions" do
+        before do
+          allow(@recipe).to receive(:pull_malt_name).and_return('white wheat')
+          @recipe.generate_name
+        end
+
+        it "should add adjectives to the middle of two word names" do
+          expect(@recipe.name).to eq( "American Wheat IPA" )
+        end
+
+        it "should add adjectives to the beginning of one word names" do
+          @recipe.style = Style.find_by_name( 'Bock' )
+          @recipe.generate_name
+          expect(@recipe.name).to eq( 'Wheat Bock' )
+        end
+
+        it "should not add adjectives to styles which already include that adjunct" do
+          @recipe.style = Style.find_by_name( 'Weizen' )
+          @recipe.generate_name
+          expect(@recipe.name).to eq('Weizen')
+        end
       end
     end
 

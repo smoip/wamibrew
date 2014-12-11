@@ -4,7 +4,7 @@ class Recipe < ActiveRecord::Base
 
   def initialize
     @malts = { :base => {}, :specialty => {} }
-    @name = "a beer"
+    @name = "A Beer"
     super
   end
 
@@ -22,6 +22,31 @@ class Recipe < ActiveRecord::Base
 
   def generate_name
     @name = @style.name unless @style.nil?
+    add_ingredient_to_name
+  end
+
+  def add_ingredient_to_name
+    base_malt_name = pull_malt_name(@malts[:base].to_a[0])
+    required_malts = []
+
+    unless @style == nil
+      if @style.required_malts != nil
+        required_malts = @style.required_malts
+      end
+    end
+
+    unless required_malts.include?(base_malt_name)
+      add_adjective(@name, "Wheat") if base_malt_name == "white wheat"
+    end
+  end
+
+  def add_adjective(name, adjective)
+    if name.split(' ') == [ name ]
+      index = 0
+    else
+      index = 1
+    end
+    @name = name.split(' ').insert(index, adjective).join(' ')
   end
 
   def choose_malt(malt_type)
