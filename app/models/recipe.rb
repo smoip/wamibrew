@@ -22,7 +22,24 @@ class Recipe < ActiveRecord::Base
 
   def generate_name
     @name = @style.name unless @style.nil?
+    check_smash
     add_ingredient_to_name
+  end
+
+  def check_smash
+    if @style == nil
+      single_malt = false
+      single_hop = false
+      single_malt = true if @malts[:specialty] == {}
+      single_hop = true if hop_names_to_array.uniq[0] == hop_names_to_array[0]
+      generate_smash_name
+    end
+  end
+
+  def generate_smash_name
+    malt = pull_malt_name(malts_to_array[0]).capitalize
+    hop = pull_hop_name(hops_to_array[0]).capitalize
+    @name = "#{malt} #{hop} SMASH"
   end
 
   def add_ingredient_to_name
@@ -161,6 +178,23 @@ class Recipe < ActiveRecord::Base
       hop_ary = hop_ary.flatten(1)
     end
     hop_ary.unshift(@hops[:bittering].to_a[0])
+  end
+
+  def hop_names_to_array
+    hop_ary = []
+    unless @hops[:aroma].nil?
+      @hops[:aroma].each do |aroma_hash|
+        aroma_hash.each_key do |aroma|
+          hop_ary << aroma.name
+        end
+      end
+    end
+    bitter = []
+    @hops[:bittering].each_key do |bittering|
+      bitter << bittering.name
+    end
+    hop_ary.unshift(bitter)
+    hop_ary.flatten
   end
 
   def pull_hop_object(hop_ary)
