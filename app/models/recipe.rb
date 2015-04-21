@@ -32,14 +32,20 @@ class Recipe < ActiveRecord::Base
       single_hop = false
       single_malt = true if @malts[:specialty] == {}
       single_hop = true if hop_names_to_array.uniq[0] == hop_names_to_array[0]
-      generate_smash_name
+      if single_malt && single_hop
+        generate_smash_name
+      end
     end
   end
 
   def generate_smash_name
-    malt = pull_malt_name(malts_to_array[0]).capitalize
-    hop = pull_hop_name(hops_to_array[0]).capitalize
+    malt = capitalize_titles(pull_malt_name(malts_to_array[0]))
+    hop = capitalize_titles(pull_hop_name(hops_to_array[0]))
     @name = "#{malt} #{hop} SMASH"
+  end
+
+  def capitalize_titles(title)
+    (title.split(" ").collect { |word| word.capitalize }).join(" ")
   end
 
   def add_ingredient_to_name
