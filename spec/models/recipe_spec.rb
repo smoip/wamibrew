@@ -35,40 +35,61 @@ describe "Recipe" do
         expect(@recipe.name).to eq("American IPA")
       end
 
-      describe "positive smash_check" do
-        # oops - put positive and negative in one 'describe'
+      describe "smash_check" do
         let(:single_malt)  { { :base => { Malt.find_by_name('maris otter') => 9 }, :specialty => {} } }
         let(:single_hop) { { :bittering => {  Hop.find_by_name('cascade') => [ 1.5, 60 ] }, :aroma=> [] } }
-        before do
-          @recipe.malts = single_malt
-          @recipe.hops = single_hop
+        let(:multi_malt) { { :base => { Malt.find_by_name("2-row") => 10 }, :specialty => { Malt.find_by_name("caramel 60") => 0.5 } } }
+        let(:multi_hop) { @recipe.hops = { :bittering => { Hop.find_by_name("cascade") => [2, 60] }, :aroma => [ { Hop.find_by_name("centennial") => [1, 5] } ] } }
+
+        describe "positively identify SMASH beers" do
+          before do
+            @recipe.malts = single_malt
+            @recipe.hops = single_hop
+            @recipe.style = nil
+          end
+
+          describe "generate_smash_name" do
+            it "should generate smash names" do
+              expect(@recipe.generate_smash_name).to include('SMASH')
+              expect(@recipe.generate_smash_name).to eq('Maris Otter Cascade SMASH')
+            end
+          end
+
+          it "should identify SMASH beers" do
+            @recipe.generate_name
+            expect(@recipe.name).to eq('Maris Otter Cascade SMASH')
+          end
         end
 
-        it "should identify SMASH beers" do
-          @recipe.style = nil
-          @recipe.generate_name
-          expect(@recipe.name).to eq('Maris Otter Cascade SMASH')
+        describe "negatively identify SMASH beers" do
+
+          describe "with multiple malts, single hop" do
+            before do
+              @recipe.malts = multi_malt
+              @recipe.hops = single_hop
+              @recipe.style = nil
+            end
+
+            it "should not identify as a smash beer" do
+              @recipe.generate_name
+              expect(@recipe.name).not_to include("SMASH")
+            end
+          end
+
+          describe "with single malts, multiple hops" do
+            before do
+              @recipe.malts = single_malt
+              @recipe.hops = multi_hop
+              @recipe.style = nil
+            end
+
+            it "should not identify as a smash beer" do
+              @recipe.generate_name
+              expect(@recipe.name).not_to include("SMASH")
+            end
+          end
         end
 
-        it "should generate smash names" do
-          @recipe.generate_smash_name
-          expect(@recipe.name).to include('SMASH')
-          expect(@recipe.name).to eq('Maris Otter Cascade SMASH')
-        end
-      end
-
-      describe "negative smash_check" do
-        let(:multi_malt) { { :base => { Malt.find_by_name('maris otter') => 9 }, :specialty => { Malt.find_by_name('carafa I') => 1, Malt.find_by_name('munich 10') => 0.75, Malt.find_by_name('black malt') => 1.75 } } }
-        let(:single_hop) { { :bittering => {  Hop.find_by_name('amarillo') => [ 0.5, 60 ] }, :aroma=> [] } }
-
-        before do
-          @recipe.malts = multi_malt
-          @recipe.hops = single_hop
-        end
-
-        it "should not identify as a smash beer" do
-          expect(@recipe.name).not_to include("SMASH")
-        end
       end
 
       describe "capitalize_titles" do

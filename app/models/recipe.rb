@@ -31,7 +31,7 @@ class Recipe < ActiveRecord::Base
       single_malt = false
       single_hop = false
       single_malt = true if @malts[:specialty] == {}
-      single_hop = true if hop_names_to_array.uniq[0] == hop_names_to_array[0]
+      single_hop = true if hop_names_to_array.uniq == [ hop_names_to_array[0] ]
       if single_malt && single_hop
         generate_smash_name
       end
