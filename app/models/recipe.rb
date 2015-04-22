@@ -50,6 +50,7 @@ class Recipe < ActiveRecord::Base
 
   def add_ingredient_to_name
     base_malt_name = pull_malt_name(@malts[:base].to_a[0])
+    specialty_malt_names = malts_to_array.collect {|malt| pull_malt_name(malt)}
     required_malts = []
 
     unless @style == nil
@@ -58,8 +59,23 @@ class Recipe < ActiveRecord::Base
       end
     end
 
+    # This is a case-by-case method, needs each adjunct added manually
+    # A generalized method will require adding an "Adjunct?" column to Malt
+    # Then check base malts and specialty malts separately for malts adjunct? == true
+    # exclude adjuncts required by style
+    # Then pick the adjunct present in the largest quantity
+    # Do not add to names already including the adjunct in the name (SMASH)
+
     unless required_malts.include?(base_malt_name)
-      add_adjective(@name, "Wheat") if base_malt_name == "white wheat"
+      # another unless? required_malts & specialty_malt_names
+      # compare required malts (and common malts) to specialty malts
+      unless @name.include?("Wheat")
+        add_adjective(@name, "Wheat") if base_malt_name.include?("wheat")
+      end
+
+      unless @name.include?("Rye")
+        add_adjective(@name, "Rye") if specialty_malt_names.include?("rye")
+      end
     end
   end
 

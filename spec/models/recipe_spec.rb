@@ -123,6 +123,12 @@ describe "Recipe" do
           @recipe.generate_name
           expect(@recipe.name).to eq('Weizen')
         end
+
+        it "should not add adjectives to SMASH beers" do
+          # will need to test by creating a SMASH beer with wheat
+          # generate name
+          # expect name to be original SMASH name, without extra 'Wheat'
+        end
       end
     end
 
