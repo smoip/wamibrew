@@ -23,7 +23,9 @@ class Recipe < ActiveRecord::Base
   def generate_name
     @name = @style.name unless @style.nil?
     check_smash
+    add_yeast_family
     add_ingredient_to_name
+    check_article
   end
 
   def check_smash
@@ -82,6 +84,26 @@ class Recipe < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def add_yeast_family
+    if @style == nil
+      if one_of_four == 1
+        if @name.include?("Beer")
+          @name = ((@name.split(' ') - ["Beer"]) + [ capitalize_titles(@yeast.family) ] ).join(' ')
+        end
+      end
+    end
+  end
+
+  def check_article
+    if @name == "A Ale"
+      @name = "An Ale"
+    end
+  end
+
+  def one_of_four
+    rand(4)
   end
 
   def add_adjective(name, adjective)

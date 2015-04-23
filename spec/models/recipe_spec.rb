@@ -106,6 +106,7 @@ describe "Recipe" do
         describe "by base malt" do
           before do
             allow(@recipe).to receive(:pull_malt_name).and_return('white wheat')
+            allow(@recipe).to receive(:one_of_four).and_return(2)
             @recipe.generate_name
           end
 
@@ -128,6 +129,7 @@ describe "Recipe" do
 
         describe "by specialty malt" do
           let(:with_rye) { { :base => { Malt.find_by_name("2-row") => 10 }, :specialty => { Malt.find_by_name("rye malt") => 1 } } }
+          before { allow(@recipe).to receive(:one_of_four).and_return(2) }
 
           it "should add an adjunct from the specialty malts" do
             @recipe.malts = with_rye
@@ -145,6 +147,19 @@ describe "Recipe" do
             @recipe.style = nil
             @recipe.generate_name
             expect(@recipe.name).not_to include("Wheat Wheat")
+          end
+        end
+
+        describe "by yeast type" do
+          before do
+            @recipe.style = nil
+            @recipe.yeast = Yeast.find_by_name("WY1056")
+            allow(@recipe).to receive(:one_of_four).and_return(1)
+          end
+
+          it "should replace 'Beer' with 'Ale'" do
+            @recipe.add_yeast_family
+            expect(@recipe.name).to include("Ale")
           end
         end
       end
