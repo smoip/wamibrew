@@ -51,6 +51,7 @@ class Recipe < ActiveRecord::Base
   def add_ingredient_to_name
     base_malt_name = pull_malt_name(@malts[:base].to_a[0])
     specialty_malt_names = malts_to_array.collect {|malt| pull_malt_name(malt)}
+    # specialty_malt_names -= base_malt_name
     required_malts = []
 
     unless @style == nil
@@ -71,10 +72,14 @@ class Recipe < ActiveRecord::Base
       # compare required malts (and common malts) to specialty malts
       unless @name.include?("Wheat")
         add_adjective(@name, "Wheat") if base_malt_name.include?("wheat")
+        return
       end
+    end
 
+    unless (required_malts & specialty_malt_names) != []
       unless @name.include?("Rye")
         add_adjective(@name, "Rye") if specialty_malt_names.include?("rye")
+        return
       end
     end
   end
@@ -98,6 +103,11 @@ class Recipe < ActiveRecord::Base
     end
     type_key = malt_type_to_key(malt_type)
     store_malt(type_key, malt)
+  end
+
+  def order_specialty_malts
+    specialty_ary = ( @malts[:specialty].sort_by { |malt, amt| amt } ).reverse
+    @malts[:specialty]= Hash[*specialty_ary.flatten]
   end
 
   def store_malt(type_key, malt)
@@ -161,6 +171,7 @@ class Recipe < ActiveRecord::Base
   def assign_malts
     choose_malt(true)
     num_specialty_malts.times { choose_malt(false) }
+    order_specialty_malts
   end
 
   def malts_to_array

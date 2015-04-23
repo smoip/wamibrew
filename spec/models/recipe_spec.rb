@@ -103,31 +103,49 @@ describe "Recipe" do
       end
 
       describe "name additions" do
-        before do
-          allow(@recipe).to receive(:pull_malt_name).and_return('white wheat')
-          @recipe.generate_name
+        describe "by base malt" do
+          before do
+            allow(@recipe).to receive(:pull_malt_name).and_return('white wheat')
+            @recipe.generate_name
+          end
+
+          it "should add adjectives to the middle of two word names" do
+            expect(@recipe.name).to eq( "American Wheat IPA" )
+          end
+
+          it "should add adjectives to the beginning of one word names" do
+            @recipe.style = Style.find_by_name( 'Bock' )
+            @recipe.generate_name
+            expect(@recipe.name).to eq( 'Wheat Bock' )
+          end
+
+          it "should not add adjectives to styles which already include that adjunct" do
+            @recipe.style = Style.find_by_name( 'Weizen' )
+            @recipe.generate_name
+            expect(@recipe.name).to eq('Weizen')
+          end
         end
 
-        it "should add adjectives to the middle of two word names" do
-          expect(@recipe.name).to eq( "American Wheat IPA" )
+        describe "by specialty malt" do
+          let(:with_rye) { { :base => { Malt.find_by_name("2-row") => 10 }, :specialty => { Malt.find_by_name("rye malt") => 1 } } }
+
+          it "should add an adjunct from the specialty malts" do
+            @recipe.malts = with_rye
+            @recipe.style = Style.find_by_name("American Pale")
+            @recipe.name = "American Pale"
+            @recipe.add_ingredient_to_name
+            expect(@recipe.name).to eq("American Rye Pale")
+          end
         end
 
-        it "should add adjectives to the beginning of one word names" do
-          @recipe.style = Style.find_by_name( 'Bock' )
-          @recipe.generate_name
-          expect(@recipe.name).to eq( 'Wheat Bock' )
-        end
-
-        it "should not add adjectives to styles which already include that adjunct" do
-          @recipe.style = Style.find_by_name( 'Weizen' )
-          @recipe.generate_name
-          expect(@recipe.name).to eq('Weizen')
-        end
-
-        it "should not add adjectives to SMASH beers" do
-          # will need to test by creating a SMASH beer with wheat
-          # generate name
-          # expect name to be original SMASH name, without extra 'Wheat'
+        describe "by SMASH determination" do
+          it "should not add repetitive adjectives to SMASH beers" do
+            @recipe.malts = { :base => { Malt.find_by_name('white wheat') => 9 }, :specialty => {} }
+            @recipe.hops = { :bittering => {  Hop.find_by_name('cascade') => [ 1.5, 60 ] }, :aroma=> [] }
+            @recipe.style = nil
+            @recipe.generate_name
+            expect(@recipe.name).not_to include("Wheat Wheat")
+          end
         end
       end
     end
@@ -163,6 +181,16 @@ describe "Recipe" do
           end
         end
 
+        describe "order_specialty_malts" do
+          let(:three_malts) { { :base => { Malt.find_by_name("2-row") => 10 }, :specialty => { Malt.find_by_name("caramel 60") => 0.5, Malt.find_by_name("rye malt") => 1, Malt.find_by_name("black malt") => 0.25 } } }
+
+          it "should order specialty malts by amount" do
+            @recipe.malts[:specialty]= three_malts
+            @recipe.order_specialty_malts
+            expect(@recipe.malts[:specialty]).to eq( { Malt.find_by_name("rye malt") => 1, Malt.find_by_name("caramel 60") => 0.5, Malt.find_by_name("black malt") => 0.25 } )
+            # curious - throws 'comparison of hash with hash failed' from recipe.rb 109 sort_by, but the code seems to function properly
+          end
+        end
       end
 
       describe "assign malts" do
