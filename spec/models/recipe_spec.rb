@@ -40,6 +40,7 @@ describe "Recipe" do
         let(:single_hop) { { :bittering => {  Hop.find_by_name('cascade') => [ 1.5, 60 ] }, :aroma=> [] } }
         let(:multi_malt) { { :base => { Malt.find_by_name("2-row") => 10 }, :specialty => { Malt.find_by_name("caramel 60") => 0.5 } } }
         let(:multi_hop) { @recipe.hops = { :bittering => { Hop.find_by_name("cascade") => [2, 60] }, :aroma => [ { Hop.find_by_name("centennial") => [1, 5] } ] } }
+        before { allow(@recipe).to receive(:yeast).and_return( Yeast.find_by_name( "WY1056" ) ) }
 
         describe "positively identify SMASH beers" do
           before do
@@ -62,7 +63,8 @@ describe "Recipe" do
         end
 
         describe "negatively identify SMASH beers" do
-
+          before { allow(@recipe).to receive(:yeast).and_return( Yeast.find_by_name( "WY1056" ) ) }
+          before { allow(@recipe).to receive(:one_of_four).and_return( 2 ) }
           describe "with multiple malts, single hop" do
             before do
               @recipe.malts = multi_malt
@@ -103,50 +105,52 @@ describe "Recipe" do
       end
 
       describe "name additions" do
-        describe "by base malt" do
-          before do
-            allow(@recipe).to receive(:pull_malt_name).and_return('white wheat')
-            allow(@recipe).to receive(:one_of_four).and_return(2)
-            @recipe.generate_name
+        describe "adjunct adjectives" do
+          describe "by base malt" do
+            before do
+              allow(@recipe).to receive(:pull_malt_name).and_return('white wheat')
+              allow(@recipe).to receive(:one_of_four).and_return(2)
+              @recipe.generate_name
+            end
+
+            it "should add adjectives to the middle of two word names" do
+              expect(@recipe.name).to eq( "American Wheat IPA" )
+            end
+
+            it "should add adjectives to the beginning of one word names" do
+              @recipe.style = Style.find_by_name( 'Bock' )
+              @recipe.generate_name
+              expect(@recipe.name).to eq( 'Wheat Bock' )
+            end
+
+            it "should not add adjectives to styles which already include that adjunct" do
+              @recipe.style = Style.find_by_name( 'Weizen' )
+              @recipe.generate_name
+              expect(@recipe.name).to eq('Weizen')
+            end
           end
 
-          it "should add adjectives to the middle of two word names" do
-            expect(@recipe.name).to eq( "American Wheat IPA" )
+          describe "by specialty malt" do
+            let(:with_rye) { { :base => { Malt.find_by_name("2-row") => 10 }, :specialty => { Malt.find_by_name("rye malt") => 1 } } }
+            before { allow(@recipe).to receive(:one_of_four).and_return(2) }
+
+            it "should add an adjunct from the specialty malts" do
+              @recipe.malts = with_rye
+              @recipe.style = Style.find_by_name("American Pale")
+              @recipe.name = "American Pale"
+              @recipe.add_ingredient_to_name
+              expect(@recipe.name).to eq("American Rye Pale")
+            end
           end
 
-          it "should add adjectives to the beginning of one word names" do
-            @recipe.style = Style.find_by_name( 'Bock' )
-            @recipe.generate_name
-            expect(@recipe.name).to eq( 'Wheat Bock' )
-          end
-
-          it "should not add adjectives to styles which already include that adjunct" do
-            @recipe.style = Style.find_by_name( 'Weizen' )
-            @recipe.generate_name
-            expect(@recipe.name).to eq('Weizen')
-          end
-        end
-
-        describe "by specialty malt" do
-          let(:with_rye) { { :base => { Malt.find_by_name("2-row") => 10 }, :specialty => { Malt.find_by_name("rye malt") => 1 } } }
-          before { allow(@recipe).to receive(:one_of_four).and_return(2) }
-
-          it "should add an adjunct from the specialty malts" do
-            @recipe.malts = with_rye
-            @recipe.style = Style.find_by_name("American Pale")
-            @recipe.name = "American Pale"
-            @recipe.add_ingredient_to_name
-            expect(@recipe.name).to eq("American Rye Pale")
-          end
-        end
-
-        describe "by SMASH determination" do
-          it "should not add repetitive adjectives to SMASH beers" do
-            @recipe.malts = { :base => { Malt.find_by_name('white wheat') => 9 }, :specialty => {} }
-            @recipe.hops = { :bittering => {  Hop.find_by_name('cascade') => [ 1.5, 60 ] }, :aroma=> [] }
-            @recipe.style = nil
-            @recipe.generate_name
-            expect(@recipe.name).not_to include("Wheat Wheat")
+          describe "by SMASH determination" do
+            it "should not add repetitive adjectives to SMASH beers" do
+              @recipe.malts = { :base => { Malt.find_by_name('white wheat') => 9 }, :specialty => {} }
+              @recipe.hops = { :bittering => {  Hop.find_by_name('cascade') => [ 1.5, 60 ] }, :aroma=> [] }
+              @recipe.style = nil
+              @recipe.generate_name
+              expect(@recipe.name).not_to include("Wheat Wheat")
+            end
           end
         end
 
@@ -161,6 +165,107 @@ describe "Recipe" do
             @recipe.add_yeast_family
             expect(@recipe.name).to include("Ale")
           end
+        end
+
+        describe "by color" do
+          let(:options) { [] }
+
+          describe "color_lookup" do
+            it "should return a string" do
+              @recipe.srm = 2.3
+              expect(@recipe.color_lookup).to be_kind_of(String)
+            end
+          end
+
+          describe "choose_color_adjective" do
+            it "should return a string" do
+              @recipe.srm = 15.0
+              expect(@recipe.choose_color_adjective(:gold)).to be_kind_of(String)
+            end
+
+            it "should return an appropriate color adjective" do
+              options << "Dark Brown"
+              options << "Black"
+              expect(options).to include(@recipe.choose_color_adjective(:black))
+              # expect(@recipe.choose_color_adjective(:black)).to eq( "Dark Brown" || "Black" )
+            end
+
+          end
+          describe "add_color_to_name" do
+            before do
+              @recipe.name = "A Beer"
+              @recipe.style = nil
+              allow(@recipe).to receive(:one_of_four).and_return(1)
+            end
+
+            it "should add an adjective" do
+              @recipe.srm = 5.2
+              @recipe.add_color_to_name
+              expect(@recipe.name).not_to eq( "A Beer" )
+            end
+
+            it "should add a < 3 adjective" do
+              @recipe.srm = 1.0
+              @recipe.add_color_to_name
+              [ "Straw", "Blonde", "Sandy" ].each { |adj| options << adj }
+              expect(options & @recipe.name.split(' ')).to be_truthy
+            end
+
+            it "should add a 3-7 adjective" do
+              @recipe.srm = 5.0
+              @recipe.add_color_to_name
+              [ "Gold", "Golden", "Blonde" ].each { |adj| options << adj }
+              expect(options & @recipe.name.split(' ')).to be_truthy
+            end
+
+            it "should add a 7-12 adjective" do
+              @recipe.srm = 10.0
+              @recipe.add_color_to_name
+              [ "Amber", "Copper" ].each { |adj| options << adj }
+              expect(options & @recipe.name.split(' ')).to be_truthy
+            end
+
+            it "should add a 12-14 adjective" do
+              @recipe.srm = 13.0
+              @recipe.add_color_to_name
+              [ "Amber", "Red" ].each { |adj| options << adj }
+              expect(options & @recipe.name.split(' ')).to be_truthy
+            end
+
+            it "should add a 14-20 adjective" do
+              @recipe.srm = 15.0
+              @recipe.add_color_to_name
+              [ "Chestnut", "Brown"].each { |adj| options << adj }
+              expect(options & @recipe.name.split(' ')).to be_truthy
+            end
+
+            it "should add a 20-25 adjective" do
+              @recipe.srm = 22.0
+              @recipe.add_color_to_name
+              [ "Dark Brown", "Brown"].each { |adj| options << adj }
+              expect(options & @recipe.name.split(' ')).to be_truthy
+            end
+
+            it "should add a 25-35 adjective" do
+              @recipe.srm = 30.0
+              @recipe.add_color_to_name
+              [ "Black", "Dark Brown"].each { |adj| options << adj }
+              expect(options & @recipe.name.split(' ')).to be_truthy
+            end
+
+            it "should add a 35+ adjective" do
+              @recipe.srm = 42.0
+              @recipe.add_color_to_name
+              [ "Black", "Jet Black"].each { |adj| options << adj }
+              expect(options & @recipe.name.split(' ')).to be_truthy
+            end
+          end
+        end
+
+        describe "by strength" do
+        end
+
+        describe "by hoppiness" do
         end
       end
     end

@@ -25,6 +25,7 @@ class Recipe < ActiveRecord::Base
     check_smash
     add_yeast_family
     add_ingredient_to_name
+    add_color_to_name
     check_article
   end
 
@@ -94,6 +95,45 @@ class Recipe < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def add_color_to_name
+    if @style == nil
+      if one_of_four == 1
+        unless check_smash_name
+          add_adjective(@name, color_lookup)
+        end
+      end
+    end
+  end
+
+  def check_smash_name
+    if @name.include?("SMASH")
+      true
+    else
+      false
+    end
+  end
+
+  def color_lookup
+    color = @srm.round(0).to_i
+    color_adj = :none
+    case color
+    when 0..3 then color_adj = :yellow
+    when 4..7 then color_adj = :gold
+    when 8..11 then color_adj = :amber
+    when 12..14 then color_adj = :red
+    when 15..20 then color_adj = :brown
+    when 21..25 then color_adj = :dark_brown
+    when 26..35 then color_adj = :black
+    else color_adj = :dark_black
+    end
+    choose_color_adjective(color_adj)
+  end
+
+  def choose_color_adjective(color)
+    color_hash = { :yellow => [ "straw", "blonde", "sandy" ], :gold => [ "gold", "golden", "blonde" ], :amber => [ "amber", "copper" ], :red => [ "red", "amber" ], :brown => [ "brown", "chestnut" ], :dark_brown => [ "dark brown", "brown" ], :black => [ "black", "dark brown" ], :dark_black => [ "black", "jet black" ]  }
+    capitalize_titles(color_hash[color].shuffle.first)
   end
 
   def check_article
