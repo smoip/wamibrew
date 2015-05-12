@@ -26,6 +26,7 @@ class Recipe < ActiveRecord::Base
     add_yeast_family
     add_ingredient_to_name
     add_color_to_name
+    add_strength_to_name
     check_article
   end
 
@@ -132,9 +133,39 @@ class Recipe < ActiveRecord::Base
   end
 
   def choose_color_adjective(color)
-    color_hash = { :yellow => [ "straw", "blonde", "sandy" ], :gold => [ "gold", "golden", "blonde" ], :amber => [ "amber", "copper" ], :red => [ "red", "amber" ], :brown => [ "brown", "chestnut" ], :dark_brown => [ "dark brown", "brown" ], :black => [ "black", "dark brown" ], :dark_black => [ "black", "jet black" ]  }
+    color_hash = { :yellow => [ "straw", "blonde", "light gold" ], :gold => [ "gold", "golden", "blonde" ], :amber => [ "amber", "copper" ], :red => [ "red", "amber" ], :brown => [ "brown", "chestnut" ], :dark_brown => [ "dark brown", "brown" ], :black => [ "black", "dark brown" ], :dark_black => [ "black", "jet black" ]  }
     capitalize_titles(color_hash[color].shuffle.first)
   end
+
+  def add_strength_to_name
+    if @style == nil
+      if one_of_four == 1
+        unless check_smash_name
+          add_adjective(@name, strength_lookup)
+        end
+      end
+    end
+  end
+
+  def strength_lookup
+    strength = @abv.round(0).to_i
+    strength_adj = :none
+    case strength
+    when 0..2 then strength_adj = :weak
+    when 3..4 then strength_adj = :session
+    when 5..7 then strength_adj = :average
+    when 8..9 then strength_adj = :strong
+    else strength_adj = :very_strong
+    end
+    choose_strength_adjective(strength_adj)
+  end
+
+  def choose_strength_adjective(strength)
+    strength_hash = { :weak => [ "mild", "low gravity" ], :session => [ "sessionable", "quaffable" ], :average => [], :strong => [ "strong" ], :very_strong => [ "high gravity", "very strong" ]  }
+    capitalize_titles(strength_hash[strength].shuffle.first)
+  end
+
+
 
   def check_article
     if @name == "A Ale"

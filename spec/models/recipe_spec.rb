@@ -207,62 +207,104 @@ describe "Recipe" do
             it "should add a < 3 adjective" do
               @recipe.srm = 1.0
               @recipe.add_color_to_name
-              [ "Straw", "Blonde", "Sandy" ].each { |adj| options << adj }
-              expect(options & @recipe.name.split(' ')).to be_truthy
+              [ "Light Gold", "Blonde", "Sandy" ].each { |adj| options << adj }
+              expect((options & @recipe.name.split(' '))[0]).to be_truthy
             end
 
             it "should add a 3-7 adjective" do
               @recipe.srm = 5.0
               @recipe.add_color_to_name
               [ "Gold", "Golden", "Blonde" ].each { |adj| options << adj }
-              expect(options & @recipe.name.split(' ')).to be_truthy
+              expect((options & @recipe.name.split(' '))[0]).to be_truthy
             end
 
             it "should add a 7-12 adjective" do
               @recipe.srm = 10.0
               @recipe.add_color_to_name
               [ "Amber", "Copper" ].each { |adj| options << adj }
-              expect(options & @recipe.name.split(' ')).to be_truthy
+              expect((options & @recipe.name.split(' '))[0]).to be_truthy
             end
 
             it "should add a 12-14 adjective" do
               @recipe.srm = 13.0
               @recipe.add_color_to_name
               [ "Amber", "Red" ].each { |adj| options << adj }
-              expect(options & @recipe.name.split(' ')).to be_truthy
+              expect((options & @recipe.name.split(' '))[0]).to be_truthy
             end
 
             it "should add a 14-20 adjective" do
               @recipe.srm = 15.0
               @recipe.add_color_to_name
               [ "Chestnut", "Brown"].each { |adj| options << adj }
-              expect(options & @recipe.name.split(' ')).to be_truthy
+              expect((options & @recipe.name.split(' '))[0]).to be_truthy
             end
 
             it "should add a 20-25 adjective" do
               @recipe.srm = 22.0
               @recipe.add_color_to_name
               [ "Dark Brown", "Brown"].each { |adj| options << adj }
-              expect(options & @recipe.name.split(' ')).to be_truthy
+              expect((options & @recipe.name.split(' '))[0]).to be_truthy
             end
 
             it "should add a 25-35 adjective" do
               @recipe.srm = 30.0
               @recipe.add_color_to_name
               [ "Black", "Dark Brown"].each { |adj| options << adj }
-              expect(options & @recipe.name.split(' ')).to be_truthy
+              expect((options & @recipe.name.split(' '))[0]).to be_truthy
             end
 
             it "should add a 35+ adjective" do
               @recipe.srm = 42.0
               @recipe.add_color_to_name
               [ "Black", "Jet Black"].each { |adj| options << adj }
-              expect(options & @recipe.name.split(' ')).to be_truthy
+              expect((options & @recipe.name.split(' '))[0]).to be_truthy
             end
           end
         end
 
         describe "by strength" do
+          let(:options) { [] }
+
+          before do
+            @recipe.name = "A Beer"
+            @recipe.style = nil
+            allow(@recipe).to receive(:one_of_four).and_return(1)
+          end
+
+          it "should add a < 3% adjective" do
+            @recipe.abv = 2.0
+            @recipe.add_strength_to_name
+            [ "Low Gravity", "Mild"].each { |adj| options << adj }
+            expect((options & @recipe.name.split(' '))[0]).to be_truthy
+          end
+
+          it "should add a 3%-5% adjective" do
+            @recipe.abv = 4.0
+            @recipe.add_strength_to_name
+            [ "Sessionable", "Quaffable"].each { |adj| options << adj }
+            expect((options & @recipe.name.split(' '))[0]).to be_truthy
+          end
+
+          it "should NOT add a 5%-7% adjective" do
+            @recipe.abv = 6.0
+            @recipe.add_strength_to_name
+            expect(@recipe.name).to eq("A Beer")
+          end
+
+          it "should add a 7%-9% adjective" do
+            @recipe.abv = 8.0
+            @recipe.add_strength_to_name
+            [ "Strong"].each { |adj| options << adj }
+            expect((options & @recipe.name.split(' '))[0]).to be_truthy
+          end
+
+          it "should add a > 9% adjective" do
+            @recipe.abv = 4.0
+            @recipe.add_strength_to_name
+            [ "Very Strong", "High Gravity"].each { |adj| options << adj }
+            expect((options & @recipe.name.split(' '))[0]).to be_truthy
+          end
+
         end
 
         describe "by hoppiness" do
