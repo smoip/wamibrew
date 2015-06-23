@@ -468,6 +468,10 @@ class Recipe < ActiveRecord::Base
     display_array.join(", ")
   end
 
+  def order_hops
+    # needs to order display array by minutes
+  end
+
   def display_malts
     display_array = []
     malts_to_array.each do |malt_ary|

@@ -442,6 +442,7 @@ describe "Recipe" do
           expect(@recipe.hops[:aroma][0].to_a[0][0]).to be_kind_of(Hop)
         end
       end
+
     end
 
     describe "ingredient helper methods" do
@@ -710,12 +711,24 @@ describe "Recipe" do
 
     describe "hop display helper" do
       let(:hop) { FactoryGirl.create(:hop) }
-      before { @recipe.hops = {:bittering => { hop => [1.5, 60] }, :aroma => [ { hop => [1.0, 10] }, { hop => [0.25, 5] } ] } }
 
-      it "should return a display formatted list of hops" do
-        expect(@recipe.display_hops).to eq("1.5 oz cascade test @ 60 min, 1.0 oz cascade test @ 10 min, 0.25 oz cascade test @ 5 min")
+      describe "display_hops" do
+        before { @recipe.hops = {:bittering => { hop => [1.5, 60] }, :aroma => [ { hop => [1.0, 10] }, { hop => [0.25, 5] } ] } }
+
+        it "should return a display formatted list of hops" do
+          expect(@recipe.display_hops).to eq("1.5 oz cascade test @ 60 min, 1.0 oz cascade test @ 10 min, 0.25 oz cascade test @ 5 min")
+        end
+      end
+
+      describe "order_hops" do
+        before { @recipe.hops = {:bittering => { hop => [1.5, 60] }, :aroma => [ { hop => [1.0, 5] }, { hop => [0.25, 10] } ] } }
+
+        it "should return an addition-time ordered list of hops" do
+          expect(@recipe.display_hops).to eq("1.5 oz cascade test @ 60 min, 0.25 oz cascade test @ 10 min, 1.0 oz cascade test @ 5 min")
+        end
       end
     end
+
 
     describe "malt display helper" do
       let(:malt) { Malt.find(1) }
