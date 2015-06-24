@@ -161,10 +161,9 @@ class Recipe < ActiveRecord::Base
   end
 
   def choose_strength_adjective(strength)
-    strength_hash = { :weak => [ "mild", "low gravity" ], :session => [ "sessionable", "quaffable" ], :average => [], :strong => [ "strong" ], :very_strong => [ "high gravity", "very strong" ]  }
+    strength_hash = { :weak => [ "mild", "low gravity" ], :session => [ "sessionable", "quaffable" ], :average => [""], :strong => [ "strong" ], :very_strong => [ "high gravity", "very strong" ]  }
     capitalize_titles(strength_hash[strength].shuffle.first)
   end
-
 
 
   def check_article

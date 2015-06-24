@@ -120,14 +120,19 @@ footer {
 
 /* recipe contents */
 
-recipe_format {
-  font-size: 1.9em;
-  float: right;
+#recipe_name {
+  font-size: 2em;
+  font-weight: 100;
+}
+
+#recipe_format {
+  font-size: 1.1em;
+  margin-right: 15%;
+  margin-left: 15%;
   ul {
     list-style: square;
     li {
-      float: right;
-      margin-right: 10px;
+      margin-right: 5%;
     }
   }
 }

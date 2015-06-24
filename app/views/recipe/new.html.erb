@@ -1,10 +1,13 @@
 <% provide(:title, "Try Brewing...") %>
 <h1>Try Brewing...</h1>
 <div class="center hero-unit">
-  <p><%= @recipe.name %>
+  <p>
+    <div id="recipe_name">
+      <%= @recipe.name %>
+    </div>
   </p>
 </div>
-<div class="recipe_format">
+<div id="recipe_format">
   <%= render 'recipe_table' %>
 </div>
 <div class="center hero-unit">
