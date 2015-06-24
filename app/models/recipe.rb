@@ -472,6 +472,20 @@ class Recipe < ActiveRecord::Base
     # needs to order display array by minutes
   end
 
+  def flat_hops_array
+    self.hops_to_array.collect do |hop_addition|
+      [ hop_addition[1][1], [ hop_addition[0], hop_addition[1][0] ] ]
+    end
+  end
+
+  def time_ordered_hops_hash(flat_array)
+    ordered_hash = {}
+    flat_array.sort.reverse.each do |timed_hops|
+      ordered_hash[timed_hops[0]]= timed_hops[1]
+    end
+    return ordered_hash
+  end
+
   def display_malts
     display_array = []
     malts_to_array.each do |malt_ary|

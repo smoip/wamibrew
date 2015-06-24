@@ -723,6 +723,18 @@ describe "Recipe" do
       describe "order_hops" do
         before { @recipe.hops = {:bittering => { hop => [1.5, 60] }, :aroma => [ { hop => [1.0, 5] }, { hop => [0.25, 10] } ] } }
 
+        describe "flat_hops_array" do
+          it "should return a flattened array format [ time, [<hop>, amt] ]" do
+            expect(@recipe.flat_hops_array[0]).to eq( [ 60, [ hop, 1.5 ] ] )
+          end
+        end
+
+        describe "time_ordered_hops_hash" do
+          it "should return a hash of hops objects and amounts keyed by time" do
+            expect(@recipe.time_ordered_hops_hash( [ [ 10, [ hop, 0.25 ] ], [ 60, [ hop, 1.5 ] ] ] )).to eq ( { 60 => [ hop, 1.5 ], 10 => [ hop, 0.25 ] } )
+          end
+        end
+
         it "should return an addition-time ordered list of hops" do
           expect(@recipe.display_hops).to eq("1.5 oz cascade test @ 60 min, 0.25 oz cascade test @ 10 min, 1.0 oz cascade test @ 5 min")
         end
