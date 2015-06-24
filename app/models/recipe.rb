@@ -462,8 +462,8 @@ class Recipe < ActiveRecord::Base
 
   def display_hops
     display_array = []
-    hops_to_array.each do |hop_ary|
-      display_array << "#{pull_hop_amt(hop_ary)} oz #{pull_hop_name(hop_ary)} @ #{pull_hop_time(hop_ary)} min"
+    time_ordered_hops_hash(flat_hops_array).each do |time, ary|
+      display_array << "#{ary[1]} oz #{ary[0].name} @ #{time} min"
     end
     display_array.join(", ")
   end
