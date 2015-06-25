@@ -68,7 +68,8 @@ p {
 
 #logo {
   float: left;
-  margin-right: 10px;
+  left: 0;
+  margin-left: 10px;
   font-size: 1.9em;
   color: #fff;
   text-transform: lowercase;
@@ -76,8 +77,9 @@ p {
   padding-top: 9px;
   font-weight: bold;
   line-height: 1;
+  transition: background-color .125s linear 0;
   &:hover {
-    color: yellow;
+    color: #77ff38;
     text-decoration: none;
   }
 }
@@ -120,7 +122,7 @@ footer {
   clear: both;
   float: left;
   width: 100%;
-  margin-top: 45px;
+  margin-top: 10px;
   @include box_sizing;
 }
 
@@ -144,4 +146,8 @@ footer {
   }
 }
 
-/* re-submit button box */
+/* submit button box */
+
+#initial-button-box {
+  margin-top: 5%;
+}
