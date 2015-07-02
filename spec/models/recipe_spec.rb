@@ -443,6 +443,51 @@ describe "Recipe" do
         end
       end
 
+      describe "ibu checks" do
+        before do
+          @recipe.hops = { :bittering => { hop => [2, 90] }, :aroma => [ { } ] }
+          allow(@recipe).to receive(:calc_ibu).and_return("60")
+        end
+
+        describe "extreme_ibu_check" do
+          before do
+            @recipe.ibu = 122
+          end
+          it "should re-assign hops when ibus exceed 120" do
+            @recipe.extreme_ibu_check
+            expect(@recipe.hops).not_to eq( { :bittering => { hop => [2, 90] }, :aroma => [ { } ] } )
+          end
+        end
+
+        describe "ibu_gravity_check" do
+
+          describe "0 - 4.5" do
+            before do
+              @recipe.abv = 3.2
+              @recipe.ibu = 70
+            end
+
+            it "should re-assign hops when abv < 4.5 and ibu > 60" do
+              @recipe.ibu_gravity_check
+              expect(@recipe.hops).not_to eq( { :bittering => { hop => [2, 90] }, :aroma => [ { } ] } )
+            end
+          end
+
+          describe "4.5 - 6" do
+            before do
+              @recipe.abv = 5.0
+              @recipe.ibu = 100
+            end
+
+            it "should re-assign hops when 4.5 < abv < 6 and ibu > 90" do
+              @recipe.ibu_gravity_check
+              expect(@recipe.hops).not_to eq( { :bittering => { hop => [2, 90] }, :aroma => [ { } ] } )
+            end
+          end
+        end
+
+      end
+
     end
 
     describe "ingredient helper methods" do

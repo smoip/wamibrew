@@ -235,6 +235,23 @@ class Recipe < ActiveRecord::Base
     end
   end
 
+  def ibu_gravity_check
+    # strength = @abv.round(0).to_i
+    # strength_adj = :none
+    # case strength
+    # when 0..3 then strength_adj = :weak
+    # when 4..6 then strength_adj = :session
+    # else strength_adj = :strong
+    # end
+    if ( ( @abv <= 4.5 ) && ( @ibu > 60 ) )
+      re_assign_hops
+      return
+    end
+    if ( ( @abv <= 6 ) && ( @ibu > 90 ) )
+      re_assign_hops
+    end
+  end
+
   def re_assign_hops
     self.hops = nil
     self.assign_hops
@@ -465,10 +482,6 @@ class Recipe < ActiveRecord::Base
       display_array << "#{ary[1]} oz #{ary[0].name} @ #{time} min"
     end
     display_array.join(", ")
-  end
-
-  def order_hops
-    # needs to order display array by minutes
   end
 
   def flat_hops_array
