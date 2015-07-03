@@ -15,6 +15,7 @@ class Recipe < ActiveRecord::Base
     self.calc_abv
     self.calc_srm
     self.calc_ibu
+    self.ibu_gravity_check
     self.extreme_ibu_check
     self.assign_style
     self.generate_name
@@ -245,9 +246,7 @@ class Recipe < ActiveRecord::Base
     # end
     if ( ( @abv <= 4.5 ) && ( @ibu > 60 ) )
       re_assign_hops
-      return
-    end
-    if ( ( @abv <= 6 ) && ( @ibu > 90 ) )
+    elsif ( ( @abv <= 6 ) && ( @ibu > 90 ) )
       re_assign_hops
     end
   end
@@ -256,6 +255,8 @@ class Recipe < ActiveRecord::Base
     self.hops = nil
     self.assign_hops
     self.calc_ibu
+    self.ibu_gravity_check
+    self.extreme_ibu_check
   end
 
   def choose_yeast

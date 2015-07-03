@@ -452,6 +452,7 @@ describe "Recipe" do
         describe "extreme_ibu_check" do
           before do
             @recipe.ibu = 122
+            @recipe.abv = 6.0
           end
           it "should re-assign hops when ibus exceed 120" do
             @recipe.extreme_ibu_check
@@ -465,11 +466,13 @@ describe "Recipe" do
             before do
               @recipe.abv = 3.2
               @recipe.ibu = 70
+              # allow(@recipe).to receive(:og).and_return(1.050)
             end
 
             it "should re-assign hops when abv < 4.5 and ibu > 60" do
               @recipe.ibu_gravity_check
               expect(@recipe.hops).not_to eq( { :bittering => { hop => [2, 90] }, :aroma => [ { } ] } )
+              expect(@recipe.ibu).not_to eq(70)
             end
           end
 
@@ -477,11 +480,13 @@ describe "Recipe" do
             before do
               @recipe.abv = 5.0
               @recipe.ibu = 100
+              # allow(@recipe).to receive(:og).and_return(1.069)
             end
 
             it "should re-assign hops when 4.5 < abv < 6 and ibu > 90" do
               @recipe.ibu_gravity_check
               expect(@recipe.hops).not_to eq( { :bittering => { hop => [2, 90] }, :aroma => [ { } ] } )
+              expect(@recipe.hops).not_to eq(100)
             end
           end
         end
