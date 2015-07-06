@@ -18,6 +18,7 @@ describe "Recipe" do
   it { should respond_to(:hops) }
   it { should respond_to(:yeast) }
   it { should respond_to(:og) }
+  it { should respond_to(:stack_token)}
 
   it { should be_valid }
 
@@ -32,7 +33,7 @@ describe "Recipe" do
       it "should generate a name" do
         allow(@recipe).to receive(:pull_malt_name).and_return('2-row')
         @recipe.generate_name
-        expect(@recipe.name).to eq("American IPA")
+        expect(@recipe.name).to eq("An American IPA")
       end
 
       describe "smash_check" do
@@ -58,7 +59,7 @@ describe "Recipe" do
 
           it "should identify SMASH beers" do
             @recipe.generate_name
-            expect(@recipe.name).to eq('Maris Otter Cascade SMASH')
+            expect(@recipe.name).to eq('A Maris Otter Cascade SMASH')
           end
         end
 
@@ -114,19 +115,19 @@ describe "Recipe" do
             end
 
             it "should add adjectives to the middle of two word names" do
-              expect(@recipe.name).to eq( "American Wheat IPA" )
+              expect(@recipe.name).to eq( "An American Wheat IPA" )
             end
 
             it "should add adjectives to the beginning of one word names" do
               @recipe.style = Style.find_by_name( 'Bock' )
               @recipe.generate_name
-              expect(@recipe.name).to eq( 'Wheat Bock' )
+              expect(@recipe.name).to eq( 'A Wheat Bock' )
             end
 
             it "should not add adjectives to styles which already include that adjunct" do
               @recipe.style = Style.find_by_name( 'Weizen' )
               @recipe.generate_name
-              expect(@recipe.name).to eq('Weizen')
+              expect(@recipe.name).to eq('A Weizen')
             end
           end
 
@@ -451,6 +452,7 @@ describe "Recipe" do
 
         describe "extreme_ibu_check" do
           before do
+            @recipe.stack_token = 0
             @recipe.ibu = 122
             @recipe.abv = 6.0
           end
@@ -464,9 +466,10 @@ describe "Recipe" do
 
           describe "0 - 4.5" do
             before do
+              @recipe.stack_token = 0
               @recipe.abv = 3.2
               @recipe.ibu = 70
-              # allow(@recipe).to receive(:og).and_return(1.050)
+              allow(@recipe).to receive(:og).and_return(1.050)
             end
 
             it "should re-assign hops when abv < 4.5 and ibu > 60" do
@@ -480,7 +483,7 @@ describe "Recipe" do
             before do
               @recipe.abv = 5.0
               @recipe.ibu = 100
-              # allow(@recipe).to receive(:og).and_return(1.069)
+              allow(@recipe).to receive(:og).and_return(1.069)
             end
 
             it "should re-assign hops when 4.5 < abv < 6 and ibu > 90" do

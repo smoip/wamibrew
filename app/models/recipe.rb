@@ -1,10 +1,11 @@
 class Recipe < ActiveRecord::Base
 
-  attr_accessor :name, :style, :abv, :ibu, :srm, :malts, :hops, :yeast, :og
+  attr_accessor :name, :style, :abv, :ibu, :srm, :malts, :hops, :yeast, :og, :stack_token
 
   def initialize
     @malts = { :base => {}, :specialty => {} }
-    @name = "A Beer"
+    @name = "Beer"
+    @stack_token = 0
     super
   end
 
@@ -28,7 +29,7 @@ class Recipe < ActiveRecord::Base
     add_ingredient_to_name
     add_color_to_name
     add_strength_to_name
-    check_article
+    add_article
   end
 
   def check_smash
@@ -166,11 +167,8 @@ class Recipe < ActiveRecord::Base
     capitalize_titles(strength_hash[strength].shuffle.first)
   end
 
-
-  def check_article
-    if @name == "A Ale"
-      @name = "An Ale"
-    end
+  def add_article
+    @name = %w(a e i o u).include?(@name[0].downcase) ? "An #{@name}" : "A #{@name}"
   end
 
   def one_of_four
@@ -252,11 +250,14 @@ class Recipe < ActiveRecord::Base
   end
 
   def re_assign_hops
+    @stack_token += 1
     self.hops = nil
     self.assign_hops
     self.calc_ibu
-    self.ibu_gravity_check
-    self.extreme_ibu_check
+    unless @stack_token > 10
+      self.ibu_gravity_check
+      self.extreme_ibu_check
+    end
   end
 
   def choose_yeast
