@@ -99,6 +99,11 @@ def make_malts
                malt_yield: 0.75,
                srm: 1,
                base_malt?: false)
+    Malt.create!(name: "special roast",
+               potential: 1.033,
+               malt_yield: 0.72,
+               srm: 50,
+               base_malt?: false)
 end
 
 def make_hops
@@ -164,6 +169,15 @@ def make_yeasts
   Yeast.create!(name: "WY3711",
                 attenuation: 80,
                 family: "saison")
+  Yeast.create!(name: "WY3522",
+                attenuation: 74,
+                family: "belgian")
+  Yeast.create!(name: "WY3724",
+                attenuation: 78,
+                family: "saison")
+  Yeast.create!(name: "WY2565",
+                attenuation: 75,
+                family: "kolsch")
 end
 
 def make_styles
@@ -466,4 +480,17 @@ def make_styles
                 ibu_lower: 20,
                 srm_upper: 14,
                 srm_lower: 5)
+            Style.create!(name: "Kolsch",
+                yeast_family: "kolsch",
+                required_malts: nil,
+                required_hops: nil,
+                common_malts: ["pilsen", "white wheat",],
+                common_hops: ["hallertau", "tettnang", "spalt", "saaz"],
+                aroma_required?: false,
+                abv_upper: 5.2,
+                abv_lower: 4.4,
+                ibu_upper: 30,
+                ibu_lower: 20,
+                srm_upper: 5,
+                srm_lower: 3.5)
 end
