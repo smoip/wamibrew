@@ -176,12 +176,16 @@ class Recipe < ActiveRecord::Base
   end
 
   def add_adjective(name, adjective)
-    if name.split(' ') == [ name ]
-      index = 0
+    if @style == nil
+      @name = "#{adjective} #{name}"
     else
-      index = 1
+      if name.split(' ') == [ name ]
+        index = 0
+      else
+        index = 1
     end
     @name = name.split(' ').insert(index, adjective).join(' ')
+    end
   end
 
   def choose_malt(malt_type)

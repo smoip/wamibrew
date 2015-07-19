@@ -106,6 +106,26 @@ describe "Recipe" do
       end
 
       describe "name additions" do
+
+        describe "add_adjective" do
+          describe "with no style" do
+            before { allow(@recipe).to receive(:style).and_return( nil ) }
+
+            it "should prepend an adjective to the name" do
+              @recipe.add_adjective( 'Beer', 'Viscous' )
+              expect(@recipe.name).to eq( 'Viscous Beer' )
+            end
+          end
+          describe "with assigned style" do
+            before { allow(@recipe).to receive(:style).and_return( 'American IPA' ) }
+
+            it "should insert an adjective between words in the name" do
+              @recipe.add_adjective( 'American IPA', 'Viscous' )
+              expect(@recipe.name).to eq( 'American Viscous IPA' )
+            end
+          end
+        end
+
         describe "adjunct adjectives" do
           describe "by base malt" do
             before do
