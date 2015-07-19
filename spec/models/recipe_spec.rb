@@ -330,6 +330,32 @@ describe "Recipe" do
 
         describe "by hoppiness" do
         end
+
+        describe "add_article" do
+          describe "with name /'ale/'" do
+            before { @recipe.name = 'Ale' }
+            it "should add /'An/'" do
+              @recipe.add_article
+              expect(@recipe.name).to eq( 'An Ale' )
+            end
+          end
+
+          describe "with other vowel-start name" do
+            before { @recipe.name  = "Imperial Stout" }
+            it "should add /'An/'" do
+              @recipe.add_article
+              expect(@recipe.name).to eq( "An Imperial Stout" )
+            end
+          end
+
+          describe "with consonant-start" do
+            before { @recipe.name = "Session IPA" }
+            it "should add /'A/'" do
+              @recipe.add_article
+              expect(@recipe.name).to eq( "A Session IPA" )
+            end
+          end
+        end
       end
     end
 
