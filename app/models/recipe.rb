@@ -34,14 +34,18 @@ class Recipe < ActiveRecord::Base
 
   def check_smash
     if @style == nil
-      single_malt = false
-      single_hop = false
-      single_malt = true if @malts[:specialty] == {}
-      single_hop = true if hop_names_to_array.uniq == [ hop_names_to_array[0] ]
-      if single_malt && single_hop
+      if single_malt? && single_hop?
         generate_smash_name
       end
     end
+  end
+
+  def single_hop?
+    ( hop_names_to_array.uniq == [ hop_names_to_array[0] ] ) ? true : false
+  end
+
+  def single_malt?
+    ( @malts[:specialty] == {} ) ? true : false
   end
 
   def generate_smash_name
@@ -111,11 +115,7 @@ class Recipe < ActiveRecord::Base
   end
 
   def check_smash_name
-    if @name.include?("SMASH")
-      true
-    else
-      false
-    end
+    @name.include?("SMASH") ? true : false
   end
 
   def color_lookup

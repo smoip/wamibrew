@@ -66,7 +66,7 @@ describe "Recipe" do
         describe "negatively identify SMASH beers" do
           before { allow(@recipe).to receive(:yeast).and_return( Yeast.find_by_name( "WY1056" ) ) }
           before { allow(@recipe).to receive(:one_of_four).and_return( 2 ) }
-          describe "with multiple malts, single hop" do
+          context "with multiple malts, single hop" do
             before do
               @recipe.malts = multi_malt
               @recipe.hops = single_hop
@@ -79,7 +79,7 @@ describe "Recipe" do
             end
           end
 
-          describe "with single malts, multiple hops" do
+          context "with single malts, multiple hops" do
             before do
               @recipe.malts = single_malt
               @recipe.hops = multi_hop
@@ -95,36 +95,7 @@ describe "Recipe" do
 
       end
 
-      describe "capitalize_titles" do
-        it "should capitalize multi-word titles" do
-          expect(@recipe.capitalize_titles('red wheat')).to eq('Red Wheat')
-        end
-
-        it "should capitalize one-word titles" do
-          expect(@recipe.capitalize_titles('wheat')).to eq('Wheat')
-        end
-      end
-
       describe "name additions" do
-
-        describe "add_adjective" do
-          describe "with no style" do
-            before { allow(@recipe).to receive(:style).and_return( nil ) }
-
-            it "should prepend an adjective to the name" do
-              @recipe.add_adjective( 'Beer', 'Viscous' )
-              expect(@recipe.name).to eq( 'Viscous Beer' )
-            end
-          end
-          describe "with assigned style" do
-            before { allow(@recipe).to receive(:style).and_return( 'American IPA' ) }
-
-            it "should insert an adjective between words in the name" do
-              @recipe.add_adjective( 'American IPA', 'Viscous' )
-              expect(@recipe.name).to eq( 'American Viscous IPA' )
-            end
-          end
-        end
 
         describe "adjunct adjectives" do
           describe "by base malt" do
@@ -329,32 +300,6 @@ describe "Recipe" do
         end
 
         describe "by hoppiness" do
-        end
-
-        describe "add_article" do
-          describe "with name /'ale/'" do
-            before { @recipe.name = 'Ale' }
-            it "should add /'An/'" do
-              @recipe.add_article
-              expect(@recipe.name).to eq( 'An Ale' )
-            end
-          end
-
-          describe "with other vowel-start name" do
-            before { @recipe.name  = "Imperial Stout" }
-            it "should add /'An/'" do
-              @recipe.add_article
-              expect(@recipe.name).to eq( "An Imperial Stout" )
-            end
-          end
-
-          describe "with consonant-start" do
-            before { @recipe.name = "Session IPA" }
-            it "should add /'A/'" do
-              @recipe.add_article
-              expect(@recipe.name).to eq( "A Session IPA" )
-            end
-          end
         end
       end
     end
