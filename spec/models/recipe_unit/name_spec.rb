@@ -153,40 +153,269 @@ require 'rails_helper'
     describe "color" do
 
       describe "add_color_to_name" do
-        it "needs to test"
-        #scheduled for 7/23
+
+        context "with assigned style" do
+          before { @recipe.style = style }
+          it "should not attempt to pick an adjective" do
+            expect { @recipe.add_color_to_name }.not_to raise_error
+          end
+        end
+
+        context "without assigned style" do
+          before do
+            @recipe.style = nil
+            allow( @recipe ).to receive( :one_of_four ).and_return( 1 )
+          end
+          it "should attempt to pick an adjective" do
+            expect { @recipe.add_color_to_name }.to raise_error
+          end
+        end
       end
 
       describe "check_smash_name" do
-        it "needs to test"
-        #scheduled for 7/23
+        context "includes \'SMASH\'" do
+          before { @recipe.name = 'Golden Promise Saaz SMASH' }
+          after { @recipe.name = nil }
+          it "should be true" do
+            expect( @recipe.check_smash_name ).to be( true )
+          end
+        end
+        context "does not include \'SMASH\'" do
+          before { @recipe.name = 'Red Ale' }
+          after { @recipe.name = nil }
+          it "should be false" do
+            expect( @recipe.check_smash_name ).to be( false )
+          end
+        end
       end
 
       describe "color_lookup" do
-        it "needs to test"
-        #scheduled for 7/23
+        after { @recipe.srm = nil }
+        context "srm < 3" do
+          before { @recipe.srm = 1.2 }
+          it "should be \'yellow\'" do
+            expect( @recipe.color_lookup ).to eq( :yellow )
+          end
+        end
+
+        context "srm = 3" do
+          before { @recipe.srm = 3.0 }
+          it "should be \'yellow\'" do
+            expect( @recipe.color_lookup ).to eq( :yellow )
+          end
+        end
+
+        context "srm 4-7" do
+          before { @recipe.srm = 5.4 }
+          it "should be \'gold\'" do
+            expect( @recipe.color_lookup ).to eq( :gold )
+          end
+        end
+
+        context "srm 8-11" do
+          before { @recipe.srm = 9.8 }
+          it "should be \'amber\'" do
+            expect( @recipe.color_lookup ).to eq( :amber )
+          end
+        end
+
+        context "srm 12-14" do
+          before { @recipe.srm = 12.1 }
+          it "should be \'red\'" do
+            expect( @recipe.color_lookup ).to eq( :red )
+          end
+        end
+
+        context "srm 15-20" do
+          before { @recipe.srm = 18.6 }
+          it "should be \'brown\'" do
+            expect( @recipe.color_lookup ).to eq( :brown )
+          end
+        end
+
+        context "srm 21-25" do
+          before { @recipe.srm = 23.0 }
+          it "should be \'dark_brown\'" do
+            expect( @recipe.color_lookup ).to eq( :dark_brown )
+          end
+        end
+
+        context "srm 26-35" do
+          before { @recipe.srm = 34.2 }
+          it "should be \'black\'" do
+            expect( @recipe.color_lookup ).to eq( :black )
+          end
+        end
+
+        context "srm 36+" do
+          before { @recipe.srm = 48.3 }
+          it "should be \'dark_black\'" do
+            expect( @recipe.color_lookup ).to eq( :dark_black )
+          end
+        end
       end
 
       describe "choose_color_adjective" do
-        it "needs to test"
-        #scheduled for 7/23
+        let(:options) { [] }
+
+        context "color yellow" do
+          before  { [ "Straw", "Blonde", "Light Gold" ].each { |adj| options << adj } }
+          after { options = [] }
+          it "should choose a yellow synonym" do
+            expect( [ [ @recipe.choose_color_adjective( :yellow ) ] & options ][0] ).to be_truthy
+          end
+        end
+
+        context "color gold" do
+          before  { [ "Gold", "Golden", "Blonde" ].each { |adj| options << adj } }
+          after { options = [] }
+          it "should choose a gold synonym" do
+            expect( [ [ @recipe.choose_color_adjective( :gold ) ] & options ][0] ).to be_truthy
+          end
+        end
+
+        context "color amber" do
+          before  { [ "Amber", "Copper" ].each { |adj| options << adj } }
+          after { options = [] }
+          it "should choose an amber synonym" do
+            expect( [ [ @recipe.choose_color_adjective( :amber ) ] & options ][0] ).to be_truthy
+          end
+        end
+
+        context "color red" do
+          before  { [ "Amber", "Red" ].each { |adj| options << adj } }
+          after { options = [] }
+          it "should choose a red synonym" do
+            expect( [ [ @recipe.choose_color_adjective( :red ) ] & options ][0] ).to be_truthy
+          end
+        end
+
+        context "color brown" do
+          before  { [ "Chestnut", "Brown"].each { |adj| options << adj } }
+          after { options = [] }
+          it "should choose a brown synonym" do
+            expect( [ @recipe.choose_color_adjective( :brown ) ] & options ).to be_truthy
+          end
+        end
+
+        context "color dark brown" do
+          before  { [ "Dark Brown", "Brown"].each { |adj| options << adj } }
+          after { options = [] }
+          it "should choose a dark brown synonym" do
+            expect( [ [ @recipe.choose_color_adjective( :dark_brown ) ] & options ][0] ).to be_truthy
+          end
+        end
+
+        context "color black" do
+          before  { [ "Black", "Dark Brown"].each { |adj| options << adj } }
+          after { options = [] }
+          it "should choose a black synonym" do
+            expect( [ [ @recipe.choose_color_adjective( :black ) ] & options ][0] ).to be_truthy
+          end
+        end
+
+        context "color dark black" do
+          before  { [ "Black", "Jet Black"].each { |adj| options << adj } }
+          after { options = [] }
+          it "should choose a dark black synonym" do
+            expect( [ [ @recipe.choose_color_adjective( :dark_black ) ] & options ][0] ).to be_truthy
+          end
+        end
+
       end
     end
 
     describe "strength" do
       describe "add_strength_to_name" do
-        it "needs to test"
-        #scheduled for 7/23
+
+        context "with assigned style" do
+          before { @recipe.style = style }
+          it "should not attempt to pick an adjective" do
+            expect { @recipe.add_strength_to_name }.not_to raise_error
+          end
+        end
+
+        context "without assigned style" do
+          before do
+            @recipe.style = nil
+            allow( @recipe ).to receive( :one_of_four ).and_return( 1 )
+          end
+          it "should attempt to pick an adjective" do
+            expect { @recipe.add_strength_to_name }.to raise_error
+          end
+        end
       end
 
       describe "strength_lookup" do
-        it "needs to test"
-        #scheduled for 7/23
+        after { @recipe.abv = nil }
+        context "abv 0-2" do
+          before { @recipe.abv = 1.8 }
+          it "should be \'weak\'" do
+            expect( @recipe.strength_lookup ).to eq( :weak )
+          end
+        end
+
+        context "abv 3-4" do
+          before { @recipe.abv = 3.0 }
+          it "should be \'session\'" do
+            expect( @recipe.strength_lookup ).to eq( :session )
+          end
+        end
+
+        context "abv 5-7" do
+          before { @recipe.abv = 7.0 }
+          it "should be \'average\'" do
+            expect( @recipe.strength_lookup ).to eq( :average )
+          end
+        end
+
+        context "abv 8-9" do
+          before { @recipe.abv = 8.9 }
+          it "should be \'strong\'" do
+            expect( @recipe.strength_lookup ).to eq( :strong )
+          end
+        end
+
+        context "abv 10+" do
+          before { @recipe.abv = 15 }
+          it "should be \'very_strong\'" do
+            expect( @recipe.strength_lookup ).to eq( :very_strong )
+          end
+        end
+
       end
 
       describe "choose_strength_adjective" do
-        it "needs to test"
-        #scheduled for 7/23
+        let(:options) { [] }
+        context "strength weak" do
+          before  { [ "Mild", "Low Gravity" ].each { |adj| options << adj } }
+          after { options = [] }
+          it "should choose a weak synonym" do
+            expect( [ [ @recipe.choose_strength_adjective( :weak ) ] & options ][0] ).to be_truthy
+          end
+        end
+
+        context "strength session" do
+          before  { [ "sessionable", "quaffable" ].each { |adj| options << adj } }
+          after { options = [] }
+          it "should choose a weak synonym" do
+            expect( [ [ @recipe.choose_strength_adjective( :session ) ] & options ][0] ).to be_truthy
+          end
+        end
+
+        context "strength average" do
+          it "should not choose an adjective" do
+            expect( @recipe.choose_strength_adjective( :average ) ).to eq( '' )
+          end
+        end
+
+        context "strength strong" do
+          before  { [ "Strong" ].each { |adj| options << adj } }
+          after { options = [] }
+          it "should choose a strong synonym" do
+            expect( [ [ @recipe.choose_strength_adjective( :strong ) ] & options ][0] ).to be_truthy
+          end
+        end
       end
     end
 
@@ -199,6 +428,7 @@ require 'rails_helper'
           expect(@recipe.name).to eq( 'Viscous Beer' )
         end
       end
+
       context "with assigned style" do
         before { @recipe.style = style }
         it "should insert an adjective between words in the name" do
@@ -235,4 +465,3 @@ require 'rails_helper'
     end
 
   end
-

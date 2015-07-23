@@ -165,7 +165,7 @@ describe "Recipe" do
           describe "color_lookup" do
             it "should return a string" do
               @recipe.srm = 2.3
-              expect(@recipe.color_lookup).to be_kind_of(String)
+              expect(@recipe.color_lookup).to be_kind_of(Symbol)
             end
           end
 
@@ -199,7 +199,7 @@ describe "Recipe" do
             it "should add a < 3 adjective" do
               @recipe.srm = 1.0
               @recipe.add_color_to_name
-              [ "Light Gold", "Blonde", "Sandy" ].each { |adj| options << adj }
+              [ "Straw", "Blonde", "Light Gold" ].each { |adj| options << adj }
               expect((options & @recipe.name.split(' '))[0]).to be_truthy
             end
 

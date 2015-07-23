@@ -108,7 +108,7 @@ class Recipe < ActiveRecord::Base
     if @style == nil
       if one_of_four == 1
         unless check_smash_name
-          add_adjective(@name, color_lookup)
+          add_adjective(@name, choose_color_adjective(color_lookup))
         end
       end
     end
@@ -131,7 +131,7 @@ class Recipe < ActiveRecord::Base
     when 26..35 then color_adj = :black
     else color_adj = :dark_black
     end
-    choose_color_adjective(color_adj)
+    color_adj
   end
 
   def choose_color_adjective(color)
@@ -143,7 +143,7 @@ class Recipe < ActiveRecord::Base
     if @style == nil
       if one_of_four == 1
         unless check_smash_name
-          add_adjective(@name, strength_lookup)
+          add_adjective(@name, choose_strength_adjective(strength_lookup))
         end
       end
     end
@@ -159,7 +159,7 @@ class Recipe < ActiveRecord::Base
     when 8..9 then strength_adj = :strong
     else strength_adj = :very_strong
     end
-    choose_strength_adjective(strength_adj)
+    strength_adj
   end
 
   def choose_strength_adjective(strength)
