@@ -62,6 +62,25 @@ describe "variable assignment" do
     end
 
     describe "num_specialty_malts" do
+      it "should pick 0..2" do
+        allow( @recipe ).to receive( :one_of_four ).and_return( 0 )
+        expect( @recipe.num_specialty_malts ).to be_between(0, 2).inclusive
+      end
+
+      it "should pick 2" do
+        allow( @recipe ).to receive( :one_of_four ).and_return( 1 )
+        expect( @recipe.num_specialty_malts ).to eq( 2 )
+      end
+
+      it "should pick 2..4" do
+        allow( @recipe ).to receive( :one_of_four ).and_return( 2 )
+        expect( @recipe.num_specialty_malts ).to be_between(2, 4).inclusive
+      end
+
+      it "should pick 4..5" do
+        allow( @recipe ).to receive( :one_of_four ).and_return( 3 )
+        expect( @recipe.num_specialty_malts ).to be_between(4, 5).inclusive
+      end
     end
 
     describe "assign_malts" do

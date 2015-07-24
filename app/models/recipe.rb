@@ -175,6 +175,10 @@ class Recipe < ActiveRecord::Base
     rand(4)
   end
 
+  def one_of_six
+    rand(6)
+  end
+
   def add_adjective(name, adjective)
     if @style == nil
       @name = "#{adjective} #{name}"
@@ -219,8 +223,8 @@ class Recipe < ActiveRecord::Base
   end
 
   def num_specialty_malts
-    rand(4)
-    # needs probability weighting table
+    complexity = one_of_six
+    [ [ 0, 1 ], [ 1, 2 ], [ 1, 2, 2, 3 ], [ 2, 3, 4 ], [ 3, 4, 5 ] ][ complexity ].shuffle.first
   end
 
   def choose_hop(hop_type)
