@@ -17,7 +17,7 @@ describe "variable assignment" do
     end
 
     describe "store_malt" do
-      before { allow( @recipe ).to recieve( :malt_amount ).and_return( 2.11 ) }
+      before { allow( @recipe ).to receive( :malt_amount ).and_return( 2.11 ) }
       context "malt is not already present in recipe" do
         before { @recipe.store_malt( :base, malt ) }
         after { @recipe.malts = { :base => {}, :specialty => {} } }
