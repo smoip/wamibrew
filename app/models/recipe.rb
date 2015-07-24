@@ -214,12 +214,8 @@ class Recipe < ActiveRecord::Base
   end
 
   def malt_type_to_key(malt_type)
-    if malt_type == true
-      key = :base
-    else
-      key = :specialty
-    end
-    return key
+    malt_type ? key = :base : key = :specialty
+    key
   end
 
   def num_specialty_malts
