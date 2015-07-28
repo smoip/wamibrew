@@ -63,39 +63,76 @@ describe "variable assignment" do
 
     describe "num_specialty_malts" do
       it "should pick 0..2" do
-        allow( @recipe ).to receive( :one_of_four ).and_return( 0 )
-        expect( @recipe.num_specialty_malts ).to be_between(0, 2).inclusive
+        allow( @recipe ).to receive( :one_of_five ).and_return( 0 )
+        expect( @recipe.num_specialty_malts ).to be_between(0, 1).inclusive
       end
 
       it "should pick 2" do
-        allow( @recipe ).to receive( :one_of_four ).and_return( 1 )
-        expect( @recipe.num_specialty_malts ).to eq( 2 )
+        allow( @recipe ).to receive( :one_of_five ).and_return( 1 )
+        expect( @recipe.num_specialty_malts ).to be_between(1, 2).inclusive
       end
 
       it "should pick 2..4" do
-        allow( @recipe ).to receive( :one_of_four ).and_return( 2 )
+        allow( @recipe ).to receive( :one_of_five ).and_return( 2 )
+        expect( @recipe.num_specialty_malts ).to be_between(1, 3).inclusive
+      end
+
+      it "should pick 4..5" do
+        allow( @recipe ).to receive( :one_of_five ).and_return( 3 )
         expect( @recipe.num_specialty_malts ).to be_between(2, 4).inclusive
       end
 
       it "should pick 4..5" do
-        allow( @recipe ).to receive( :one_of_four ).and_return( 3 )
-        expect( @recipe.num_specialty_malts ).to be_between(4, 5).inclusive
+        allow( @recipe ).to receive( :one_of_five ).and_return( 4 )
+        expect( @recipe.num_specialty_malts ).to be_between(3, 5).inclusive
       end
     end
 
     describe "assign_malts" do
+      # not sure how to unit test - only calls other methods
+      # leave for integration only?
+      it "needs a unit test?"
     end
 
     describe "malts_to_array" do
+      after { @recipe.malts = nil }
+      context "with specialty malts" do
+        it "returns base malt and one specialty malt" do
+          @recipe.malts = { :base => { malt => 10.0 }, :specialty => { malt => 1.0 } }
+          expect( @recipe.malts_to_array ).to eq( [ [ malt, 10.0 ], [ malt, 1.0 ] ] )
+        end
+
+        it "returns base malt and multiple specialty malts" do
+          @recipe.malts = { :base => { malt => 10.0 }, :specialty => { malt => 1.0, malt => 0.25, malt => 0.125 } }
+          expect( @recipe.malts_to_array ).to eq( [ [ malt, 10.0 ], [ malt, 1.0 ], [ malt, 0.25 ], [ malt, 0.125 ] ] )
+          # not sure why failing - try with different malt ids? (rather than same Factory item)
+        end
+      end
+
+      context "without specialty malts" do
+        it "returns base malt only" do
+          @recipe.malts = { :base => { malt => 10.0 }, :specialty => {} }
+          expect( @recipe.malts_to_array ).to eq( [ [ malt, 10.0 ] ] )
+        end
+      end
     end
 
     describe "pull_malt_object" do
+      it "should return a malt object" do
+        expect( @recipe.pull_malt_object( [ malt, 10.0 ] ) ).to eq( malt )
+      end
     end
 
     describe "pull_malt_name" do
+      it "should return \'2-row test\'" do
+        expect( @recipe.pull_malt_name( [ malt, 10.0 ] ) ).to eq( '2-row test' )
+      end
     end
 
     describe "pull_malt_amt" do
+      it "should return 10.0" do
+        expect( @recipe.pull_malt_amt( [ malt, 10.0 ] ) ).to eq( 10.0 )
+      end
     end
 
   end
