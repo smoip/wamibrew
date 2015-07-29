@@ -11,6 +11,8 @@ describe "variable assignment" do
   describe "malt assignment" do
 
     describe "choose_malt" do
+      it "needs a test"
+      # unit-testable?
     end
 
     describe "order_specialty_malts" do
@@ -139,13 +141,66 @@ describe "variable assignment" do
 
   describe "hops assignment" do
 
-    describe "chose_hop" do
+    describe "choose_hop" do
+      it "needs a test"
+      # unit-testable?
     end
 
     describe "extreme_ibu_check" do
+      after { @recipe.ibu  = nil }
+
+      context "ibus > 120" do
+        before { @recipe.ibu = 124 }
+        it "attempts to reassign hops" do
+          allow( @recipe ).to receive( :re_assign_hops ).and_return( 'success' )
+          expect( @recipe.extreme_ibu_check ).to eq( 'success' )
+        end
+      end
+
+      context "ibus < 120" do
+        before { @recipe.ibu = 15 }
+        it "shouldn't raise an error" do
+          expect { @recipe.extreme_ibu_check }.not_to raise_error
+        end
+      end
     end
 
     describe "ibu_gravity_check" do
+      context "abv <= 4.5 && ibu > 60" do
+        before do
+          @recipe.abv = 3.0
+          @recipe.ibu = 72
+        end
+        it "should reassign hops" do
+
+        end
+      end
+      context "abv <=  6.0 && ibu > 90" do
+        before do
+          @recipe.abv = 5.2
+          @recipe.ibu = 99
+        end
+        it "should reassign hops" do
+
+        end
+      end
+      context "abv > 4.5 && ibu > 60" do
+        before do
+          @recipe.abv = 4.6
+          @recipe.ibu = 80
+        end
+        it "should not reassign hops" do
+
+        end
+      end
+      context "abv <= 4.5 && ibu < 60" do
+        before do
+          @recipe.abv = 3.1
+          @recipe.ibu = 55
+        end
+        it "should not reassign hops" do
+        end
+      end
     end
 
     describe "re_assign_hops" do

@@ -258,7 +258,7 @@ class Recipe < ActiveRecord::Base
     self.hops = nil
     self.assign_hops
     self.calc_ibu
-    unless @stack_token > 10
+    unless @stack_token > 15
       self.ibu_gravity_check
       self.extreme_ibu_check
     end
