@@ -140,13 +140,18 @@ require 'rails_helper'
           @recipe.style = nil
           @recipe.yeast = yeast
           allow( @recipe ).to receive( :one_of_four ).and_return( 1 )
-          allow( @recipe ).to receive( :capitalize_titles ).and_return( 'Ale' )
         end
         after { @recipe.yeast = nil }
 
         it "should alter the name" do
+          allow( @recipe ).to receive( :capitalize_titles ).and_return( 'Ale' )
           @recipe.add_yeast_family
           expect( @recipe.name ).to eq( 'Ale' )
+        end
+        it "should not add the yeast family \'wheat\'" do
+          allow( @recipe.yeast ).to receive( :family ).and_return( 'wheat' )
+          @recipe.add_yeast_family
+          expect( @recipe.name ).not_to eq( 'Wheat' )
         end
       end
     end

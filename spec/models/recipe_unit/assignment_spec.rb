@@ -340,7 +340,6 @@ describe "variable assignment" do
         expect( @recipe.choose_aroma_hops ).to eq( nil )
       end
     end
-
   end
 
   describe "yeast assignment" do

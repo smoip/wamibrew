@@ -96,8 +96,8 @@ class Recipe < ActiveRecord::Base
 
   def add_yeast_family
     if @style == nil
-      if one_of_four == 1
-        if @name.include?("Beer")
+      if (one_of_four == 1) & (@name.include?("Beer"))
+        unless @yeast.family == 'wheat'
           @name = ((@name.split(' ') - ["Beer"]) + [ capitalize_titles(@yeast.family) ] ).join(' ')
         end
       end
@@ -179,7 +179,7 @@ class Recipe < ActiveRecord::Base
     rand(5)
   end
 
-  def one_of_five
+  def one_of_six
     rand(6)
   end
 
