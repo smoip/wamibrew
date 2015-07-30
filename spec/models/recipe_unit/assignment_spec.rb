@@ -8,6 +8,7 @@ describe "variable assignment" do
   after { @recipe.destroy! }
   let(:malt) { FactoryGirl.build(:malt) }
   let(:hop) { FactoryGirl.build(:hop) }
+  let(:yeast) { FactoryGirl.build(:yeast) }
 
   describe "malt assignment" do
 
@@ -345,14 +346,37 @@ describe "variable assignment" do
   describe "yeast assignment" do
 
     describe "choose_yeast" do
+      it "should choose a yeast" do
+        expect( @recipe.choose_yeast ).to be_kind_of( Yeast )
+      end
     end
 
     describe "associate_yeast" do
+      let(:two_row) { Malt.find_by_name( "2-row" ) }
+      let(:vienna) { Malt.find_by_name( "vienna" ) }
+      context "base malt has associated yeast" do
+        before { @recipe.malts = { :base => { two_row => 10.0 }, :specialty => {} } }
+        it "chooses an associated yeast by family" do
+          expect( @recipe.associate_yeast.family ).to eq( 'ale' )
+        end
+      end
+      context "base malt does not have associated yeast" do
+        before { @recipe.malts = { :base => { vienna => 10.0 }, :specialty => {} } }
+        it "chooses any yeast" do
+          expect( @recipe.associate_yeast ).to be_kind_of( Yeast )
+        end
+      end
     end
 
     describe "assign_yeast" do
+      it "chooses a yeast" do
+        @recipe.yeast = nil
+        allow( @recipe ).to receive( :associate_yeast ).and_return( yeast )
+        allow( @recipe ).to receive( :choose_yeast ).and_return( yeast )
+        @recipe.assign_yeast
+        expect( @recipe.yeast ).to eq( yeast )
+      end
     end
-
   end
 
 end
