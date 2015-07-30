@@ -179,6 +179,10 @@ class Recipe < ActiveRecord::Base
     rand(5)
   end
 
+  def one_of_five
+    rand(6)
+  end
+
   def add_adjective(name, adjective)
     if @style == nil
       @name = "#{adjective} #{name}"
@@ -239,13 +243,6 @@ class Recipe < ActiveRecord::Base
   end
 
   def ibu_gravity_check
-    # strength = @abv.round(0).to_i
-    # strength_adj = :none
-    # case strength
-    # when 0..3 then strength_adj = :weak
-    # when 4..6 then strength_adj = :session
-    # else strength_adj = :strong
-    # end
     if ( ( @abv <= 4.5 ) && ( @ibu > 60 ) )
       re_assign_hops
     elsif ( ( @abv <= 6 ) && ( @ibu > 90 ) )
@@ -370,8 +367,8 @@ class Recipe < ActiveRecord::Base
   end
 
   def num_aroma_hops
-    rand(5)
-    # needs probability weighting table
+    complexity = one_of_six
+    [ [ 0, 1 ], [ 0, 1, 2 ], [ 1, 2, 2, 3 ], [ 2, 3, 3, 4 ], [ 3, 4, 5 ], [ 4, 5, 6 ] ][ complexity ].shuffle.first
   end
 
   def choose_aroma_hops

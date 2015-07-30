@@ -7,6 +7,7 @@ describe "variable assignment" do
   end
   after { @recipe.destroy! }
   let(:malt) { FactoryGirl.build(:malt) }
+  let(:hop) { FactoryGirl.build(:hop) }
 
   describe "malt assignment" do
 
@@ -64,12 +65,12 @@ describe "variable assignment" do
     end
 
     describe "num_specialty_malts" do
-      it "should pick 0..2" do
+      it "should pick 0..1" do
         allow( @recipe ).to receive( :one_of_five ).and_return( 0 )
         expect( @recipe.num_specialty_malts ).to be_between(0, 1).inclusive
       end
 
-      it "should pick 2" do
+      it "should pick 1..2" do
         allow( @recipe ).to receive( :one_of_five ).and_return( 1 )
         expect( @recipe.num_specialty_malts ).to be_between(1, 2).inclusive
       end
@@ -166,13 +167,14 @@ describe "variable assignment" do
     end
 
     describe "ibu_gravity_check" do
+      before { allow( @recipe ).to receive( :re_assign_hops ).and_return( 'assigning hops...' ) }
       context "abv <= 4.5 && ibu > 60" do
         before do
           @recipe.abv = 3.0
           @recipe.ibu = 72
         end
         it "should reassign hops" do
-
+          expect( @recipe.ibu_gravity_check ).to eq( 'assigning hops...' )
         end
       end
       context "abv <=  6.0 && ibu > 90" do
@@ -181,7 +183,7 @@ describe "variable assignment" do
           @recipe.ibu = 99
         end
         it "should reassign hops" do
-
+          expect( @recipe.ibu_gravity_check ).to eq( 'assigning hops...' )
         end
       end
       context "abv > 4.5 && ibu > 60" do
@@ -190,7 +192,7 @@ describe "variable assignment" do
           @recipe.ibu = 80
         end
         it "should not reassign hops" do
-
+          expect( @recipe.ibu_gravity_check ).not_to eq( 'assigning hops...' )
         end
       end
       context "abv <= 4.5 && ibu < 60" do
@@ -199,38 +201,144 @@ describe "variable assignment" do
           @recipe.ibu = 55
         end
         it "should not reassign hops" do
+          expect( @recipe.ibu_gravity_check ).not_to eq( 'assigning hops...' )
         end
       end
     end
 
     describe "re_assign_hops" do
+      before do
+        allow( @recipe ).to receive( :ibu_gravity_check ).and_return( 'gravity check' )
+        allow( @recipe ).to receive( :extreme_ibu_check ).and_return( 'gravity check' )
+        allow( @recipe ).to receive( :assign_hops ).and_return( nil )
+        allow( @recipe ).to receive( :calc_ibu ).and_return( nil )
+      end
+      after { @recipe.stack_token = nil }
+      context "stack_token > 15" do
+        before { @recipe.stack_token = 16 }
+        it "should not run ibu/gravity checks" do
+          expect( @recipe.re_assign_hops ).not_to eq( 'gravity check' )
+        end
+      end
+
+      context "stack_token <= 15" do
+        before { @recipe.stack_token = 14 }
+        it "should run ibu/gravity comparisons" do
+          expect( @recipe.re_assign_hops ).to eq( 'gravity check' )
+        end
+      end
     end
 
     describe "assign_hops" do
+      # not sure how to unit test - only calls other methods
+      # leave for integration only?
+      it "needs a unit test?"
     end
 
     describe "hops_to_array" do
+      after { @recipe.hops = nil }
+      context "with aroma hops" do
+        it "returns bittering hops and one aroma hops" do
+          @recipe.hops = { :bittering => { hop => [ 1.5, 60 ] }, :aroma => [ { hop => [ 1.0, 15 ] } ] }
+          expect( @recipe.hops_to_array ).to eq( [ [ hop, [ 1.5, 60 ] ], [ hop, [ 1.0, 15 ] ] ] )
+        end
+
+        it "returns bittering hops and multiple aroma hops" do
+          @recipe.hops = { :bittering => { hop => [ 1.5, 60 ] }, :aroma => [ { hop => [ 1.0, 15 ] }, { hop => [ 2.25, 5 ] } ] }
+          expect( @recipe.hops_to_array ).to eq( [ [ hop, [ 1.5, 60 ] ], [ hop, [ 1.0, 15 ] ], [ hop, [ 2.25, 5 ] ] ] )
+        end
+      end
+
+      context "without aroma hops" do
+        it "returns bittering hops only" do
+          @recipe.hops = { :bittering => { hop => [ 1.5, 60 ] }, :specialty => nil }
+          expect( @recipe.hops_to_array ).to eq( [ [ hop, [ 1.5, 60 ] ] ] )
+        end
+      end
     end
 
     describe "hop_names_to_array" do
+      after { @recipe.hops = nil }
+      context "has aroma hops" do
+        it "returns bittering and aroma hops names in an array" do
+          @recipe.hops = { :bittering => { hop => [ 1.5, 60 ] }, :aroma => [ { hop => [ 1.0, 15 ] }, { hop => [ 2.25, 5 ] } ] }
+          expect( @recipe.hop_names_to_array ).to eq( [ 'cascade test', 'cascade test', 'cascade test' ] )
+        end
+      end
+      context "does not have aroma hops" do
+        it "returns only bittering hops names in an array" do
+          @recipe.hops = { :bittering => { hop => [ 1.5, 60 ] }, :specialty => nil }
+          expect( @recipe.hop_names_to_array ).to eq( [ 'cascade test' ] )
+        end
+      end
     end
 
     describe "pull_hop_object" do
+      it "should return a hop object" do
+        expect( @recipe.pull_hop_object( [ hop, [ 1.0, 10 ] ] ) ).to eq( hop )
+      end
     end
 
     describe "pull_hop_name" do
+      it "should return a hop name" do
+        expect( @recipe.pull_hop_name( [ hop, [ 1.0, 10 ] ] ) ).to eq( 'cascade test' )
+      end
     end
 
     describe "pull_hop_amt" do
+      it "should return a hop_amt" do
+        expect( @recipe.pull_hop_amt( [ hop, [ 1.0, 10 ] ] ) ).to eq( 1.0 )
+      end
     end
 
     describe "pull_hop_time" do
+      it "should return a hop time" do
+        expect( @recipe.pull_hop_time( [ hop, [ 1.0, 10 ] ] ) ).to eq( 10 )
+      end
     end
 
     describe "num_aroma_hops" do
+      it "should pick 0..1" do
+        allow( @recipe ).to receive( :one_of_six ).and_return( 0 )
+        expect( @recipe.num_aroma_hops ).to be_between(0, 1).inclusive
+      end
+
+      it "should pick 0..2" do
+        allow( @recipe ).to receive( :one_of_six ).and_return( 1 )
+        expect( @recipe.num_aroma_hops ).to be_between(0, 2).inclusive
+      end
+
+      it "should pick 2..4" do
+        allow( @recipe ).to receive( :one_of_six ).and_return( 2 )
+        expect( @recipe.num_aroma_hops ).to be_between(1, 3).inclusive
+      end
+
+      it "should pick 4..5" do
+        allow( @recipe ).to receive( :one_of_six ).and_return( 3 )
+        expect( @recipe.num_aroma_hops ).to be_between(2, 4).inclusive
+      end
+
+      it "should pick 4..5" do
+        allow( @recipe ).to receive( :one_of_six ).and_return( 4 )
+        expect( @recipe.num_aroma_hops ).to be_between(3, 5).inclusive
+      end
+
+      it "should pick 4..5" do
+        allow( @recipe ).to receive( :one_of_six ).and_return( 5 )
+        expect( @recipe.num_aroma_hops ).to be_between(4, 6).inclusive
+      end
     end
 
     describe "choose_aroma_hops" do
+      it "should choose aroma hops" do
+        allow( @recipe ).to receive( :num_aroma_hops ).and_return( 2 )
+        expect( @recipe.choose_aroma_hops.length ).to eq( 2 )
+      end
+
+      it "should not choose aroma hops" do
+        allow( @recipe ).to receive( :num_aroma_hops ).and_return( 0 )
+        expect( @recipe.choose_aroma_hops ).to eq( nil )
+      end
     end
 
   end
