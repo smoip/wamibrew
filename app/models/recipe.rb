@@ -59,19 +59,19 @@ class Recipe < ActiveRecord::Base
   end
 
   def add_ingredient_to_name
-    adjectives = [ 'wheat', 'rye', 'honey' ]
-    # add more desired adjectives here
-    malt_names = malts_to_array.collect {|malt| pull_malt_name(malt).split(' ')}
-    required_malts = []
-    unless @style == nil
-      if @style.required_malts != nil
-        required_malts = @style.required_malts.collect {|name| name.split(' ')}
-      end
-    end
+    # adjectives = [ 'wheat', 'rye', 'honey' ]
+    # # add more desired adjectives here
+    # malt_names = malts_to_array.collect {|malt| pull_malt_name(malt).split(' ')}
+    # required_malts = []
+    # unless @style == nil
+    #   if @style.required_malts != nil
+    #     required_malts = @style.required_malts.collect {|name| name.split(' ')}
+    #   end
+    # end
 
-    adjective = (malt_names.flatten & adjectives).shuffle.first
+    # adjective = (malt_names.flatten & adjectives).shuffle.first
 
-    if (adjective & required_malts.flatten) == nil
+    if ([ adjective ] & required_malts.flatten) == nil
       # no overlap between usuable malt names and adjective
       unless @name.include?(capitalize_titles(adjective))
         # no redundant adjectives
@@ -101,6 +101,20 @@ class Recipe < ActiveRecord::Base
     #     end
     #   end
     # end
+  end
+
+  def choose_ingredient_adjective
+    adjectives = [ 'wheat', 'rye', 'honey' ]
+    # add more desired adjectives here
+    malt_names = malts_to_array.collect {|malt| pull_malt_name(malt).split(' ')}
+    required_malts = []
+    unless @style == nil
+      if @style.required_malts != nil
+        required_malts = @style.required_malts.collect {|name| name.split(' ')}
+      end
+    end
+
+    adjective = (malt_names.flatten & adjectives).shuffle.first
   end
 
   def add_yeast_family

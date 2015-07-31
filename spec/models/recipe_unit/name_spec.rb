@@ -164,6 +164,28 @@ require 'rails_helper'
       end
     end
 
+    describe "choose_ingredient_adjective" do
+      context "recipe includes one adjective-able malt" do
+        let(:malt_3) { Malt.find_by_name( 'rye malt' ) }
+        let(:malt_4) { Malt.find_by_name( 'white wheat' ) }
+        before { @recipe.malts = { :base => { malt => 10 }, :specialty => {} } }
+        it "returns \'rye\'" do
+          @recipe.malts[:specialty] = { malt_3 => 2 }
+          expect( @recipe.choose_ingredient_adjective ).to eq( 'rye' )
+        end
+        it "returns \'honey\'" do
+          @recipe.malts[:specialty] = { sugar => 2 }
+          expect( @recipe.choose_ingredient_adjective ).to eq( 'honey' )
+        end
+      end
+      context "recipe includes multiple adjective-able malts" do
+      end
+      context "recipe includes no adjective-able malts" do
+      end
+      context "recipe includes an adjective-able malt which is also a required malt for assigned style" do
+      end
+    end
+
     describe "add_yeast_family" do
       before do
         @recipe.name = 'Beer'
