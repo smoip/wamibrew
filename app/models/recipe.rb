@@ -59,39 +59,48 @@ class Recipe < ActiveRecord::Base
   end
 
   def add_ingredient_to_name
-    base_malt_name = pull_malt_name(@malts[:base].to_a[0])
-    specialty_malt_names = ( malts_to_array.collect {|malt| pull_malt_name(malt)} ) - [ base_malt_name ]
+    adjectives = [ 'wheat', 'rye', 'honey' ]
+    # add more desired adjectives here
+    malt_names = malts_to_array.collect {|malt| pull_malt_name(malt).split(' ')}
     required_malts = []
-
     unless @style == nil
       if @style.required_malts != nil
-        required_malts = @style.required_malts
+        required_malts = @style.required_malts.collect {|name| name.split(' ')}
       end
     end
 
-    # This is a case-by-case method, needs each adjunct added manually
-    # A generalized method will require adding an "Adjunct?" column to Malt
-    # Then check base malts and specialty malts separately for malts adjunct? == true
-    # exclude adjuncts required by style
-    # Then pick the adjunct present in the largest quantity
-    # Do not add to names already including the adjunct in the name (SMASH)
+    adjective = (malt_names.flatten & adjectives).shuffle.first
 
-    unless required_malts.include?(base_malt_name)
-      # another unless? required_malts & specialty_malt_names
-      # compare required malts (and common malts) to specialty malts
-      unless @name.include?("Wheat")
-        add_adjective(@name, "Wheat") if base_malt_name.include?("wheat")
+    if (adjective & required_malts.flatten) == nil
+      # no overlap between usuable malt names and adjective
+      unless @name.include?(capitalize_titles(adjective))
+        # no redundant adjectives
+        add_adjective(@name, capitalize_titles(adjective))
       end
     end
 
-    specialty_malt_names.each do |malt_name|
-      unless required_malts.include?(malt_name)
-        # add each adjunct type here
-        unless @name.include?("Rye")
-          add_adjective(@name, "Rye") if specialty_malt_names.include?("rye malt")
-        end
-      end
-    end
+    # unless required_malts.include?(base_malt_name)
+    #   # another unless? required_malts & specialty_malt_names
+    #   # compare required malts (and common malts) to specialty malts
+    #   unless @name.include?("Wheat")
+    #     add_adjective(@name, "Wheat") if base_malt_name.include?("wheat")
+    #   end
+    # end
+
+    # adjective = (malt_names & adjectives).shuffle.first
+
+    # unless @name.include?(adjective)
+    #   add_adjective(@name, capitalize_titles(adjective))
+    # end
+
+    # specialty_malt_names.each do |malt_name|
+    #   unless required_malts.include?(malt_name)
+    #     # add each adjunct type here
+    #     unless @name.include?("Rye")
+    #       add_adjective(@name, "Rye") if specialty_malt_names.include?("rye malt")
+    #     end
+    #   end
+    # end
   end
 
   def add_yeast_family

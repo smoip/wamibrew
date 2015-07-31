@@ -114,8 +114,54 @@ require 'rails_helper'
     end
 
     describe "add_ingredient_to_name" do
-      it "needs to test for ingredient additions"
-      #requires overhaul of this method
+      let(:malt_3) { Malt.find_by_name( 'rye malt' ) }
+      let(:malt_4) { Malt.find_by_name( 'white wheat' ) }
+      before { @recipe.malts = { :base => { malt => 10 }, :specialty => {} } }
+      context "recipe includes one adjective-able malt" do
+        let(:sugar) { Malt.find_by_name( 'honey' ) }
+        before { @recipe.name = 'Beer' }
+        it "adds \'rye\' to the name" do
+          @recipe.malts[:specialty] = { malt_3 => 2 }
+          @recipe.add_ingredient_to_name
+          expect( @recipe.name ).to eq( 'Rye Beer' )
+        end
+        it "adds \'honey\' to the name" do
+          @recipe.malts[:specialty] = { sugar => 2 }
+          @recipe.add_ingredient_to_name
+          expect( @recipe.name ).to eq( 'Honey Beer' )
+        end
+      end
+      context "recipe includes multiple adjective-able malts" do
+        before do
+          @recipe.name = 'Beer'
+          @recipe.malts[:specialty] = { malt_3 => 2.5, malt_4 => 2 }
+        end
+        it "adds an adjective to the name" do
+          adjectives = [ "Rye", "Wheat" ]
+          @recipe.add_ingredient_to_name
+          expect( @recipe.name.split(' ') & adjectives ).to be_truthy
+        end
+        it "does not add multiple adjectives to the name" do
+          @recipe.name = 'Beer'
+          @recipe.add_ingredient_to_name
+          expect( @recipe.name ).not_to eq( 'Rye Wheat Beer' )
+          expect( @recipe.name ).not_to eq( 'Wheat Rye Beer' )
+        end
+      end
+      context "recipe includes no adjective-able malts" do
+        before { @recipe.name = 'Beer' }
+        it "does not add an adjective to the name" do
+          @recipe.add_ingredient_to_name
+          expect( @recipe.name ).to eq( 'Beer' )
+        end
+      end
+      context "recipe includes an adjective-able malt which is also a required malt for style" do
+        before { @recipe.name = 'Beer' }
+        it "does not add an adjective to the name" do
+          @recipe.add_ingredient_to_name
+          expect( @recipe.name ).to eq( 'Beer' )
+        end
+      end
     end
 
     describe "add_yeast_family" do
