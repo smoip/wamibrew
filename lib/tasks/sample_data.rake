@@ -104,6 +104,31 @@ def make_malts
                malt_yield: 0.72,
                srm: 50,
                base_malt?: false)
+    Malt.create!(name: "flaked wheat",
+               potential: 1.035,
+               malt_yield: 0.77,
+               srm: 1.6,
+               base_malt?: false)
+    Malt.create!(name: "flaked rye",
+               potential: 1.033,
+               malt_yield: 0.71,
+               srm: 4.6,
+               base_malt?: false)
+    Malt.create!(name: "flaked oats",
+               potential: 1.039,
+               malt_yield: 0.85,
+               srm: 1.4,
+               base_malt?: false)
+    Malt.create!(name: "flaked rice",
+               potential: 1.032,
+               malt_yield: 0.70,
+               srm: 1.0,
+               base_malt?: false)
+    Malt.create!(name: "flaked corn",
+               potential: 1.039,
+               malt_yield: 0.85,
+               srm: 1.3,
+               base_malt?: false)
 end
 
 def make_hops

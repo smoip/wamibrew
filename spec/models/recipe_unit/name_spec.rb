@@ -171,6 +171,15 @@ require 'rails_helper'
           expect( @recipe.name ).to eq( 'Beer' )
         end
       end
+      context "recipe includes oats" do
+        before { @recipe.name = 'Beer' }
+        it "adds \'oatmeal\' rather than \'oats\'" do
+          allow( @recipe ).to receive( :choose_ingredient_adjective ).and_return( 'oats' )
+          allow( @recipe ).to receive( :get_required_malts ).and_return( [] )
+          @recipe.add_ingredient_to_name
+          expect( @recipe.name ).to eq( 'Oatmeal Beer' )
+        end
+      end
     end
 
     describe "choose_ingredient_adjective" do
@@ -223,6 +232,14 @@ require 'rails_helper'
         it "returns an array containing two test malt names" do
           expect( @recipe.get_required_malts ).to eq( [ '2-row', 'black', 'malt' ] )
         end
+      end
+    end
+    describe "oatmeal_check" do
+      it "should change oats to oatmeal" do
+        expect( @recipe.oatmeal_check('oats') ).to eq( 'oatmeal' )
+      end
+      it "does not change non-oat words" do
+        expect( @recipe.oatmeal_check('rye') ).to eq( 'rye' )
       end
     end
 

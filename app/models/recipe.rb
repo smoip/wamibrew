@@ -65,17 +65,24 @@ class Recipe < ActiveRecord::Base
         # no overlap between usuable malt names and adjective
         unless @name.include?(capitalize_titles(adjective))
           # no redundant adjectives
-          add_adjective(@name, capitalize_titles(adjective))
+          add_adjective(@name, capitalize_titles(oatmeal_check(adjective)))
         end
       end
     end
   end
 
   def choose_ingredient_adjective
-    adjectives = [ 'wheat', 'rye', 'honey' ]
+    adjectives = [ 'wheat', 'rye', 'honey', 'rice', 'oats', 'corn' ]
     # add more desired adjectives here
     malt_names = malts_to_array.collect {|malt| pull_malt_name(malt).split(' ')}
     adjective = (malt_names.flatten & adjectives).shuffle.first
+    adjective
+  end
+
+  def oatmeal_check(adjective)
+    if adjective == 'oats'
+      adjective = 'oatmeal'
+    end
     adjective
   end
 
