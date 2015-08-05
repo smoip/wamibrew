@@ -144,19 +144,15 @@ describe "variable assignment" do
   describe "hops assignment" do
 
     describe "choose_hop" do
-      it "needs a test"
-      # unit-testable?
-    end
-
-    describe "rand_test" do
-      it "returns 4" do
-        allow(@recipe).to receive(:rand).and_return(4)
-        expect(@recipe.rand_test).to eq(4)
-      end
+        it "needs a test"
+        # unit-testable?
     end
 
     describe "similar_hop" do
-      # test it
+      it "chooses the same hop as the previous choice" do
+        allow( @recipe ).to receive( :hop_names_to_array ).and_return( [ 'cascade' ] )
+        expect( @recipe.similar_hop.name ).to eq( 'cascade' )
+      end
     end
 
     describe "extreme_ibu_check" do

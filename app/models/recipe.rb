@@ -4,6 +4,7 @@ class Recipe < ActiveRecord::Base
 
   def initialize
     @malts = { :base => {}, :specialty => {} }
+    # @hops = { :bittering => {}, :aroma => [] }
     @name = "Beer"
     @stack_token = 0
     super
@@ -226,8 +227,8 @@ class Recipe < ActiveRecord::Base
     { hop => [ hop_amount(hop), hop_time(hop_type) ] }
   end
 
-  def rand_test
-    rand(5)
+  def similar_hop
+    Hop.find_by_name(hop_names_to_array.last)
   end
 
   def extreme_ibu_check
@@ -304,6 +305,8 @@ class Recipe < ActiveRecord::Base
 
   def assign_hops
     @hops = { :bittering => choose_hop(true), :aroma => choose_aroma_hops }
+    # @hops[:bittering]= choose_hop(true)
+    # @hops[:aroma]= choose_aroma_hops
     # probably want to refactor to mirror new malt structure (initialize @hops, assign to hash)
     # yes, do that
   end
@@ -366,6 +369,11 @@ class Recipe < ActiveRecord::Base
   end
 
   def choose_aroma_hops
+    # add similar_hop or something like it here
+    # similar hop won't work as is - uses hop_names_to_array.
+    # hop_names relies on hops already being assigned
+    # either refactor hops to mirror malt assignment (empty array and then assign bittering and aroma separately)
+    # or find a way to check last hop without using hop_names_to_array
     late_additions = num_aroma_hops
     if late_additions == 0
       return nil
