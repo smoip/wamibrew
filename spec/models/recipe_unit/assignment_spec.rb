@@ -67,27 +67,27 @@ describe "variable assignment" do
 
     describe "num_specialty_malts" do
       it "should pick 0..1" do
-        allow( @recipe ).to receive( :one_of_five ).and_return( 0 )
+        allow( @recipe ).to receive( :rand ).and_return( 0 )
         expect( @recipe.num_specialty_malts ).to be_between(0, 1).inclusive
       end
 
       it "should pick 1..2" do
-        allow( @recipe ).to receive( :one_of_five ).and_return( 1 )
+        allow( @recipe ).to receive( :rand ).and_return( 1 )
         expect( @recipe.num_specialty_malts ).to be_between(1, 2).inclusive
       end
 
       it "should pick 2..4" do
-        allow( @recipe ).to receive( :one_of_five ).and_return( 2 )
+        allow( @recipe ).to receive( :rand ).and_return( 2 )
         expect( @recipe.num_specialty_malts ).to be_between(1, 3).inclusive
       end
 
       it "should pick 4..5" do
-        allow( @recipe ).to receive( :one_of_five ).and_return( 3 )
+        allow( @recipe ).to receive( :rand ).and_return( 3 )
         expect( @recipe.num_specialty_malts ).to be_between(2, 4).inclusive
       end
 
       it "should pick 4..5" do
-        allow( @recipe ).to receive( :one_of_five ).and_return( 4 )
+        allow( @recipe ).to receive( :rand ).and_return( 4 )
         expect( @recipe.num_specialty_malts ).to be_between(3, 5).inclusive
       end
     end
@@ -146,6 +146,17 @@ describe "variable assignment" do
     describe "choose_hop" do
       it "needs a test"
       # unit-testable?
+    end
+
+    describe "rand_test" do
+      it "returns 4" do
+        allow(@recipe).to receive(:rand).and_return(4)
+        expect(@recipe.rand_test).to eq(4)
+      end
+    end
+
+    describe "similar_hop" do
+      # test it
     end
 
     describe "extreme_ibu_check" do
@@ -300,32 +311,32 @@ describe "variable assignment" do
 
     describe "num_aroma_hops" do
       it "should pick 0..1" do
-        allow( @recipe ).to receive( :one_of_six ).and_return( 0 )
+        allow( @recipe ).to receive( :rand ).and_return( 0 )
         expect( @recipe.num_aroma_hops ).to be_between(0, 1).inclusive
       end
 
       it "should pick 0..2" do
-        allow( @recipe ).to receive( :one_of_six ).and_return( 1 )
+        allow( @recipe ).to receive( :rand ).and_return( 1 )
         expect( @recipe.num_aroma_hops ).to be_between(0, 2).inclusive
       end
 
       it "should pick 2..4" do
-        allow( @recipe ).to receive( :one_of_six ).and_return( 2 )
+        allow( @recipe ).to receive( :rand ).and_return( 2 )
         expect( @recipe.num_aroma_hops ).to be_between(1, 3).inclusive
       end
 
       it "should pick 4..5" do
-        allow( @recipe ).to receive( :one_of_six ).and_return( 3 )
+        allow( @recipe ).to receive( :rand ).and_return( 3 )
         expect( @recipe.num_aroma_hops ).to be_between(2, 4).inclusive
       end
 
       it "should pick 4..5" do
-        allow( @recipe ).to receive( :one_of_six ).and_return( 4 )
+        allow( @recipe ).to receive( :rand ).and_return( 4 )
         expect( @recipe.num_aroma_hops ).to be_between(3, 5).inclusive
       end
 
       it "should pick 4..5" do
-        allow( @recipe ).to receive( :one_of_six ).and_return( 5 )
+        allow( @recipe ).to receive( :rand ).and_return( 5 )
         expect( @recipe.num_aroma_hops ).to be_between(4, 6).inclusive
       end
     end

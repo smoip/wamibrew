@@ -98,7 +98,7 @@ class Recipe < ActiveRecord::Base
 
   def add_yeast_family
     if @style == nil
-      if (one_of_four == 1) & (@name.include?("Beer"))
+      if (rand(4) == 1) & (@name.include?("Beer"))
         unless @yeast.family == 'wheat'
           @name = ((@name.split(' ') - ["Beer"]) + [ capitalize_titles(@yeast.family) ] ).join(' ')
         end
@@ -108,7 +108,7 @@ class Recipe < ActiveRecord::Base
 
   def add_color_to_name
     if @style == nil
-      if one_of_four == 1
+      if rand(4) == 1
         unless check_smash_name
           add_adjective(@name, choose_color_adjective(color_lookup))
         end
@@ -143,7 +143,7 @@ class Recipe < ActiveRecord::Base
 
   def add_strength_to_name
     if @style == nil
-      if one_of_four == 1
+      if rand(4) == 1
         unless check_smash_name
           add_adjective(@name, choose_strength_adjective(strength_lookup))
         end
@@ -171,18 +171,6 @@ class Recipe < ActiveRecord::Base
 
   def add_article
     @name = %w(a e i o u).include?(@name[0].downcase) ? "An #{@name}" : "A #{@name}"
-  end
-
-  def one_of_four
-    rand(4)
-  end
-
-  def one_of_five
-    rand(5)
-  end
-
-  def one_of_six
-    rand(6)
   end
 
   def add_adjective(name, adjective)
@@ -229,13 +217,17 @@ class Recipe < ActiveRecord::Base
   end
 
   def num_specialty_malts
-    complexity = one_of_five
+    complexity = rand(5)
     [ [ 0, 1 ], [ 1, 2 ], [ 1, 2, 2, 3 ], [ 2, 3, 4 ], [ 3, 4, 5 ] ][ complexity ].shuffle.first
   end
 
   def choose_hop(hop_type)
     hop = Hop.find_by(id: rand(Hop.count) + 1)
     { hop => [ hop_amount(hop), hop_time(hop_type) ] }
+  end
+
+  def rand_test
+    rand(5)
   end
 
   def extreme_ibu_check
@@ -369,7 +361,7 @@ class Recipe < ActiveRecord::Base
   end
 
   def num_aroma_hops
-    complexity = one_of_six
+    complexity = rand(6)
     [ [ 0, 1 ], [ 0, 1, 2 ], [ 1, 2, 2, 3 ], [ 2, 3, 3, 4 ], [ 3, 4, 5 ], [ 4, 5, 6 ] ][ complexity ].shuffle.first
   end
 

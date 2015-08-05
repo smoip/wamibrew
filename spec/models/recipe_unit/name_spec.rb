@@ -264,7 +264,7 @@ require 'rails_helper'
         before do
           @recipe.style = nil
           @recipe.yeast = yeast
-          allow( @recipe ).to receive( :one_of_four ).and_return( 1 )
+          allow( @recipe ).to receive( :rand ).and_return( 1 )
         end
         after { @recipe.yeast = nil }
 
@@ -294,7 +294,7 @@ require 'rails_helper'
         context "without assigned style" do
           before do
             @recipe.style = nil
-            allow( @recipe ).to receive( :one_of_four ).and_return( 1 )
+            allow( @recipe ).to receive( :rand ).and_return( 1 )
           end
           it "should attempt to pick an adjective" do
             expect { @recipe.add_color_to_name }.to raise_error
@@ -468,7 +468,7 @@ require 'rails_helper'
         context "without assigned style" do
           before do
             @recipe.style = nil
-            allow( @recipe ).to receive( :one_of_four ).and_return( 1 )
+            allow( @recipe ).to receive( :rand ).and_return( 1 )
           end
           it "should attempt to pick an adjective" do
             expect { @recipe.add_strength_to_name }.to raise_error
