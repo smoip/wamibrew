@@ -4,7 +4,7 @@ class Recipe < ActiveRecord::Base
 
   def initialize
     @malts = { :base => {}, :specialty => {} }
-    # @hops = { :bittering => {}, :aroma => [] }
+    @hops = { :bittering => {}, :aroma => [] }
     @name = "Beer"
     @stack_token = 0
     super
@@ -223,12 +223,34 @@ class Recipe < ActiveRecord::Base
   end
 
   def choose_hop(hop_type)
-    hop = Hop.find_by(id: rand(Hop.count) + 1)
-    { hop => [ hop_amount(hop), hop_time(hop_type) ] }
+    hop = similar_hop(hop_type)
+    type_key = hop_type_to_key(hop_type)
+    store_hop(type_key, hop, hop_type)
   end
 
-  def similar_hop
-    Hop.find_by_name(hop_names_to_array.last)
+  def store_hop(type_key, hop, hop_type)
+    if hop_type
+      @hops[type_key][hop]= [hop_amount, hop_time(hop_type)]
+    else
+      @hops[type_key] << { hop => [hop_amount, hop_time(hop_type)] }
+    end
+  end
+
+  def similar_hop(hop_type)
+    unless hop_type
+      if rand(4) == 1
+        unless (hop_names_to_array == [])
+          Hop.find_by_name(hop_names_to_array.last)
+          return
+        end
+      end
+    end
+    Hop.find_by(id: rand(Hop.count) + 1)
+  end
+
+  def hop_type_to_key(hop_type)
+    hop_type ? key = :bittering : key = :aroma
+    key
   end
 
   def extreme_ibu_check
@@ -304,11 +326,8 @@ class Recipe < ActiveRecord::Base
   end
 
   def assign_hops
-    @hops = { :bittering => choose_hop(true), :aroma => choose_aroma_hops }
-    # @hops[:bittering]= choose_hop(true)
-    # @hops[:aroma]= choose_aroma_hops
-    # probably want to refactor to mirror new malt structure (initialize @hops, assign to hash)
-    # yes, do that
+    choose_hop(true)
+    num_aroma_hops.times { choose_hop(false) }
   end
 
   def hops_to_array
@@ -368,23 +387,23 @@ class Recipe < ActiveRecord::Base
     [ [ 0, 1 ], [ 0, 1, 2 ], [ 1, 2, 2, 3 ], [ 2, 3, 3, 4 ], [ 3, 4, 5 ], [ 4, 5, 6 ] ][ complexity ].shuffle.first
   end
 
-  def choose_aroma_hops
-    # add similar_hop or something like it here
-    # similar hop won't work as is - uses hop_names_to_array.
-    # hop_names relies on hops already being assigned
-    # either refactor hops to mirror malt assignment (empty array and then assign bittering and aroma separately)
-    # or find a way to check last hop without using hop_names_to_array
-    late_additions = num_aroma_hops
-    if late_additions == 0
-      return nil
-    else
-      aroma_hops = []
-      late_additions.times do
-        aroma_hops << choose_hop(false)
-      end
-    end
-    return aroma_hops
-  end
+  # def choose_aroma_hops
+  #   # add similar_hop or something like it here
+  #   # similar hop won't work as is - uses hop_names_to_array.
+  #   # hop_names relies on hops already being assigned
+  #   # either refactor hops to mirror malt assignment (empty array and then assign bittering and aroma separately)
+  #   # or find a way to check last hop without using hop_names_to_array
+  #   late_additions = num_aroma_hops
+  #   if late_additions == 0
+  #     return nil
+  #   else
+  #     aroma_hops = []
+  #     late_additions.times do
+  #       aroma_hops << choose_hop(false)
+  #     end
+  #   end
+  #   return aroma_hops
+  # end
 
   def calc_abv
     # (og - fg) * weight of ethanol / fg * 100 = ABW
@@ -637,7 +656,7 @@ private
     end
   end
 
-  def hop_amount(hop)
+  def hop_amount
     (rand(6) + 1) / 2.0
   end
 
