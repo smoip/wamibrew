@@ -240,8 +240,7 @@ class Recipe < ActiveRecord::Base
     unless hop_type
       if rand(4) == 1
         unless (hop_names_to_array == [])
-          Hop.find_by_name(hop_names_to_array.last)
-          return
+          return Hop.find_by_name(hop_names_to_array.last)
         end
       end
     end
@@ -386,24 +385,6 @@ class Recipe < ActiveRecord::Base
     complexity = rand(6)
     [ [ 0, 1 ], [ 0, 1, 2 ], [ 1, 2, 2, 3 ], [ 2, 3, 3, 4 ], [ 3, 4, 5 ], [ 4, 5, 6 ] ][ complexity ].shuffle.first
   end
-
-  # def choose_aroma_hops
-  #   # add similar_hop or something like it here
-  #   # similar hop won't work as is - uses hop_names_to_array.
-  #   # hop_names relies on hops already being assigned
-  #   # either refactor hops to mirror malt assignment (empty array and then assign bittering and aroma separately)
-  #   # or find a way to check last hop without using hop_names_to_array
-  #   late_additions = num_aroma_hops
-  #   if late_additions == 0
-  #     return nil
-  #   else
-  #     aroma_hops = []
-  #     late_additions.times do
-  #       aroma_hops << choose_hop(false)
-  #     end
-  #   end
-  #   return aroma_hops
-  # end
 
   def calc_abv
     # (og - fg) * weight of ethanol / fg * 100 = ABW
