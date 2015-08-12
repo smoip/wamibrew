@@ -240,11 +240,15 @@ class Recipe < ActiveRecord::Base
     unless hop_type
       if rand(4) == 1
         unless (hop_names_to_array == [])
-          return Hop.find_by_name(hop_names_to_array.last)
+          hop = Hop.find_by_name(hop_names_to_array.last)
+          unless hop.nil?
+            return hop
+          end
         end
       end
     end
-    Hop.find_by(id: rand(Hop.count) + 1)
+    hop = Hop.find_by(id: rand(Hop.count) + 1)
+    hop
   end
 
   def hop_type_to_key(hop_type)
@@ -268,7 +272,7 @@ class Recipe < ActiveRecord::Base
 
   def re_assign_hops
     @stack_token += 1
-    self.hops = nil
+    self.hops = { :bittering => {}, :aroma => [] }
     self.assign_hops
     self.calc_ibu
     unless @stack_token > 15
