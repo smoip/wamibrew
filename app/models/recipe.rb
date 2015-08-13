@@ -494,9 +494,12 @@ class Recipe < ActiveRecord::Base
   end
 
   def flat_hops_array
-    self.hops_to_array.collect do |hop_addition|
-      [ hop_addition[1][1], [ hop_addition[0], hop_addition[1][0] ] ]
+    hop_ary = self.hops_to_array.collect do |hop_addition|
+      if hop_addition
+        [ hop_addition[1][1], [ hop_addition[0], hop_addition[1][0] ] ]
+      end
     end
+    (hop_ary[0] == nil) ? hop_ary -= [nil] : hop_ary
   end
 
   def time_ordered_hops_hash(flat_array)
