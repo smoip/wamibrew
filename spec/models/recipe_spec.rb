@@ -773,12 +773,6 @@ describe "Recipe" do
           end
         end
 
-        describe "time_ordered_hops_hash" do
-          it "should return a hash of hops objects and amounts keyed by time" do
-            expect(@recipe.time_ordered_hops_hash( [ [ 10, [ hop, 0.25 ] ], [ 60, [ hop, 1.5 ] ] ] )).to eq ( { 60 => [ hop, 1.5 ], 10 => [ hop, 0.25 ] } )
-          end
-        end
-
         it "should return an addition-time ordered list of hops" do
           expect(@recipe.display_hops).to eq("1.5 oz cascade test @ 60 min, 0.25 oz cascade test @ 10 min, 1.0 oz cascade test @ 5 min")
         end
