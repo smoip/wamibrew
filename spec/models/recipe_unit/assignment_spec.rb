@@ -7,6 +7,8 @@ describe "variable assignment" do
   end
   after { @recipe.destroy! }
   let(:malt) { FactoryGirl.build(:malt) }
+  let(:malt_1) { FactoryGirl.build(:malt, name: 'test malt_1') }
+  let(:malt_2) { FactoryGirl.build(:malt, name: 'test malt_2') }
   let(:hop) { FactoryGirl.build(:hop) }
   let(:yeast) { FactoryGirl.build(:yeast) }
 
@@ -102,13 +104,13 @@ describe "variable assignment" do
       after { @recipe.malts = nil }
       context "with specialty malts" do
         it "returns base malt and one specialty malt" do
-          @recipe.malts = { :base => { malt => 10.0 }, :specialty => { malt => 1.0 } }
-          expect( @recipe.malts_to_array ).to eq( [ [ malt, 10.0 ], [ malt, 1.0 ] ] )
+          @recipe.malts = { :base => { malt => 10.0 }, :specialty => { malt_1 => 1.0 } }
+          expect( @recipe.malts_to_array ).to eq( [ [ malt, 10.0 ], [ malt_1, 1.0 ] ] )
         end
 
         it "returns base malt and multiple specialty malts" do
-          @recipe.malts = { :base => { malt => 10.0 }, :specialty => { malt => 1.0, malt => 0.25, malt => 0.125 } }
-          expect( @recipe.malts_to_array ).to eq( [ [ malt, 10.0 ], [ malt, 1.0 ], [ malt, 0.25 ], [ malt, 0.125 ] ] )
+          @recipe.malts = { :base => { malt => 10.0 }, :specialty => { malt_1 => 1.0, malt_2 => 0.25 } }
+          expect( @recipe.malts_to_array ).to eq( [ [ malt, 10.0 ], [ malt_1, 1.0 ], [ malt_2, 0.25 ] ] )
           # not sure why failing - try with different malt ids? (rather than same Factory item)
         end
       end
