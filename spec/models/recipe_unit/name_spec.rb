@@ -61,7 +61,9 @@ require 'rails_helper'
       context "without assigned style" do
         before { @recipe.style = nil }
         it "should attempt to generate smash name" do
-          expect { @recipe.check_smash }.to raise_error( NoMethodError )
+          allow( @recipe ).to receive( :single_malt? ).and_return( true )
+          allow( @recipe ).to receive( :single_hop? ).and_return( true )
+          expect { @recipe.check_smash }.to raise_error
         end
       end
     end

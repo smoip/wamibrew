@@ -539,15 +539,17 @@ class Recipe < ActiveRecord::Base
   end
 
   def select_by_aroma(style_list)
-    subset = []
-    aroma_present = false
-    aroma_present = true if @hops[:aroma] != nil
-    if aroma_present
-      style_list.each { |style| subset << style if style.aroma_required? }
-    else
-      subset = style_list
+    subset = style_list.dup
+    unless aroma_present?
+      style_list.each { |style| subset -= [style] if style.aroma_required? }
     end
     return subset
+  end
+
+  def aroma_present?
+    aroma_present = false
+    aroma_present = true if @hops[:aroma] != []
+    aroma_present
   end
 
   def select_by_abv(style_list)
