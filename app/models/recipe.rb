@@ -588,7 +588,7 @@ class Recipe < ActiveRecord::Base
     elsif style_list.length > 1
       @style = filter_style_by_ingredients(style_list)
     end
-    # needs case handling for no style match - approximate styles
+    # needs better case handling for no style match - approximate styles
   end
 
   def filter_style_by_ingredients(style_list)
