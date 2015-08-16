@@ -14,12 +14,19 @@ describe "variable assignment" do
 
   describe "malt assignment" do
 
-    describe "choose_malt" do
-      it "needs a test"
-      # unit-testable?
-    end
-
     describe "order_specialty_malts" do
+      after { @recipe.malts[:specialty]= {} }
+      context "no specialty malts" do
+        it "assigns @malts[:specialty] an empty hash" do
+          expect(@recipe.malts[:specialty]).to eq({})
+        end
+      end
+      context "specialty malts present" do
+        before { @recipe.malts[:specialty]= { malt => 2, malt_1 => 2.25, malt_2 => 0.5 } }
+        it "assigns @malts[:specialty] a hash ordered by malt amount" do
+          expect(@recipe.malts[:specialty]).to eq({ malt_1 => 2.25, malt => 2, malt_2 => 0.5 })
+        end
+      end
     end
 
     describe "store_malt" do
@@ -94,12 +101,6 @@ describe "variable assignment" do
       end
     end
 
-    describe "assign_malts" do
-      # not sure how to unit test - only calls other methods
-      # leave for integration only?
-      it "needs a unit test?"
-    end
-
     describe "malts_to_array" do
       after { @recipe.malts = nil }
       context "with specialty malts" do
@@ -111,7 +112,6 @@ describe "variable assignment" do
         it "returns base malt and multiple specialty malts" do
           @recipe.malts = { :base => { malt => 10.0 }, :specialty => { malt_1 => 1.0, malt_2 => 0.25 } }
           expect( @recipe.malts_to_array ).to eq( [ [ malt, 10.0 ], [ malt_1, 1.0 ], [ malt_2, 0.25 ] ] )
-          # not sure why failing - try with different malt ids? (rather than same Factory item)
         end
       end
 
@@ -123,32 +123,9 @@ describe "variable assignment" do
       end
     end
 
-    describe "pull_malt_object" do
-      it "should return a malt object" do
-        expect( @recipe.pull_malt_object( [ malt, 10.0 ] ) ).to eq( malt )
-      end
-    end
-
-    describe "pull_malt_name" do
-      it "should return \'2-row test\'" do
-        expect( @recipe.pull_malt_name( [ malt, 10.0 ] ) ).to eq( '2-row test' )
-      end
-    end
-
-    describe "pull_malt_amt" do
-      it "should return 10.0" do
-        expect( @recipe.pull_malt_amt( [ malt, 10.0 ] ) ).to eq( 10.0 )
-      end
-    end
-
   end
 
   describe "hops assignment" do
-
-    describe "choose_hop" do
-        it "needs a test"
-        # unit-testable?
-    end
 
     describe "store_hop" do
       before { allow( @recipe ).to receive( :hop_amount ).and_return( 2.0 ) }
@@ -291,12 +268,6 @@ describe "variable assignment" do
       end
     end
 
-    describe "assign_hops" do
-      # not sure how to unit test - only calls other methods
-      # leave for integration only?
-      it "needs a unit test?"
-    end
-
     describe "hops_to_array" do
       after { @recipe.hops = nil }
       context "with aroma hops" do
@@ -332,30 +303,6 @@ describe "variable assignment" do
           @recipe.hops = { :bittering => { hop => [ 1.5, 60 ] }, :specialty => nil }
           expect( @recipe.hop_names_to_array ).to eq( [ 'cascade test' ] )
         end
-      end
-    end
-
-    describe "pull_hop_object" do
-      it "should return a hop object" do
-        expect( @recipe.pull_hop_object( [ hop, [ 1.0, 10 ] ] ) ).to eq( hop )
-      end
-    end
-
-    describe "pull_hop_name" do
-      it "should return a hop name" do
-        expect( @recipe.pull_hop_name( [ hop, [ 1.0, 10 ] ] ) ).to eq( 'cascade test' )
-      end
-    end
-
-    describe "pull_hop_amt" do
-      it "should return a hop_amt" do
-        expect( @recipe.pull_hop_amt( [ hop, [ 1.0, 10 ] ] ) ).to eq( 1.0 )
-      end
-    end
-
-    describe "pull_hop_time" do
-      it "should return a hop time" do
-        expect( @recipe.pull_hop_time( [ hop, [ 1.0, 10 ] ] ) ).to eq( 10 )
       end
     end
 
