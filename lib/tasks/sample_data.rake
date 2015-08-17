@@ -440,7 +440,7 @@ def make_styles
                 ibu_lower: 50,
                 srm_upper: 18,
                 srm_lower: 6)
-    Style.create!(name: "Witbier",
+  Style.create!(name: "Witbier",
                 yeast_family: "belgian",
                 required_malts: ["white wheat"],
                 required_hops: nil,
@@ -453,7 +453,7 @@ def make_styles
                 ibu_lower: 10,
                 srm_upper: 6,
                 srm_lower: 2)
-      Style.create!(name: "Belgian Dubbel",
+  Style.create!(name: "Belgian Dubbel",
                 yeast_family: "belgian",
                 required_malts: ["pilsen"],
                 required_hops: nil,
@@ -466,7 +466,7 @@ def make_styles
                 ibu_lower: 15,
                 srm_upper: 18,
                 srm_lower: 10)
-        Style.create!(name: "Belgian Tripel",
+  Style.create!(name: "Belgian Tripel",
                 yeast_family: "belgian",
                 required_malts: ["pilsen", "candi sugar"],
                 required_hops: nil,
@@ -479,7 +479,7 @@ def make_styles
                 ibu_lower: 20,
                 srm_upper: 8,
                 srm_lower: 4)
-          Style.create!(name: "Belgian Dark Strong",
+  Style.create!(name: "Belgian Dark Strong",
                 yeast_family: "belgian",
                 required_malts: ["pilsen"],
                 required_hops: nil,
@@ -492,7 +492,7 @@ def make_styles
                 ibu_lower: 20,
                 srm_upper: 22,
                 srm_lower: 12)
-            Style.create!(name: "Saison",
+  Style.create!(name: "Saison",
                 yeast_family: "saison",
                 required_malts: ["pilsen"],
                 required_hops: nil,
@@ -505,7 +505,7 @@ def make_styles
                 ibu_lower: 20,
                 srm_upper: 14,
                 srm_lower: 5)
-            Style.create!(name: "Kolsch",
+  Style.create!(name: "Kolsch",
                 yeast_family: "kolsch",
                 required_malts: nil,
                 required_hops: nil,
