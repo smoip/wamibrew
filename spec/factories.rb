@@ -33,7 +33,7 @@ FactoryGirl.define do
   end
 
   factory :style do
-    name            "American IPA"
+    name            "IPA"
     yeast_family    "ale"
     required_malts  nil
     required_hops   nil

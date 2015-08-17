@@ -74,7 +74,7 @@ class Recipe < ActiveRecord::Base
   end
 
   def choose_ingredient_adjective
-    adjectives = [ 'wheat', 'rye', 'honey', 'rice', 'oats', 'corn' ]
+    adjectives = [ 'wheat', 'rye', 'honey', 'rice', 'oats', 'corn', 'smoked' ]
     # add more desired adjectives here
     malt_names = malts_to_array.collect {|malt| pull_malt_name(malt).split(' ')}
     adjective = (malt_names.flatten & adjectives).shuffle.first

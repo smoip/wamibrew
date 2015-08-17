@@ -26,7 +26,7 @@ describe "Styles" do
 
     describe "with duplicate name" do
       it "should be invalid" do
-       allow(@style).to receive(:name).and_return("American IPA")
+       allow(@style).to receive(:name).and_return("IPA")
        expect(@style).not_to be_valid
       end
     end

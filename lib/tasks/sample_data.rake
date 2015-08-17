@@ -129,6 +129,31 @@ def make_malts
                malt_yield: 0.85,
                srm: 1.3,
                base_malt?: false)
+    Malt.create!(name: "caramel 90",
+               potential: 1.033,
+               malt_yield: 0.72,
+               srm: 90,
+               base_malt?: false)
+    Malt.create!(name: "carapils",
+               potential: 1.034,
+               malt_yield: 0.73,
+               srm: 1.5,
+               base_malt?: false)
+    Malt.create!(name: "golden promise",
+               potential: 1.038,
+               malt_yield: 0.82,
+               srm: 2.5,
+               base_malt?: true)
+    Malt.create!(name: "red x",
+               potential: 1.034,
+               malt_yield: 0.74,
+               srm: 12,
+               base_malt?: true)
+    Malt.create!(name: "smoked malt",
+               potential: 1.037,
+               malt_yield: 0.80,
+               srm: 7,
+               base_malt?: false)
 end
 
 def make_hops
@@ -158,55 +183,72 @@ def make_hops
               alpha: 4.5)
   Hop.create!(name: "sorachi ace",
               alpha: 13.0)
+  Hop.create!(name: "mosaic",
+              alpha: 12.0)
+  Hop.create!(name: "green bullet",
+              alpha: 13.5)
+  Hop.create!(name: "glacier",
+              alpha: 5.6)
+  Hop.create!(name: "liberty",
+              alpha: 4.3)
+  Hop.create!(name: "galaxy",
+              alpha: 14.0)
+  Hop.create!(name: "mt. hood",
+              alpha: 14.0)
+  Hop.create!(name: "challenger",
+              alpha: 7.5)
 end
 
 def make_yeasts
-  Yeast.create!(name: "WY1007",
+  Yeast.create!(name: "WY1007 - German Ale",
                 attenuation: 76,
                 family: "german ale")
-  Yeast.create!(name: "WY1056",
+  Yeast.create!(name: "WY1056 - American Ale",
                 attenuation: 75,
                 family: "ale")
-  Yeast.create!(name: "WY1098",
+  Yeast.create!(name: "WY1098 - British Ale",
                 attenuation: 72,
                 family: "ale")
-  Yeast.create!(name: "WLP090",
+  Yeast.create!(name: "WLP090 - San Diego Super Yeast",
                 attenuation: 80,
                 family: "ale")
-  Yeast.create!(name: "WY2007",
+  Yeast.create!(name: "WY2007 - Pilsen Lager",
                 attenuation: 73,
                 family: "lager")
-  Yeast.create!(name: "WY1099",
+  Yeast.create!(name: "WY1099 - Whitbread Ale",
                 attenuation: 70,
                 family: "ale")
-  Yeast.create!(name: "WY3056",
+  Yeast.create!(name: "WY3056 - Bavarian Wheat Blend",
                 attenuation: 75,
                 family: "wheat")
-  Yeast.create!(name: "WY2001",
+  Yeast.create!(name: "WY2001 - Urqell Lager",
                 attenuation: 74,
                 family: "lager")
-  Yeast.create!(name: "WY1214",
+  Yeast.create!(name: "WY1214 - Belgian Abbey",
                 attenuation: 76,
-                family: "belgian")
-  Yeast.create!(name: "WY3944",
+                family: "belgian ale")
+  Yeast.create!(name: "WY3944 - Belgian Witbier",
                 attenuation: 74,
-                family: "belgian")
-  Yeast.create!(name: "WY3711",
+                family: "belgian ale")
+  Yeast.create!(name: "WY3711 - French Saison",
                 attenuation: 80,
                 family: "saison")
-  Yeast.create!(name: "WY3522",
+  Yeast.create!(name: "WY3522 - Belgian Ardennes",
                 attenuation: 74,
-                family: "belgian")
-  Yeast.create!(name: "WY3724",
+                family: "belgian ale")
+  Yeast.create!(name: "WY3724 - Belgian Saison",
                 attenuation: 78,
                 family: "saison")
-  Yeast.create!(name: "WY2565",
+  Yeast.create!(name: "WY2565 - Kölsch",
                 attenuation: 75,
                 family: "kolsch")
+  Yeast.create!(name: "WY1084 - Irish Ale",
+                attenuation: 73,
+                family: "ale")
 end
 
 def make_styles
-  Style.create!(name: "American IPA",
+  Style.create!(name: "IPA",
                 yeast_family: "ale",
                 required_malts: nil,
                 required_hops: nil,
@@ -219,7 +261,7 @@ def make_styles
                 ibu_lower: 40,
                 srm_upper: 15,
                 srm_lower: 6)
-  Style.create!(name: "American Stout",
+  Style.create!(name: "Stout",
                 yeast_family: "ale",
                 required_malts: nil,
                 required_hops: nil,
@@ -245,7 +287,7 @@ def make_styles
                 ibu_lower: 25,
                 srm_upper: 2,
                 srm_lower: 5)
-  Style.create!(name: "American Pale",
+  Style.create!(name: "Pale Ale",
                 yeast_family: "ale",
                 required_malts: nil,
                 required_hops: nil,
@@ -275,7 +317,7 @@ def make_styles
                 yeast_family: "ale",
                 required_malts: nil,
                 required_hops: nil,
-                common_malts: ["maris otter"],
+                common_malts: ["maris otter", "golden promise", "red x"],
                 common_hops: ["east kent goldings", "fuggle"],
                 aroma_required?: false,
                 abv_upper: 6.0,
@@ -340,7 +382,7 @@ def make_styles
                 yeast_family: "ale",
                 required_malts: nil,
                 required_hops: nil,
-                common_malts: ["black malt"],
+                common_malts: ["black malt", "chocolate", "smoked malt"],
                 common_hops: nil,
                 aroma_required?: false,
                 abv_upper: 6.5,
@@ -418,7 +460,7 @@ def make_styles
                 yeast_family: "german ale",
                 required_malts: ["pilsen"],
                 required_hops: nil,
-                common_malts: ["munich 10", "vienna"],
+                common_malts: ["munich 10", "vienna", "red x"],
                 common_hops: ["hallertau", "tettnang", "spalt", "saaz"],
                 aroma_required?: false,
                 abv_upper: 5.2,
@@ -509,7 +551,7 @@ def make_styles
                 yeast_family: "kolsch",
                 required_malts: nil,
                 required_hops: nil,
-                common_malts: ["pilsen", "white wheat",],
+                common_malts: ["pilsen", "white wheat"],
                 common_hops: ["hallertau", "tettnang", "spalt", "saaz"],
                 aroma_required?: false,
                 abv_upper: 5.2,
@@ -518,4 +560,17 @@ def make_styles
                 ibu_lower: 20,
                 srm_upper: 5,
                 srm_lower: 3.5)
+  Style.create!(name: "Oktoberfest",
+                yeast_family: "lager",
+                required_malts: nil,
+                required_hops: nil,
+                common_malts: ["pilsen", "vienna", "munich 10", "red x"],
+                common_hops: ["hallertau", "tettnang", "spalt", "saaz"],
+                aroma_required?: false,
+                abv_upper: 6.0,
+                abv_lower: 4.6,
+                ibu_upper: 30,
+                ibu_lower: 18,
+                srm_upper: 15,
+                srm_lower: 6)
 end

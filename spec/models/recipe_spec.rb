@@ -25,7 +25,7 @@ describe "Recipe" do
   describe "ingredient methods" do
 
     describe "name" do
-      let(:style) { Style.find_by_name( "American IPA" ) }
+      let(:style) { Style.find_by_name( "IPA" ) }
       before do
         @recipe.style = style
       end
@@ -33,7 +33,7 @@ describe "Recipe" do
       it "should generate a name" do
         allow(@recipe).to receive(:pull_malt_name).and_return('2-row')
         @recipe.generate_name
-        expect(@recipe.name).to eq("An American IPA")
+        expect(@recipe.name).to eq("An IPA")
       end
 
       describe "smash_check" do
@@ -107,7 +107,7 @@ describe "Recipe" do
             end
 
             it "should add adjectives to the middle of two word names" do
-              expect(@recipe.name).to eq( "An American Wheat IPA" )
+              expect(@recipe.name).to eq( "A Wheat IPA" )
             end
 
             it "should add adjectives to the beginning of one word names" do
@@ -129,10 +129,10 @@ describe "Recipe" do
 
             it "should add an adjunct from the specialty malts" do
               @recipe.malts = with_rye
-              @recipe.style = Style.find_by_name("American Pale")
-              @recipe.name = "American Pale"
+              @recipe.style = Style.find_by_name("Pale Ale")
+              @recipe.name = "Pale Ale"
               @recipe.add_ingredient_to_name
-              expect(@recipe.name).to eq("American Rye Pale")
+              expect(@recipe.name).to eq("Rye Pale Ale")
             end
           end
 
@@ -620,8 +620,8 @@ describe "Recipe" do
   end
 
   describe "style determination" do
-    let(:style) { Style.find_by_name( "American IPA" ) }
-    let(:stout) { Style.find_by_name( "American Stout" ) }
+    let(:style) { Style.find_by_name( "IPA" ) }
+    let(:stout) { Style.find_by_name( "Stout" ) }
     let(:style_list) { [ style, stout ] }
     let(:hop) { FactoryGirl.create(:hop) }
     before do
@@ -744,7 +744,7 @@ describe "Recipe" do
           @recipe.calc_srm
         end
 
-        let(:style2) { Style.find_by_name("American Pale") }
+        let(:style2) { Style.find_by_name("Pale Ale") }
         let(:two_styles) { [ style2, style ] }
 
         describe "tally_common_malts" do
@@ -769,7 +769,7 @@ describe "Recipe" do
 
         describe "filter_style_by_ingredients" do
           it "should choose the style with the most matching 'common ingredients'" do
-            expect(@recipe.filter_style_by_ingredients( two_styles )).to eq( Style.find_by_name("American IPA") )
+            expect(@recipe.filter_style_by_ingredients( two_styles )).to eq( Style.find_by_name("IPA") )
           end
         end
       end
