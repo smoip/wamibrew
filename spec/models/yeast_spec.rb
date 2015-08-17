@@ -14,7 +14,7 @@ describe "Yeast" do
   describe "with invalid attributes" do
     describe "with duplicate name" do
       it "should be invalid" do
-        allow(@yeast).to receive(:name).and_return("WY1056")
+        allow(@yeast).to receive(:name).and_return("WY1056 - American Ale")
         expect(@yeast).not_to be_valid
       end
     end

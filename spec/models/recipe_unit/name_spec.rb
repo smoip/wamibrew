@@ -41,7 +41,7 @@
         after { @recipe.style = nil }
         it "should assign the style name" do
           @recipe.generate_name
-          expect( @recipe.name ).to eq( 'American IPA' )
+          expect( @recipe.name ).to eq( 'IPA' )
         end
       end
     end

@@ -41,7 +41,7 @@ describe "Recipe" do
         let(:single_hop) { { :bittering => {  Hop.find_by_name('cascade') => [ 1.5, 60 ] }, :aroma=> [] } }
         let(:multi_malt) { { :base => { Malt.find_by_name("2-row") => 10 }, :specialty => { Malt.find_by_name("caramel 60") => 0.5 } } }
         let(:multi_hop) { @recipe.hops = { :bittering => { Hop.find_by_name("cascade") => [2, 60] }, :aroma => [ { Hop.find_by_name("centennial") => [1, 5] } ] } }
-        before { @recipe.yeast = Yeast.find_by_name( "WY1056" ) }
+        before { @recipe.yeast = Yeast.find_by_name( "WY1056 - American Ale" ) }
         after { @recipe.yeast = nil }
 
         describe "positively identify SMASH beers" do
@@ -65,7 +65,7 @@ describe "Recipe" do
         end
 
         describe "negatively identify SMASH beers" do
-          before { allow(@recipe).to receive(:yeast).and_return( Yeast.find_by_name( "WY1056" ) ) }
+          before { allow(@recipe).to receive(:yeast).and_return( Yeast.find_by_name( "WY1056 - American Ale" ) ) }
           before { allow(@recipe).to receive(:rand).and_return( 2 ) }
           context "with multiple malts, single hop" do
             before do
@@ -151,7 +151,7 @@ describe "Recipe" do
           context "ale" do
             before do
               @recipe.style = nil
-              @recipe.yeast = Yeast.find_by_name("WY1056")
+              @recipe.yeast = Yeast.find_by_name("WY1056 - American Ale")
               allow(@recipe).to receive(:rand).and_return(1)
             end
 
@@ -163,7 +163,7 @@ describe "Recipe" do
           context "lager" do
             before do
               @recipe.style = nil
-              @recipe.yeast = Yeast.find_by_name("WY2001")
+              @recipe.yeast = Yeast.find_by_name("WY2001 - Urqell Lager")
               allow(@recipe).to receive(:rand).and_return(1)
             end
 
@@ -628,7 +628,7 @@ describe "Recipe" do
       @recipe.abv = 6
       @recipe.ibu = 60
       @recipe.srm = 10
-      @recipe.yeast = Yeast.find_by_name('WY1056')
+      @recipe.yeast = Yeast.find_by_name('WY1056 - American Ale')
       style_list = [ style ]
     end
     # need to index anything you'll be searching (GIN?)
@@ -738,7 +738,7 @@ describe "Recipe" do
           # should fit both IPA and Pale
           @recipe.malts = { :base => { Malt.find_by_name("2-row") => 10 }, :specialty => { Malt.find_by_name("caramel 60") => 0.5 } }
           @recipe.hops = { :bittering => { Hop.find_by_name("cascade") => [2, 60] }, :aroma => [ { Hop.find_by_name("cascade") => [1, 5] } ] }
-          @recipe.yeast = Yeast.find_by_name("WY1056")
+          @recipe.yeast = Yeast.find_by_name("WY1056 - American Ale")
           @recipe.calc_abv
           @recipe.calc_ibu
           @recipe.calc_srm

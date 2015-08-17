@@ -202,13 +202,18 @@ class Recipe < ActiveRecord::Base
   end
 
   def choose_malt(malt_type)
-    match = false
-    until match == true
-      malt = Malt.find_by(id: rand(Malt.count) + 1)
-      if malt.base_malt? == malt_type
-        match = true
-      end
+    # match = false
+    # until match == true
+    #   malt = Malt.find_by(id: rand(Malt.count) + 1)
+    #   if malt.base_malt? == malt_type
+    #     match = true
+    #   end
+    # end
+    subset = []
+    Malt.all.each do |malt|
+      subset << malt if (malt.base_malt? == malt_type)
     end
+    malt = subset.shuffle.first
     type_key = malt_type_to_key(malt_type)
     store_malt(type_key, malt)
   end
