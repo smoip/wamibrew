@@ -402,7 +402,6 @@ class Recipe < ActiveRecord::Base
     return 0 if malt_ary.nil?
     malt = pull_malt_object(malt_ary)
     weight = pull_malt_amt(malt_ary)
-    # weight = malt_and_weight[malt]
     ((weight * pg_to_ep(malt.potential) * malt.malt_yield / 5.0) / 1000.0)
   end
 
@@ -436,11 +435,11 @@ class Recipe < ActiveRecord::Base
     time = pull_hop_time(hop_ary)
     rager_ibu = ( weight * (calc_hop_util(time)) * (hop.alpha / 100) * 7462 ) / ( 5 * ( 1 + calc_hop_ga ) )
     rager_to_tinseth_q_and_d(time, rager_ibu)
-    # remove last line to reset to Rager
+    # comment out previous line to reset to Rager
   end
 
   def rager_to_tinseth_q_and_d(time, rager_ibu)
-    # need to match BJCP IBU style guidelines
+    # needed to match BJCP IBU style guidelines
     faux_tinseth = 0
     if time > 30
       faux_tinseth = rager_ibu * 0.78
