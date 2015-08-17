@@ -30,6 +30,7 @@ class Recipe < ActiveRecord::Base
     add_ingredient_to_name
     add_color_to_name
     add_strength_to_name
+    nationality_check
     add_article
   end
 
@@ -105,6 +106,19 @@ class Recipe < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def nationality_check
+    if @name.include?('German')
+      @name = swap_yeast_adjective_order(@name, 'German')
+    end
+    if @name.include?('Belgian')
+      @name = swap_yeast_adjective_order(@name, 'Belgian')
+    end
+  end
+
+  def swap_yeast_adjective_order(name, adjective)
+    ((name.split - [adjective]).unshift([adjective])).join(' ')
   end
 
   def add_color_to_name

@@ -579,6 +579,14 @@
         end
       end
 
+      context "with \'Amber\'" do
+        before { @recipe.name = "Amber" }
+        it "should add \'An\'" do
+          @recipe.add_article
+          expect(@recipe.name).to eq( "An Amber" )
+        end
+      end
+
       context "with other vowel-start name" do
         before { @recipe.name  = "Imperial Stout" }
         it "should add \'An\'" do
@@ -593,6 +601,30 @@
           @recipe.add_article
           expect(@recipe.name).to eq( "A Session IPA" )
         end
+      end
+    end
+
+    describe "nationality_check" do
+      before { allow(@recipe).to receive(:swap_yeast_adjective_order).and_return('Success!') }
+      context "name includes German" do
+        it "calls swap_yeast_adjective_order" do
+          @recipe.name = 'Rye German Ale'
+          @recipe.nationality_check
+          expect(@recipe.name).to eq('Success!')
+        end
+      end
+      context "name includes Belgian" do
+        it "calls swap_yeast_adjective_order" do
+          @recipe.name = 'Wheat Belgian Ale'
+          @recipe.nationality_check
+          expect(@recipe.name).to eq('Success!')
+        end
+      end
+    end
+
+    describe "swap_yeast_adjective_order" do
+      it "moves the adjective to the front of the name string" do
+        expect(@recipe.swap_yeast_adjective_order('White Hoppy Ale', 'Hoppy')).to eq('Hoppy White Ale')
       end
     end
 

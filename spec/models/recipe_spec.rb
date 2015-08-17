@@ -174,6 +174,23 @@ describe "Recipe" do
           end
         end
 
+        describe "nationality_check" do
+          context "name includes German" do
+            it "moves \'German\' to the front of the name string" do
+              @recipe.name = 'Rye German Ale'
+              @recipe.nationality_check
+              expect(@recipe.name).to eq('German Rye Ale')
+            end
+          end
+          context "name includes Belgian" do
+            it "moves \'Belgian\' to the front of the name string" do
+              @recipe.name = 'Wheat Belgian Ale'
+              @recipe.nationality_check
+              expect(@recipe.name).to eq('Belgian Wheat Ale')
+            end
+          end
+        end
+
         describe "by hoppiness" do
           it "doesn't exist yet"
         end
