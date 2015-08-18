@@ -29,8 +29,8 @@ class Recipe < ActiveRecord::Base
     add_yeast_family
     add_ingredient_to_name
     add_color_to_name
-    add_strength_to_name
     nationality_check
+    add_strength_to_name
     add_article
   end
 
@@ -180,7 +180,7 @@ class Recipe < ActiveRecord::Base
   end
 
   def choose_strength_adjective(strength)
-    strength_hash = { :weak => [ "mild", "low gravity" ], :session => [ "sessionable", "quaffable" ], :average => [""], :strong => [ "strong" ], :very_strong => [ "high gravity", "very strong" ]  }
+    strength_hash = { :weak => [ "mild", "low gravity" ], :session => [ "sessionable", "quaffable" ], :average => [""], :strong => [ "strong" ], :very_strong => [ "high gravity", "imperial" ]  }
     capitalize_titles(strength_hash[strength].shuffle.first)
   end
 
@@ -202,18 +202,7 @@ class Recipe < ActiveRecord::Base
   end
 
   def choose_malt(malt_type)
-    # match = false
-    # until match == true
-    #   malt = Malt.find_by(id: rand(Malt.count) + 1)
-    #   if malt.base_malt? == malt_type
-    #     match = true
-    #   end
-    # end
-    subset = []
-    Malt.all.each do |malt|
-      subset << malt if (malt.base_malt? == malt_type)
-    end
-    malt = subset.shuffle.first
+    malt = Malt.where(base_malt?: malt_type).shuffle.first
     type_key = malt_type_to_key(malt_type)
     store_malt(type_key, malt)
   end
@@ -257,7 +246,7 @@ class Recipe < ActiveRecord::Base
 
   def similar_hop(hop_type)
     unless hop_type
-      if rand(4) == 1
+      if rand(3) == 1
         unless (hop_names_to_array == [])
           hop = Hop.find_by_name(hop_names_to_array.last)
           unless hop.nil?
