@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe "Recipe" do
+describe Recipe do
   before do
     @recipe = Recipe.new
     @recipe.save!
@@ -42,7 +42,6 @@ describe "Recipe" do
         let(:multi_malt) { { :base => { Malt.find_by_name("2-row") => 10 }, :specialty => { Malt.find_by_name("caramel 60") => 0.5 } } }
         let(:multi_hop) { @recipe.hops = { :bittering => { Hop.find_by_name("cascade") => [2, 60] }, :aroma => [ { Hop.find_by_name("centennial") => [1, 5] } ] } }
         before { @recipe.yeast = Yeast.find_by_name( "WY1056 - American Ale" ) }
-        after { @recipe.yeast = nil }
 
         describe "positively identify SMASH beers" do
           before do
@@ -192,7 +191,7 @@ describe "Recipe" do
         end
 
         describe "by hoppiness" do
-          it "doesn't exist yet"
+          pending
         end
       end
     end
@@ -229,12 +228,15 @@ describe "Recipe" do
         end
 
         describe "order_specialty_malts" do
-          let(:three_malts) { { Malt.find_by_name("caramel 60") => 0.5, Malt.find_by_name("rye malt") => 1, Malt.find_by_name("black malt") => 0.25 } }
+          let(:c_60) { FactoryGirl.create(:malt, name: 'c 60') }
+          let(:rye) { FactoryGirl.create(:malt, name: 'rye') }
+          let(:black) { FactoryGirl.create(:malt, name: 'black') }
+          let(:three_malts) { { c_60 => 0.5, rye => 1, black => 0.25 } }
 
           it "should order specialty malts by amount" do
             @recipe.malts[:specialty]= three_malts
             @recipe.order_specialty_malts
-            expect(@recipe.malts[:specialty]).to eq( { Malt.find_by_name("rye malt") => 1, Malt.find_by_name("caramel 60") => 0.5, Malt.find_by_name("black malt") => 0.25 } )
+            expect(@recipe.malts[:specialty]).to eq( { rye => 1, c_60 => 0.5, black => 0.25 } )
           end
         end
       end
