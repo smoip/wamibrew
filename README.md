@@ -1,7 +1,6 @@
 # Wamibrew (What Am I Brewing?)
 
-Wamibrew is a smart beer recipe generator for homebrewers.
+[Wamibrew] (http://www.wamibrew.com/ "Wamibrew") is a smart beer recipe generator for homebrewers.
 
-by David Roberts
+by [David Roberts] (http://www.davidroberts.xyz)
 
-[Heroku] (http://glacial-retreat-8598.herokuapp.com/ "Wamibrew")
