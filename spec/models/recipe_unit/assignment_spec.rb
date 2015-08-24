@@ -14,20 +14,20 @@ describe "variable assignment" do
 
   describe "malt assignment" do
 
-    describe "order_specialty_malts" do
-      after { @recipe.malts[:specialty]= {} }
-      context "no specialty malts" do
-        it "assigns @malts[:specialty] an empty hash" do
-          expect(@recipe.malts[:specialty]).to eq({})
-        end
-      end
-      context "specialty malts present" do
-        before { @recipe.malts[:specialty]= { malt => 2, malt_1 => 2.25, malt_2 => 0.5 } }
-        it "assigns @malts[:specialty] a hash ordered by malt amount" do
-          expect(@recipe.malts[:specialty]).to eq({ malt_1 => 2.25, malt => 2, malt_2 => 0.5 })
-        end
-      end
-    end
+    # describe "order_specialty_malts" do
+    #   after { @recipe.malts[:specialty]= {} }
+    #   context "no specialty malts" do
+    #     it "assigns @malts[:specialty] an empty hash" do
+    #       expect(@recipe.malts[:specialty]).to eq({})
+    #     end
+    #   end
+    #   context "specialty malts present" do
+    #     before { @recipe.malts[:specialty]= { malt => 2, malt_1 => 2.25, malt_2 => 0.5 } }
+    #     it "assigns @malts[:specialty] a hash ordered by malt amount" do
+    #       expect(@recipe.malts[:specialty]).to eq({ malt_1 => 2.25, malt => 2, malt_2 => 0.5 })
+    #     end
+    #   end
+    # end
 
     describe "store_malt" do
       before { allow( @recipe ).to receive( :malt_amount ).and_return( 2.11 ) }

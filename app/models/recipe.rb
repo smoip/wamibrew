@@ -208,8 +208,8 @@ class Recipe < ActiveRecord::Base
   end
 
   def order_specialty_malts
-    specialty_ary = ( @malts[:specialty].sort_by { |malt, amt| amt } ).reverse
-    @malts[:specialty]= Hash[*specialty_ary.flatten]
+    order_object = OrderSpecialtyMalts.new(self)
+    order_object.order
   end
 
   def store_malt(type_key, malt)
