@@ -497,45 +497,13 @@ describe Recipe do
         @recipe.hops = hops
         @recipe.og = 1.040
         # rager numbers:
-        # expect(@recipe.calc_ibu).to be_within(2).of(55)
+        # @recipe.calc_bitterness
         # expect(@recipe.ibu).to be_within(2).of(55)
         # semi-tinseth numbers:
-        expect(@recipe.calc_ibu).to be_within(2).of(45)
+        @recipe.calc_bitterness
         expect(@recipe.ibu).to be_within(2).of(45)
       end
 
-      it "should calculate individual hop addition ibus" do
-        @recipe.og = 1.040
-        # rager numbers:
-        # expect(@recipe.calc_indiv_ibu(hops[:bittering].to_a[0])).to be_within(0.01).of(50.59)
-        # semi-tinseth numbers:
-        expect(@recipe.calc_indiv_ibu(hops[:bittering].to_a[0])).to be_within(0.01).of(39.46)
-      end
-
-      describe "Q&D rager to tinseth correction" do
-        it "should use bittering percentage for times > 30 min" do
-          expect(@recipe.rager_to_tinseth_q_and_d(60, 75)).to be_within(0.1).of(58.5)
-        end
-
-        it "should use aroma percentage for times <= 30 min" do
-          expect(@recipe.rager_to_tinseth_q_and_d(30, 75)).to be_within(0.1).of(87)
-        end
-      end
-
-      it "should calculate hop utilization" do
-        expect(@recipe.calc_hop_util(60)).to be_within(0.0001).of(0.3082)
-      end
-
-      describe "gravity adjustments" do
-        it "should return a gravity adjustment for og > 1.058" do
-          @recipe.og = 1.059
-          expect(@recipe.calc_hop_ga).to be_within(0.0001).of(0.005)
-        end
-        it "should return zero for og <= 1.058" do
-          @recipe.og = 1.058
-          expect(@recipe.calc_hop_ga).to eq(0)
-        end
-      end
     end
 
     describe "choose_attributes" do
@@ -717,7 +685,7 @@ describe Recipe do
           @recipe.hops = { :bittering => { Hop.find_by_name("cascade") => [2, 60] }, :aroma => [ { Hop.find_by_name("cascade") => [1, 5] } ] }
           @recipe.yeast = Yeast.find_by_name("WY1056 - American Ale")
           @recipe.calc_gravities
-          @recipe.calc_ibu
+          @recipe.calc_bitterness
           @recipe.calc_color
         end
 

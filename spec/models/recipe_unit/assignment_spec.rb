@@ -250,7 +250,7 @@ describe "variable assignment" do
         allow( @recipe ).to receive( :ibu_gravity_check ).and_return( 'gravity check' )
         allow( @recipe ).to receive( :extreme_ibu_check ).and_return( 'gravity check' )
         allow( @recipe ).to receive( :assign_hops ).and_return( nil )
-        allow( @recipe ).to receive( :calc_ibu ).and_return( nil )
+        allow( @recipe ).to receive( :calc_bitterness ).and_return( nil )
       end
       after { @recipe.stack_token = nil }
       context "stack_token > 15" do
