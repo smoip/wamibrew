@@ -499,17 +499,9 @@ describe Recipe do
 
     end
 
-    describe "srm calculations" do
-      it "should calculate mcu" do
-        expect(@recipe.calc_mcu(malt_ary)).to be_within(0.1).of(3.6)
-      end
-
-      it "should add mcu from all malts" do
-        expect(@recipe.combine_mcu).to be_within(0.1).of(15.6)
-      end
-
+    describe "color assignment" do
       it "should calculate srm" do
-        expect(@recipe.calc_srm).to be_within(0.01).of(9.91)
+        expect(@recipe.calc_color).to be_within(0.01).of(9.91)
         expect(@recipe.srm).to be_within(0.01).of(9.91)
       end
     end
@@ -743,7 +735,7 @@ describe Recipe do
           @recipe.yeast = Yeast.find_by_name("WY1056 - American Ale")
           @recipe.calc_abv
           @recipe.calc_ibu
-          @recipe.calc_srm
+          @recipe.calc_color
         end
 
         let(:style2) { Style.find_by_name("Pale Ale") }

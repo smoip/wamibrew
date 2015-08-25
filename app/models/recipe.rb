@@ -15,7 +15,7 @@ class Recipe < ActiveRecord::Base
     self.assign_hops
     self.assign_yeast
     self.calc_abv
-    self.calc_srm
+    self.calc_color
     self.calc_ibu
     self.ibu_gravity_check
     self.extreme_ibu_check
@@ -200,35 +200,6 @@ class Recipe < ActiveRecord::Base
     @name = name.split(' ').insert(index, adjective).join(' ')
     end
   end
-
-  # def choose_malt(malt_type)
-  #   malt = Malt.where(base_malt?: malt_type).shuffle.first
-  #   type_key = malt_type_to_key(malt_type)
-  #   store_malt(type_key, malt)
-  # end
-
-  # def order_specialty_malts
-  #   order_object = OrderSpecialtyMalts.new(self)
-  #   order_object.order_specialty_malts
-  # end
-
-  # def store_malt(type_key, malt)
-  #   if @malts[type_key][malt].nil?
-  #     @malts[type_key][malt]= malt_amount(malt)
-  #   else
-  #     @malts[type_key][malt]+= malt_amount(malt)
-  #   end
-  # end
-
-  # def malt_type_to_key(malt_type)
-  #   malt_type ? key = :base : key = :specialty
-  #   key
-  # end
-
-  # def num_specialty_malts
-  #   complexity = rand(5)
-  #   [ [ 0, 1 ], [ 1, 2 ], [ 1, 2, 2, 3 ], [ 2, 3, 4 ], [ 3, 4, 5 ] ][ complexity ].shuffle.first
-  # end
 
   def choose_hop(hop_type)
     hop = similar_hop(hop_type)
@@ -473,24 +444,29 @@ class Recipe < ActiveRecord::Base
     end
   end
 
-  def calc_mcu(malt_ary)
-    # calculates malt color units
-    malt = pull_malt_object(malt_ary)
-    weight = pull_malt_amt(malt_ary)
-    malt.srm * weight / 5.0
-  end
+  # def calc_mcu(malt_ary)
+  #   # calculates malt color units
+  #   malt = pull_malt_object(malt_ary)
+  #   weight = pull_malt_amt(malt_ary)
+  #   malt.srm * weight / 5.0
+  # end
 
-  def combine_mcu
-    combined = 0.0
-    malts_to_array.each do | malt_ary |
-      combined += calc_mcu(malt_ary)
-    end
-    return combined
-  end
+  # def combine_mcu
+  #   combined = 0.0
+  #   malts_to_array.each do | malt_ary |
+  #     combined += calc_mcu(malt_ary)
+  #   end
+  #   return combined
+  # end
 
-  def calc_srm
-    @srm = ((combine_mcu ** 0.69) * 1.49).round(1)
-    # Morey's logarithmic srm conversion
+  # def calc_srm
+  #   @srm = ((combine_mcu ** 0.69) * 1.49).round(1)
+  #   # Morey's logarithmic srm conversion
+  # end
+
+  def calc_color
+    color = CalculateColor.new(self)
+    @srm = color.calc_srm
   end
 
   def display_hops
@@ -645,14 +621,6 @@ class Recipe < ActiveRecord::Base
 
 
 private
-
-  # def malt_amount(malt)
-  #   if malt.base_malt?
-  #     rand(10) + 5.0
-  #   else
-  #     (rand(8) + 1) / 4.0
-  #   end
-  # end
 
   def hop_amount
     (rand(6) + 1) / 2.0
