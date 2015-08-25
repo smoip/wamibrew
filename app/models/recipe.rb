@@ -201,39 +201,39 @@ class Recipe < ActiveRecord::Base
     end
   end
 
-  def choose_hop(hop_type)
-    hop = similar_hop(hop_type)
-    type_key = hop_type_to_key(hop_type)
-    store_hop(type_key, hop, hop_type)
-  end
+  # def choose_hop(hop_type)
+  #   hop = similar_hop(hop_type)
+  #   type_key = hop_type_to_key(hop_type)
+  #   store_hop(type_key, hop, hop_type)
+  # end
 
-  def store_hop(type_key, hop, hop_type)
-    if hop_type
-      @hops[type_key][hop]= [hop_amount, hop_time(hop_type)]
-    else
-      @hops[type_key] << { hop => [hop_amount, hop_time(hop_type)] }
-    end
-  end
+  # def store_hop(type_key, hop, hop_type)
+  #   if hop_type
+  #     @hops[type_key][hop]= [hop_amount, hop_time(hop_type)]
+  #   else
+  #     @hops[type_key] << { hop => [hop_amount, hop_time(hop_type)] }
+  #   end
+  # end
 
-  def similar_hop(hop_type)
-    unless hop_type
-      if rand(3) == 1
-        unless (hop_names_to_array == [])
-          hop = Hop.find_by_name(hop_names_to_array.last)
-          unless hop.nil?
-            return hop
-          end
-        end
-      end
-    end
-    hop = Hop.find_by(id: rand(Hop.count) + 1)
-    hop
-  end
+  # def similar_hop(hop_type)
+  #   unless hop_type
+  #     if rand(3) == 1
+  #       unless (hop_names_to_array == [])
+  #         hop = Hop.find_by_name(hop_names_to_array.last)
+  #         unless hop.nil?
+  #           return hop
+  #         end
+  #       end
+  #     end
+  #   end
+  #   hop = Hop.find_by(id: rand(Hop.count) + 1)
+  #   hop
+  # end
 
-  def hop_type_to_key(hop_type)
-    hop_type ? key = :bittering : key = :aroma
-    key
-  end
+  # def hop_type_to_key(hop_type)
+  #   hop_type ? key = :bittering : key = :aroma
+  #   key
+  # end
 
   def extreme_ibu_check
     if @ibu > 120
@@ -309,9 +309,15 @@ class Recipe < ActiveRecord::Base
   end
 
   def assign_hops
-    choose_hop(true)
-    num_aroma_hops.times { choose_hop(false) }
+    hopster = AssignHops.new(self)
+    hopster.choose_hop(true)
+    hopster.num_aroma_hops.times { hopster.choose_hop(false) }
   end
+
+  # def assign_hops
+  #   choose_hop(true)
+  #   num_aroma_hops.times { choose_hop(false) }
+  # end
 
   def hops_to_array
     hop_ary = []
@@ -365,10 +371,10 @@ class Recipe < ActiveRecord::Base
     end
   end
 
-  def num_aroma_hops
-    complexity = rand(6)
-    [ [ 0, 1 ], [ 0, 1, 2 ], [ 1, 2, 2, 3 ], [ 2, 3, 3, 4 ], [ 3, 4, 5 ], [ 4, 5, 6 ] ][ complexity ].shuffle.first
-  end
+  # def num_aroma_hops
+  #   complexity = rand(6)
+  #   [ [ 0, 1 ], [ 0, 1, 2 ], [ 1, 2, 2, 3 ], [ 2, 3, 3, 4 ], [ 3, 4, 5 ], [ 4, 5, 6 ] ][ complexity ].shuffle.first
+  # end
 
   def calc_gravities
     gravity = CalculateGravity.new(self)
@@ -629,30 +635,4 @@ class Recipe < ActiveRecord::Base
     return tally
   end
 
-
-private
-
-  def hop_amount
-    (rand(6) + 1) / 2.0
-  end
-
-  def hop_time(hop_type)
-    if hop_type
-      if rand(3) == 0
-        60
-        # force to 60 1/3 of attempts
-      else
-        round_to_fives(rand(25) + 41)
-        # pick a number between 60 and 40 rounded to 5
-        # adjusted for truncation rounding
-      end
-    else
-      # pick a number between 30 and 0 rounded to 5
-      round_to_fives(rand(35))
-    end
-  end
-
-  def round_to_fives(number)
-    (number / 5).round * 5
-  end
 end

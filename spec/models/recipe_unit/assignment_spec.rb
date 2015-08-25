@@ -127,64 +127,64 @@ describe "variable assignment" do
 
   describe "hops assignment" do
 
-    describe "store_hop" do
-      before { allow( @recipe ).to receive( :hop_amount ).and_return( 2.0 ) }
-      context "type == bittering" do
-        it "stores a bittering hop" do
-          allow( @recipe ).to receive( :hop_time ).and_return( 60 )
-          @recipe.hops = { :bittering => {}, :aroma => [] }
-          @recipe.store_hop( :bittering, hop, true )
-          expect( @recipe.hops[:bittering] ).to eq( { hop => [ 2.0, 60 ] } )
-        end
-      end
-      context "type == aroma" do
-        before { allow( @recipe ).to receive( :hop_time ).and_return( 10 ) }
-        it "stores the first aroma hop" do
-          @recipe.hops = { :bittering => {}, :aroma => [] }
-          @recipe.store_hop( :aroma, hop, false )
-          expect( @recipe.hops[:aroma] ).to eq( [ { hop => [ 2.0, 10 ] } ] )
-        end
-        it "stores subsequent aroma hops" do
-          @recipe.hops = { :bittering => {}, :aroma => [ { hop => [ 1.5, 5 ] } ] }
-          @recipe.store_hop( :aroma, hop, false )
-          expect( @recipe.hops[:aroma] ).to eq( [ { hop => [ 1.5, 5 ] }, { hop => [ 2.0, 10 ] } ] )
-        end
-      end
-    end
+    # describe "store_hop" do
+    #   before { allow( @recipe ).to receive( :hop_amount ).and_return( 2.0 ) }
+    #   context "type == bittering" do
+    #     it "stores a bittering hop" do
+    #       allow( @recipe ).to receive( :hop_time ).and_return( 60 )
+    #       @recipe.hops = { :bittering => {}, :aroma => [] }
+    #       @recipe.store_hop( :bittering, hop, true )
+    #       expect( @recipe.hops[:bittering] ).to eq( { hop => [ 2.0, 60 ] } )
+    #     end
+    #   end
+    #   context "type == aroma" do
+    #     before { allow( @recipe ).to receive( :hop_time ).and_return( 10 ) }
+    #     it "stores the first aroma hop" do
+    #       @recipe.hops = { :bittering => {}, :aroma => [] }
+    #       @recipe.store_hop( :aroma, hop, false )
+    #       expect( @recipe.hops[:aroma] ).to eq( [ { hop => [ 2.0, 10 ] } ] )
+    #     end
+    #     it "stores subsequent aroma hops" do
+    #       @recipe.hops = { :bittering => {}, :aroma => [ { hop => [ 1.5, 5 ] } ] }
+    #       @recipe.store_hop( :aroma, hop, false )
+    #       expect( @recipe.hops[:aroma] ).to eq( [ { hop => [ 1.5, 5 ] }, { hop => [ 2.0, 10 ] } ] )
+    #     end
+    #   end
+    # end
 
-    describe "hop_type_to_key" do
-      it "returns :bittering" do
-        expect( @recipe.hop_type_to_key(true) ).to eq( :bittering )
-      end
-      it "returns :aroma" do
-        expect( @recipe.hop_type_to_key(false) ).to eq( :aroma )
-      end
-    end
+    # describe "hop_type_to_key" do
+    #   it "returns :bittering" do
+    #     expect( @recipe.hop_type_to_key(true) ).to eq( :bittering )
+    #   end
+    #   it "returns :aroma" do
+    #     expect( @recipe.hop_type_to_key(false) ).to eq( :aroma )
+    #   end
+    # end
 
-    describe "similar_hop" do
-      context "bittering hop" do
-        it "returns a hop object" do
-          expect( @recipe.similar_hop(true) ).to be_kind_of( Hop )
-        end
-      end
-      context "aroma hop" do
-        it "returns a hop object" do
-          allow( @recipe ).to receive( :rand ).and_return( 2 )
-          expect( @recipe.similar_hop(false) ).to be_kind_of( Hop )
-        end
-        it "returns hop object of the same type as previous assignment" do
-          allow( @recipe ).to receive( :rand ).and_return( 1 )
-          allow( @recipe ).to receive( :hop_names_to_array ).and_return( [ 'cascade' ] )
-          expect( @recipe.similar_hop(false) ).to be_kind_of( Hop )
-          expect( (@recipe.similar_hop(false)).name ).to eq( 'cascade' )
-        end
-        it "does" do
-          allow( @recipe ).to receive( :rand ).and_return( 1 )
-          allow( @recipe ).to receive( :hop_names_to_array ).and_return( [] )
-          expect( @recipe.similar_hop(false) ).to be_kind_of( Hop )
-        end
-      end
-    end
+    # describe "similar_hop" do
+    #   context "bittering hop" do
+    #     it "returns a hop object" do
+    #       expect( @recipe.similar_hop(true) ).to be_kind_of( Hop )
+    #     end
+    #   end
+    #   context "aroma hop" do
+    #     it "returns a hop object" do
+    #       allow( @recipe ).to receive( :rand ).and_return( 2 )
+    #       expect( @recipe.similar_hop(false) ).to be_kind_of( Hop )
+    #     end
+    #     it "returns hop object of the same type as previous assignment" do
+    #       allow( @recipe ).to receive( :rand ).and_return( 1 )
+    #       allow( @recipe ).to receive( :hop_names_to_array ).and_return( [ 'cascade' ] )
+    #       expect( @recipe.similar_hop(false) ).to be_kind_of( Hop )
+    #       expect( (@recipe.similar_hop(false)).name ).to eq( 'cascade' )
+    #     end
+    #     it "does" do
+    #       allow( @recipe ).to receive( :rand ).and_return( 1 )
+    #       allow( @recipe ).to receive( :hop_names_to_array ).and_return( [] )
+    #       expect( @recipe.similar_hop(false) ).to be_kind_of( Hop )
+    #     end
+    #   end
+    # end
 
     describe "extreme_ibu_check" do
       after { @recipe.ibu  = nil }
@@ -306,37 +306,37 @@ describe "variable assignment" do
       end
     end
 
-    describe "num_aroma_hops" do
-      it "should pick 0..1" do
-        allow( @recipe ).to receive( :rand ).and_return( 0 )
-        expect( @recipe.num_aroma_hops ).to be_between(0, 1).inclusive
-      end
+    # describe "num_aroma_hops" do
+    #   it "should pick 0..1" do
+    #     allow( @recipe ).to receive( :rand ).and_return( 0 )
+    #     expect( @recipe.num_aroma_hops ).to be_between(0, 1).inclusive
+    #   end
 
-      it "should pick 0..2" do
-        allow( @recipe ).to receive( :rand ).and_return( 1 )
-        expect( @recipe.num_aroma_hops ).to be_between(0, 2).inclusive
-      end
+    #   it "should pick 0..2" do
+    #     allow( @recipe ).to receive( :rand ).and_return( 1 )
+    #     expect( @recipe.num_aroma_hops ).to be_between(0, 2).inclusive
+    #   end
 
-      it "should pick 2..4" do
-        allow( @recipe ).to receive( :rand ).and_return( 2 )
-        expect( @recipe.num_aroma_hops ).to be_between(1, 3).inclusive
-      end
+    #   it "should pick 2..4" do
+    #     allow( @recipe ).to receive( :rand ).and_return( 2 )
+    #     expect( @recipe.num_aroma_hops ).to be_between(1, 3).inclusive
+    #   end
 
-      it "should pick 4..5" do
-        allow( @recipe ).to receive( :rand ).and_return( 3 )
-        expect( @recipe.num_aroma_hops ).to be_between(2, 4).inclusive
-      end
+    #   it "should pick 4..5" do
+    #     allow( @recipe ).to receive( :rand ).and_return( 3 )
+    #     expect( @recipe.num_aroma_hops ).to be_between(2, 4).inclusive
+    #   end
 
-      it "should pick 4..5" do
-        allow( @recipe ).to receive( :rand ).and_return( 4 )
-        expect( @recipe.num_aroma_hops ).to be_between(3, 5).inclusive
-      end
+    #   it "should pick 4..5" do
+    #     allow( @recipe ).to receive( :rand ).and_return( 4 )
+    #     expect( @recipe.num_aroma_hops ).to be_between(3, 5).inclusive
+    #   end
 
-      it "should pick 4..5" do
-        allow( @recipe ).to receive( :rand ).and_return( 5 )
-        expect( @recipe.num_aroma_hops ).to be_between(4, 6).inclusive
-      end
-    end
+    #   it "should pick 4..5" do
+    #     allow( @recipe ).to receive( :rand ).and_return( 5 )
+    #     expect( @recipe.num_aroma_hops ).to be_between(4, 6).inclusive
+    #   end
+    # end
   end
 
   describe "yeast assignment" do
