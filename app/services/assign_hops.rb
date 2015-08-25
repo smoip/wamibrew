@@ -46,7 +46,7 @@ class AssignHops
   end
 
   def hop_amount
-    (rand(6) + 1) / 2.0
+    (rand(12) + 1) / 4.0
   end
 
   def hop_time(hop_type)
@@ -55,7 +55,8 @@ class AssignHops
         60
         # force to 60 1/3 of attempts
       else
-        round_to_fives(rand(25) + 41)
+        t = round_to_fives(rand(25) + 41)
+        (t > 60) ? 60 : t
         # pick a number between 60 and 40 rounded to 5
       end
     else

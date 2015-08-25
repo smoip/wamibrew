@@ -126,8 +126,8 @@ describe AssignHops do
 
   describe "hop_amount" do
     let(:hopster) { AssignHops.new(@recipe) }
-    it "picks a weight between 0.5 and 3" do
-      expect(hopster.hop_amount).to be_between(0.5, 3.0).inclusive
+    it "picks a weight between 0.25 and 3" do
+      expect(hopster.hop_amount).to be_between(0.25, 3.0).inclusive
     end
   end
 
