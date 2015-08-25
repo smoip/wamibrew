@@ -201,34 +201,34 @@ class Recipe < ActiveRecord::Base
     end
   end
 
-  def choose_malt(malt_type)
-    malt = Malt.where(base_malt?: malt_type).shuffle.first
-    type_key = malt_type_to_key(malt_type)
-    store_malt(type_key, malt)
-  end
+  # def choose_malt(malt_type)
+  #   malt = Malt.where(base_malt?: malt_type).shuffle.first
+  #   type_key = malt_type_to_key(malt_type)
+  #   store_malt(type_key, malt)
+  # end
 
-  def order_specialty_malts
-    order_object = OrderSpecialtyMalts.new(self)
-    order_object.order
-  end
+  # def order_specialty_malts
+  #   order_object = OrderSpecialtyMalts.new(self)
+  #   order_object.order_specialty_malts
+  # end
 
-  def store_malt(type_key, malt)
-    if @malts[type_key][malt].nil?
-      @malts[type_key][malt]= malt_amount(malt)
-    else
-      @malts[type_key][malt]+= malt_amount(malt)
-    end
-  end
+  # def store_malt(type_key, malt)
+  #   if @malts[type_key][malt].nil?
+  #     @malts[type_key][malt]= malt_amount(malt)
+  #   else
+  #     @malts[type_key][malt]+= malt_amount(malt)
+  #   end
+  # end
 
-  def malt_type_to_key(malt_type)
-    malt_type ? key = :base : key = :specialty
-    key
-  end
+  # def malt_type_to_key(malt_type)
+  #   malt_type ? key = :base : key = :specialty
+  #   key
+  # end
 
-  def num_specialty_malts
-    complexity = rand(5)
-    [ [ 0, 1 ], [ 1, 2 ], [ 1, 2, 2, 3 ], [ 2, 3, 4 ], [ 3, 4, 5 ] ][ complexity ].shuffle.first
-  end
+  # def num_specialty_malts
+  #   complexity = rand(5)
+  #   [ [ 0, 1 ], [ 1, 2 ], [ 1, 2, 2, 3 ], [ 2, 3, 4 ], [ 3, 4, 5 ] ][ complexity ].shuffle.first
+  # end
 
   def choose_hop(hop_type)
     hop = similar_hop(hop_type)
@@ -309,9 +309,10 @@ class Recipe < ActiveRecord::Base
   end
 
   def assign_malts
-    choose_malt(true)
-    num_specialty_malts.times { choose_malt(false) }
-    order_specialty_malts
+    maltster = AssignMalts.new(self)
+    maltster.choose_malt(true)
+    maltster.num_specialty_malts.times { maltster.choose_malt(false) }
+    maltster.order_specialty_malts
   end
 
   def malts_to_array
@@ -645,13 +646,13 @@ class Recipe < ActiveRecord::Base
 
 private
 
-  def malt_amount(malt)
-    if malt.base_malt?
-      rand(10) + 5.0
-    else
-      (rand(8) + 1) / 4.0
-    end
-  end
+  # def malt_amount(malt)
+  #   if malt.base_malt?
+  #     rand(10) + 5.0
+  #   else
+  #     (rand(8) + 1) / 4.0
+  #   end
+  # end
 
   def hop_amount
     (rand(6) + 1) / 2.0

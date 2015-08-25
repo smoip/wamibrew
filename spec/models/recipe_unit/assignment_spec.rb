@@ -29,77 +29,77 @@ describe "variable assignment" do
     #   end
     # end
 
-    describe "store_malt" do
-      before { allow( @recipe ).to receive( :malt_amount ).and_return( 2.11 ) }
-      context "malt is not already present in recipe" do
-        before { @recipe.store_malt( :base, malt ) }
-        after { @recipe.malts = { :base => {}, :specialty => {} } }
-        it "creates a new entry for this malt in the malt hash according to key" do
-          expect( @recipe.malts[:base] ).to eq( { malt => 2.11 } )
-        end
-        it "does not add this malt to the wrong key in the malt hash" do
-          expect( @recipe.malts[:specialty] ).not_to eq( { malt => 2.11 } )
-        end
-      end
+    # describe "store_malt" do
+    #   before { allow( @recipe ).to receive( :malt_amount ).and_return( 2.11 ) }
+    #   context "malt is not already present in recipe" do
+    #     before { @recipe.store_malt( :base, malt ) }
+    #     after { @recipe.malts = { :base => {}, :specialty => {} } }
+    #     it "creates a new entry for this malt in the malt hash according to key" do
+    #       expect( @recipe.malts[:base] ).to eq( { malt => 2.11 } )
+    #     end
+    #     it "does not add this malt to the wrong key in the malt hash" do
+    #       expect( @recipe.malts[:specialty] ).not_to eq( { malt => 2.11 } )
+    #     end
+    #   end
 
-      context "malt is already present in recipe" do
-        before do
-          @recipe.malts[:specialty] = { malt => 1 }
-          @recipe.store_malt( :specialty, malt )
-        end
-        after { @recipe.malts = { :base => {}, :specialty => {} } }
-        it "adds this malt to the existing entry in the malt hash" do
-          expect( @recipe.malts[:specialty] ).to eq( { malt => 3.11 } )
-        end
+    #   context "malt is already present in recipe" do
+    #     before do
+    #       @recipe.malts[:specialty] = { malt => 1 }
+    #       @recipe.store_malt( :specialty, malt )
+    #     end
+    #     after { @recipe.malts = { :base => {}, :specialty => {} } }
+    #     it "adds this malt to the existing entry in the malt hash" do
+    #       expect( @recipe.malts[:specialty] ).to eq( { malt => 3.11 } )
+    #     end
 
-        it "does not create a new entry for this malt in the malt hash" do
-          expect( @recipe.malts[:base] ).not_to eq( { malt => 2.11 } )
-        end
-      end
-    end
+    #     it "does not create a new entry for this malt in the malt hash" do
+    #       expect( @recipe.malts[:base] ).not_to eq( { malt => 2.11 } )
+    #     end
+    #   end
+    # end
 
 
 
-    describe "malt_type_to_key" do
-      context "type = true" do
-        it "should return :base" do
-          expect( @recipe.malt_type_to_key( true ) ).to eq( :base )
-        end
-      end
+    # describe "malt_type_to_key" do
+    #   context "type = true" do
+    #     it "should return :base" do
+    #       expect( @recipe.malt_type_to_key( true ) ).to eq( :base )
+    #     end
+    #   end
 
-      context "type = false" do
-        it "should return :specialty" do
-          expect( @recipe.malt_type_to_key( false ) ).to eq( :specialty )
-        end
-      end
-    end
+    #   context "type = false" do
+    #     it "should return :specialty" do
+    #       expect( @recipe.malt_type_to_key( false ) ).to eq( :specialty )
+    #     end
+    #   end
+    # end
 
-    describe "num_specialty_malts" do
-      it "should pick 0..1" do
-        allow( @recipe ).to receive( :rand ).and_return( 0 )
-        expect( @recipe.num_specialty_malts ).to be_between(0, 1).inclusive
-      end
+    # describe "num_specialty_malts" do
+    #   it "should pick 0..1" do
+    #     allow( @recipe ).to receive( :rand ).and_return( 0 )
+    #     expect( @recipe.num_specialty_malts ).to be_between(0, 1).inclusive
+    #   end
 
-      it "should pick 1..2" do
-        allow( @recipe ).to receive( :rand ).and_return( 1 )
-        expect( @recipe.num_specialty_malts ).to be_between(1, 2).inclusive
-      end
+    #   it "should pick 1..2" do
+    #     allow( @recipe ).to receive( :rand ).and_return( 1 )
+    #     expect( @recipe.num_specialty_malts ).to be_between(1, 2).inclusive
+    #   end
 
-      it "should pick 2..4" do
-        allow( @recipe ).to receive( :rand ).and_return( 2 )
-        expect( @recipe.num_specialty_malts ).to be_between(1, 3).inclusive
-      end
+    #   it "should pick 2..4" do
+    #     allow( @recipe ).to receive( :rand ).and_return( 2 )
+    #     expect( @recipe.num_specialty_malts ).to be_between(1, 3).inclusive
+    #   end
 
-      it "should pick 4..5" do
-        allow( @recipe ).to receive( :rand ).and_return( 3 )
-        expect( @recipe.num_specialty_malts ).to be_between(2, 4).inclusive
-      end
+    #   it "should pick 4..5" do
+    #     allow( @recipe ).to receive( :rand ).and_return( 3 )
+    #     expect( @recipe.num_specialty_malts ).to be_between(2, 4).inclusive
+    #   end
 
-      it "should pick 4..5" do
-        allow( @recipe ).to receive( :rand ).and_return( 4 )
-        expect( @recipe.num_specialty_malts ).to be_between(3, 5).inclusive
-      end
-    end
+    #   it "should pick 4..5" do
+    #     allow( @recipe ).to receive( :rand ).and_return( 4 )
+    #     expect( @recipe.num_specialty_malts ).to be_between(3, 5).inclusive
+    #   end
+    # end
 
     describe "malts_to_array" do
       after { @recipe.malts = nil }
