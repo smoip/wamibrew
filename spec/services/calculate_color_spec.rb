@@ -3,7 +3,6 @@ require 'service_objects_helper'
 describe CalculateColor do
   include_context "shared service variables"
   let(:color) { CalculateColor.new(@recipe) }
-# unedited tests - need transfer
 
   describe "calc_mcu" do
     before { allow(@recipe).to receive(:pull_malt_object).and_return(malt) }

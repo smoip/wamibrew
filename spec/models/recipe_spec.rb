@@ -243,6 +243,7 @@ describe Recipe do
 
       describe "assign malts" do
         before do
+          # needs to be properly stubbed at service object...
           allow(@recipe).to receive(:num_specialty_malts).and_return(1)
           @recipe.assign_malts
         end
@@ -472,28 +473,10 @@ describe Recipe do
       @recipe.malts = { :base => malt_hash, :specialty => small_malt_hash }
     end
 
-    describe "original gravity calculations" do
-      it "should convert potential gravity to extract potential" do
-        expect(@recipe.pg_to_ep(1.037)).to be_within(0.01).of(37)
-      end
-
-      it "should calculate original gravity" do
-        expect(@recipe.calc_og( malt_ary )).to be_within(0.0001).of(0.0592)
-      end
-    end
-
     describe "abv calculations" do
-      it "should combine all original gravities" do
-        expect(@recipe.combine_og).to be_within(0.0001).of(0.06416)
-        # high value from using malt_hash for both types
-      end
-
-      it "should calculate final gravity" do
-        expect(@recipe.calc_fg(1.0592)).to be_within(0.0001).of(1.0148)
-      end
 
       it "should calculate abv" do
-        expect(@recipe.calc_abv).to be_within(0.1).of(6.3)
+        @recipe.calc_gravities
         expect(@recipe.abv).to be_within(0.1).of(6.3)
       end
 
@@ -733,7 +716,7 @@ describe Recipe do
           @recipe.malts = { :base => { Malt.find_by_name("2-row") => 10 }, :specialty => { Malt.find_by_name("caramel 60") => 0.5 } }
           @recipe.hops = { :bittering => { Hop.find_by_name("cascade") => [2, 60] }, :aroma => [ { Hop.find_by_name("cascade") => [1, 5] } ] }
           @recipe.yeast = Yeast.find_by_name("WY1056 - American Ale")
-          @recipe.calc_abv
+          @recipe.calc_gravities
           @recipe.calc_ibu
           @recipe.calc_color
         end

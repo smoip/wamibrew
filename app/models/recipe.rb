@@ -14,7 +14,7 @@ class Recipe < ActiveRecord::Base
     self.assign_malts
     self.assign_hops
     self.assign_yeast
-    self.calc_abv
+    self.calc_gravities
     self.calc_color
     self.calc_ibu
     self.ibu_gravity_check
@@ -370,36 +370,41 @@ class Recipe < ActiveRecord::Base
     [ [ 0, 1 ], [ 0, 1, 2 ], [ 1, 2, 2, 3 ], [ 2, 3, 3, 4 ], [ 3, 4, 5 ], [ 4, 5, 6 ] ][ complexity ].shuffle.first
   end
 
-  def calc_abv
-    # (og - fg) * weight of ethanol / fg * 100 = ABW
-    # ABW / 0.79 = ABV
-    @og = combine_og + 1.0
-    fg = calc_fg(@og)
-    @abv = ((@og - fg) * 1.05 / fg * 100 / 0.79).round(1)
+  def calc_gravities
+    gravity = CalculateGravity.new(self)
+    gravity.calc_abv
   end
 
-  def calc_og(malt_ary)
-    return 0 if malt_ary.nil?
-    malt = pull_malt_object(malt_ary)
-    weight = pull_malt_amt(malt_ary)
-    ((weight * pg_to_ep(malt.potential) * malt.malt_yield / 5.0) / 1000.0)
-  end
+  # def calc_abv
+  #   # (og - fg) * weight of ethanol / fg * 100 = ABW
+  #   # ABW / 0.79 = ABV
+  #   @og = combine_og + 1.0
+  #   fg = calc_fg(@og)
+  #   @abv = ((@og - fg) * 1.05 / fg * 100 / 0.79).round(1)
+  # end
 
-  def calc_fg(og)
-    1.0 + (pg_to_ep(og) * ((1.0 - (@yeast.attenuation/100.0)) / 1000.0))
-  end
+  # def calc_og(malt_ary)
+  #   return 0 if malt_ary.nil?
+  #   malt = pull_malt_object(malt_ary)
+  #   weight = pull_malt_amt(malt_ary)
+  #   ((weight * pg_to_ep(malt.potential) * malt.malt_yield / 5.0) / 1000.0)
+  # end
 
-  def combine_og
-    combined = 0.0
-    malts_to_array.each do | malt_ary |
-      combined += calc_og(malt_ary)
-    end
-    return combined
-  end
+  # def calc_fg(og)
+  #   1.0 + (pg_to_ep(og) * ((1.0 - (@yeast.attenuation/100.0)) / 1000.0))
+  # end
 
-  def pg_to_ep(potential)
-    (potential - 1.0) * 1000
-  end
+  # def combine_og
+  #   combined = 0.0
+  #   malts_to_array.each do | malt_ary |
+  #     combined += calc_og(malt_ary)
+  #   end
+  #   return combined
+  # end
+
+  # def pg_to_ep(potential)
+  #   (potential - 1.0) * 1000
+  # end
 
   def calc_ibu
     combined = 0.0
