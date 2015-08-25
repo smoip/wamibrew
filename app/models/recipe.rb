@@ -16,7 +16,7 @@ class Recipe < ActiveRecord::Base
     self.assign_yeast
     self.calc_gravities
     self.calc_color
-    self.calc_ibu
+    self.calc_bitterness
     self.ibu_gravity_check
     self.extreme_ibu_check
     self.assign_style
@@ -253,7 +253,7 @@ class Recipe < ActiveRecord::Base
     @stack_token += 1
     self.hops = { :bittering => {}, :aroma => [] }
     self.assign_hops
-    self.calc_ibu
+    self.calc_bitterness
     unless @stack_token > 15
       self.ibu_gravity_check
       self.extreme_ibu_check
@@ -406,48 +406,53 @@ class Recipe < ActiveRecord::Base
   #   (potential - 1.0) * 1000
   # end
 
-  def calc_ibu
-    combined = 0.0
-    hops_to_array.each do |hop_ary|
-      combined += calc_indiv_ibu(hop_ary)
-    end
-    @ibu = combined.round(1)
+  def calc_bitterness
+    bitterness = CalculateBitterness.new(self)
+    bitterness.calc_ibu
   end
 
-  def calc_indiv_ibu(hop_ary)
-    hop = pull_hop_object(hop_ary)
-    weight = pull_hop_amt(hop_ary)
-    time = pull_hop_time(hop_ary)
-    rager_ibu = ( weight * (calc_hop_util(time)) * (hop.alpha / 100) * 7462 ) / ( 5 * ( 1 + calc_hop_ga ) )
-    rager_to_tinseth_q_and_d(time, rager_ibu)
-    # comment out previous line to reset to Rager
-  end
+  # def calc_ibu
+  #   combined = 0.0
+  #   hops_to_array.each do |hop_ary|
+  #     combined += calc_indiv_ibu(hop_ary)
+  #   end
+  #   @ibu = combined.round(1)
+  # end
 
-  def rager_to_tinseth_q_and_d(time, rager_ibu)
-    # needed to match BJCP IBU style guidelines
-    faux_tinseth = 0
-    if time > 30
-      faux_tinseth = rager_ibu * 0.78
-    else
-      faux_tinseth = rager_ibu * 1.16
-    end
-    return faux_tinseth
-  end
+  # def calc_indiv_ibu(hop_ary)
+  #   hop = pull_hop_object(hop_ary)
+  #   weight = pull_hop_amt(hop_ary)
+  #   time = pull_hop_time(hop_ary)
+  #   rager_ibu = ( weight * (calc_hop_util(time)) * (hop.alpha / 100) * 7462 ) / ( 5 * ( 1 + calc_hop_ga ) )
+  #   rager_to_tinseth_q_and_d(time, rager_ibu)
+  #   # comment out previous line to reset to Rager
+  # end
 
-  def calc_hop_util(minutes)
-    # rager hop utilization
-    (18.11 + (13.86 * Math.tanh((minutes - 31.32)/18.27))) / 100
-  end
+  # def rager_to_tinseth_q_and_d(time, rager_ibu)
+  #   # needed to match BJCP IBU style guidelines
+  #   faux_tinseth = 0
+  #   if time > 30
+  #     faux_tinseth = rager_ibu * 0.78
+  #   else
+  #     faux_tinseth = rager_ibu * 1.16
+  #   end
+  #   return faux_tinseth
+  # end
 
-  def calc_hop_ga
-    if @og > (1.058)
-      (@og - 1.058) / 0.2
-      # rager gravity adjustment
-      # +0.008 added to extrapolate generic pre-boil from og
-    else
-      0
-    end
-  end
+  # def calc_hop_util(minutes)
+  #   # rager hop utilization
+  #   (18.11 + (13.86 * Math.tanh((minutes - 31.32)/18.27))) / 100
+  # end
+
+  # def calc_hop_ga
+  #   if @og > (1.058)
+  #     (@og - 1.058) / 0.2
+  #     # rager gravity adjustment
+  #     # +0.008 added to extrapolate generic pre-boil from og
+  #   else
+  #     0
+  #   end
+  # end
 
   # def calc_mcu(malt_ary)
   #   # calculates malt color units
