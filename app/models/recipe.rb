@@ -98,13 +98,8 @@ class Recipe < ActiveRecord::Base
   end
 
   def add_yeast_family
-    if @style == nil
-      if (rand(4) == 1) & (@name.include?("Beer"))
-        unless @yeast.family == 'wheat'
-          @name = ((@name.split(' ') - ["Beer"]) + [ capitalize_titles(@yeast.family) ] ).join(' ')
-        end
-      end
-    end
+    yeast = AddYeast.new(self)
+    yeast.add_yeast
   end
 
   def nationality_check

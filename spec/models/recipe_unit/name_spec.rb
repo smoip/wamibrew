@@ -245,43 +245,43 @@
       end
     end
 
-    describe "add_yeast_family" do
-      before do
-        @recipe.name = 'Beer'
-      end
-      after do
-        @recipe.name = nil
-        @recipe.style = nil
-      end
+    # describe "add_yeast_family" do
+    #   before do
+    #     @recipe.name = 'Beer'
+    #   end
+    #   after do
+    #     @recipe.name = nil
+    #     @recipe.style = nil
+    #   end
 
-      context "with assigned style" do
-        before { @recipe.style = style }
-        it "should not alter the name" do
-          @recipe.add_yeast_family
-          expect( @recipe.name ).to eq( 'Beer' )
-        end
-      end
+    #   context "with assigned style" do
+    #     before { @recipe.style = style }
+    #     it "should not alter the name" do
+    #       @recipe.add_yeast_family
+    #       expect( @recipe.name ).to eq( 'Beer' )
+    #     end
+    #   end
 
-      context "without assigned style" do
-        before do
-          @recipe.style = nil
-          @recipe.yeast = yeast
-          allow( @recipe ).to receive( :rand ).and_return( 1 )
-        end
-        after { @recipe.yeast = nil }
+    #   context "without assigned style" do
+    #     before do
+    #       @recipe.style = nil
+    #       @recipe.yeast = yeast
+    #       allow( @recipe ).to receive( :rand ).and_return( 1 )
+    #     end
+    #     after { @recipe.yeast = nil }
 
-        it "should alter the name" do
-          allow( @recipe ).to receive( :capitalize_titles ).and_return( 'Ale' )
-          @recipe.add_yeast_family
-          expect( @recipe.name ).to eq( 'Ale' )
-        end
-        it "should not add the yeast family \'wheat\'" do
-          allow( @recipe.yeast ).to receive( :family ).and_return( 'wheat' )
-          @recipe.add_yeast_family
-          expect( @recipe.name ).not_to eq( 'Wheat' )
-        end
-      end
-    end
+    #     it "should alter the name" do
+    #       allow( @recipe ).to receive( :capitalize_titles ).and_return( 'Ale' )
+    #       @recipe.add_yeast_family
+    #       expect( @recipe.name ).to eq( 'Ale' )
+    #     end
+    #     it "should not add the yeast family \'wheat\'" do
+    #       allow( @recipe.yeast ).to receive( :family ).and_return( 'wheat' )
+    #       @recipe.add_yeast_family
+    #       expect( @recipe.name ).not_to eq( 'Wheat' )
+    #     end
+    #   end
+    # end
 
     describe "color" do
 
