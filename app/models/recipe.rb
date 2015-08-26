@@ -121,72 +121,18 @@ class Recipe < ActiveRecord::Base
   end
 
   def add_color_to_name
-    if @style == nil
-      if rand(4) == 1
-        unless check_smash_name
-          add_adjective(@name, choose_color_adjective(color_lookup))
-        end
-      end
-    end
+    color = AddColor.new(self)
+    color.add_color
   end
 
   def check_smash_name
     @name.include?("SMASH") ? true : false
   end
 
-  def color_lookup
-    color = @srm.round(0).to_i
-    color_adj = :none
-    case color
-    when 0..3 then color_adj = :yellow
-    when 4..7 then color_adj = :gold
-    when 8..11 then color_adj = :amber
-    when 12..14 then color_adj = :red
-    when 15..20 then color_adj = :brown
-    when 21..25 then color_adj = :dark_brown
-    when 26..35 then color_adj = :black
-    else color_adj = :dark_black
-    end
-    color_adj
-  end
-
-  def choose_color_adjective(color)
-    color_hash = { :yellow => [ "straw", "blonde", "light gold" ], :gold => [ "gold", "golden", "blonde" ], :amber => [ "amber", "copper" ], :red => [ "red", "amber" ], :brown => [ "brown", "chestnut" ], :dark_brown => [ "dark brown", "brown" ], :black => [ "black", "dark brown" ], :dark_black => [ "black", "jet black" ]  }
-    capitalize_titles(color_hash[color].shuffle.first)
-  end
-
   def add_strength_to_name
     strength = AddStrength.new(self)
     strength.add_strength
   end
-
-  # def add_strength_to_name
-  #   if @style == nil
-  #     if rand(4) == 1
-  #       unless check_smash_name
-  #         add_adjective(@name, choose_strength_adjective(strength_lookup))
-  #       end
-  #     end
-  #   end
-  # end
-
-  # def strength_lookup
-  #   strength = @abv.round(0).to_i
-  #   strength_adj = :none
-  #   case strength
-  #   when 0..2 then strength_adj = :weak
-  #   when 3..4 then strength_adj = :session
-  #   when 5..7 then strength_adj = :average
-  #   when 8..9 then strength_adj = :strong
-  #   else strength_adj = :very_strong
-  #   end
-  #   strength_adj
-  # end
-
-  # def choose_strength_adjective(strength)
-  #   strength_hash = { :weak => [ "mild", "low gravity" ], :session => [ "sessionable", "quaffable" ], :average => [""], :strong => [ "strong" ], :very_strong => [ "high gravity", "imperial" ]  }
-  #   capitalize_titles(strength_hash[strength].shuffle.first)
-  # end
 
   def add_article
     @name = %w(a e i o u).include?(@name[0].downcase) ? "An #{@name}" : "A #{@name}"
