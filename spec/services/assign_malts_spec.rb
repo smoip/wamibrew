@@ -107,4 +107,17 @@ describe AssignMalts do
       end
     end
   end
+
+  describe "malt_amount" do
+    context "base malt" do
+      it "picks a number 5..14" do
+        expect(maltster.malt_amount(malt)).to be_between(5, 14).inclusive
+      end
+    end
+    context "specialty grain" do
+      it "picks a number 0.125..4" do
+        expect(maltster.malt_amount(malt_3)).to be_between(0.125, 4.0).inclusive
+      end
+    end
+  end
 end

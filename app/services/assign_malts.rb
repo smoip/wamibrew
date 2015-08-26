@@ -34,7 +34,7 @@ class AssignMalts
     if malt.base_malt?
       rand(10) + 5.0
     else
-      (rand(8) + 1) / 4.0
+      (rand(16) + 1) / 8.0
     end
   end
 
@@ -42,7 +42,5 @@ class AssignMalts
     specialty_ary = ( @recipe.malts[:specialty].sort_by { |malt, amt| amt } ).reverse
     @recipe.malts[:specialty]= Hash[*specialty_ary.flatten]
   end
-
-
 
 end
