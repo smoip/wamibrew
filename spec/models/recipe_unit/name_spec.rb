@@ -551,24 +551,24 @@
       end
     end
 
-    describe "add_adjective" do
-      context "with no style" do
-        before { @recipe.style = nil }
+    # describe "add_adjective" do
+    #   context "with no style" do
+    #     before { @recipe.style = nil }
 
-        it "should prepend an adjective to the name" do
-          @recipe.add_adjective( 'Beer', 'Viscous' )
-          expect(@recipe.name).to eq( 'Viscous Beer' )
-        end
-      end
+    #     it "should prepend an adjective to the name" do
+    #       @recipe.add_adjective( 'Beer', 'Viscous' )
+    #       expect(@recipe.name).to eq( 'Viscous Beer' )
+    #     end
+    #   end
 
-      context "with assigned style" do
-        before { @recipe.style = style }
-        it "should insert an adjective between words in the name" do
-          @recipe.add_adjective( 'American IPA', 'Viscous' )
-          expect(@recipe.name).to eq( 'American Viscous IPA' )
-        end
-      end
-    end
+    #   context "with assigned style" do
+    #     before { @recipe.style = style }
+    #     it "should insert an adjective between words in the name" do
+    #       @recipe.add_adjective( 'American IPA', 'Viscous' )
+    #       expect(@recipe.name).to eq( 'American Viscous IPA' )
+    #     end
+    #   end
+    # end
 
     describe "add_article" do
       context "with name \'ale\'" do

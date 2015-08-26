@@ -188,22 +188,8 @@ class Recipe < ActiveRecord::Base
   end
 
   def add_adjective(name, adjective)
-    if @style == nil
-      @name = "#{adjective} #{name}"
-    else
-      if name.split(' ') == [ name ]
-        index = 0
-      elsif name == 'Pale Ale'
-        index = 0
-      elsif name == 'Red Ale'
-        index = 0
-      elsif name == 'Wheat Wine'
-        index = 0
-      else
-        index = 1
-    end
-    @name = name.split(' ').insert(index, adjective).join(' ')
-    end
+    adjective_adder = AddAdjective.new(self)
+    adjective_adder.add_adjective(name, adjective)
   end
 
   def ibu_checks
