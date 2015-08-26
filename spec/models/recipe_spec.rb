@@ -197,50 +197,6 @@ describe Recipe do
     end
 
     describe "malt" do
-
-      # describe "choose_malt" do
-      #   before { @recipe.choose_malt(true) }
-      #   let(:malt) { @recipe.malts[:base] }
-
-      #   it "should choose a malt" do
-      #     expect(malt).not_to be_nil
-      #     expect(malt.to_a[0][0]).to be_kind_of(Malt)
-      #   end
-      #   it "should choose base malt quantities" do
-      #     expect(malt.to_a[0][1]).to be_between(5, 15).inclusive
-      #   end
-      # end
-
-      # describe "specialty malts" do
-      #   describe "choose_specialty_malts" do
-      #     before do
-      #       allow(@recipe).to receive(:num_specialty_malts).and_return(1)
-      #       @recipe.assign_malts
-      #     end
-      #     it "should choose one specialty grain" do
-      #       expect(@recipe.malts[:specialty].to_a[0][0]).to be_kind_of(Malt)
-      #       expect(@recipe.malts[:specialty].to_a.length).to eq(1)
-      #     end
-
-      #     it "should choose specialty malt quantities" do
-      #       expect(@recipe.malts[:specialty].to_a[0][1]).to be_between(0.25, 2).inclusive
-      #     end
-      #   end
-
-        # describe "order_specialty_malts" do
-        #   let(:c_60) { FactoryGirl.create(:malt, name: 'c 60') }
-        #   let(:rye) { FactoryGirl.create(:malt, name: 'rye') }
-        #   let(:black) { FactoryGirl.create(:malt, name: 'black') }
-        #   let(:three_malts) { { c_60 => 0.5, rye => 1, black => 0.25 } }
-
-        #   it "should order specialty malts by amount" do
-        #     @recipe.malts[:specialty]= three_malts
-        #     @recipe.order_specialty_malts
-        #     expect(@recipe.malts[:specialty]).to eq( { rye => 1, c_60 => 0.5, black => 0.25 } )
-        #   end
-        # end
-      # end
-
       describe "assign malts" do
         before do
           # needs to be properly stubbed at service object...
@@ -263,32 +219,6 @@ describe Recipe do
     end
 
     describe "hops" do
-
-      # describe "choose_hop" do
-      #   context "choose a bittering hop" do
-      #     before { @recipe.choose_hop(true) }
-
-      #     it "should assign a hop to hops[:bittering]" do
-      #       expect(@recipe.hops[:bittering].to_a.flatten[0]).to be_kind_of(Hop)
-      #     end
-      #     it "should choose quantities" do
-      #       expect(@recipe.hops[:bittering].to_a.flatten[1]).to be_between(0.5, 3).inclusive
-      #     end
-      #     it "should choose appropriate bittering times" do
-      #       expect(@recipe.hops[:bittering].to_a.flatten[2]).to be_between(40, 60).inclusive
-      #     end
-      #   end
-      #   context "choose an aroma hop" do
-      #     before { @recipe.choose_hop(false) }
-      #     it "should assign a hop to hops[:aroma]" do
-      #       expect(@recipe.hops[:aroma][0].to_a.flatten[0]).to be_kind_of(Hop)
-      #     end
-      #     it "should choose appropriate aroma times" do
-      #       expect(@recipe.hops[:aroma][0].to_a.flatten[2]).to be_between(0, 30).inclusive
-      #     end
-      #   end
-      # end
-
       describe "assign hops" do
         context "choose three aroma additions" do
           before do
@@ -434,32 +364,17 @@ describe Recipe do
 
     describe "yeast" do
 
-      let(:yeast) { @recipe.choose_yeast }
-
-      describe "choose_yeast" do
-        it "should choose a yeast" do
-          expect(yeast).not_to be_nil
-        end
-      end
+      let(:yeast) { FactoryGirl.build(:yeast) }
 
       describe "assign yeast" do
         before do
+          @recipe.yeast = nil
           @recipe.assign_malts
           @recipe.assign_yeast
         end
 
         it "should return a yeast" do
           expect(@recipe.yeast).to be_present
-        end
-
-        describe "malt-yeast associations" do
-          before do
-            @recipe.malts[:base] = { Malt.find_by_name("pilsen") => 10 }
-          end
-
-          it "should pick an appropriate yeast for base malt" do
-            expect(@recipe.associate_yeast.family).to eq("lager")
-          end
         end
       end
     end

@@ -206,88 +206,10 @@ class Recipe < ActiveRecord::Base
     end
   end
 
-  # def choose_hop(hop_type)
-  #   hop = similar_hop(hop_type)
-  #   type_key = hop_type_to_key(hop_type)
-  #   store_hop(type_key, hop, hop_type)
-  # end
-
-  # def store_hop(type_key, hop, hop_type)
-  #   if hop_type
-  #     @hops[type_key][hop]= [hop_amount, hop_time(hop_type)]
-  #   else
-  #     @hops[type_key] << { hop => [hop_amount, hop_time(hop_type)] }
-  #   end
-  # end
-
-  # def similar_hop(hop_type)
-  #   unless hop_type
-  #     if rand(3) == 1
-  #       unless (hop_names_to_array == [])
-  #         hop = Hop.find_by_name(hop_names_to_array.last)
-  #         unless hop.nil?
-  #           return hop
-  #         end
-  #       end
-  #     end
-  #   end
-  #   hop = Hop.find_by(id: rand(Hop.count) + 1)
-  #   hop
-  # end
-
-  # def hop_type_to_key(hop_type)
-  #   hop_type ? key = :bittering : key = :aroma
-  #   key
-  # end
-
   def ibu_checks
     re_hop = ReAssignHops.new(self)
     re_hop.extreme_ibu_check
     re_hop.ibu_gravity_check
-  end
-
-  # def extreme_ibu_check
-  #   if @ibu > 120
-  #     re_assign_hops
-  #   end
-  # end
-
-  # def ibu_gravity_check
-  #   if ( ( @abv <= 4.5 ) && ( @ibu > 60 ) )
-  #     re_assign_hops
-  #   elsif ( ( @abv <= 6 ) && ( @ibu > 90 ) )
-  #     re_assign_hops
-  #   end
-  # end
-
-  # def re_assign_hops
-  #   @stack_token += 1
-  #   self.hops = { :bittering => {}, :aroma => [] }
-  #   self.assign_hops
-  #   self.calc_bitterness
-  #   unless @stack_token > 15
-  #     self.ibu_gravity_check
-  #     self.extreme_ibu_check
-  #   end
-  # end
-
-  def choose_yeast
-    yeast = nil
-    until yeast != nil do
-      yeast = Yeast.find_by(id: rand(Yeast.count) + 1)
-    end
-    return yeast
-  end
-
-  def associate_yeast
-    base_malt_name = pull_malt_name(@malts[:base].to_a[0])
-    malt_associations = { "2-row" => "ale", "pilsen" => "lager", "white wheat" => "wheat", "maris otter" => "ale" }
-    if malt_associations[base_malt_name] != nil
-      yeast = Yeast.find_by(family: "#{malt_associations[base_malt_name]}")
-      return yeast
-    else
-      choose_yeast
-    end
   end
 
   def assign_malts
@@ -324,11 +246,6 @@ class Recipe < ActiveRecord::Base
     hopster.choose_hop(true)
     hopster.num_aroma_hops.times { hopster.choose_hop(false) }
   end
-
-  # def assign_hops
-  #   choose_hop(true)
-  #   num_aroma_hops.times { choose_hop(false) }
-  # end
 
   def hops_to_array
     hop_ary = []
@@ -375,121 +292,23 @@ class Recipe < ActiveRecord::Base
   end
 
   def assign_yeast
+    pick_yeast = AssignYeast.new(self)
     if rand(3) == 0
-      @yeast = associate_yeast
+      @yeast = pick_yeast.associate_yeast
     else
-      @yeast = choose_yeast
+      @yeast = pick_yeast.choose_yeast
     end
   end
-
-  # def num_aroma_hops
-  #   complexity = rand(6)
-  #   [ [ 0, 1 ], [ 0, 1, 2 ], [ 1, 2, 2, 3 ], [ 2, 3, 3, 4 ], [ 3, 4, 5 ], [ 4, 5, 6 ] ][ complexity ].shuffle.first
-  # end
 
   def calc_gravities
     gravity = CalculateGravity.new(self)
     gravity.calc_abv
   end
 
-  # def calc_abv
-  #   # (og - fg) * weight of ethanol / fg * 100 = ABW
-  #   # ABW / 0.79 = ABV
-  #   @og = combine_og + 1.0
-  #   fg = calc_fg(@og)
-  #   @abv = ((@og - fg) * 1.05 / fg * 100 / 0.79).round(1)
-  # end
-
-  # def calc_og(malt_ary)
-  #   return 0 if malt_ary.nil?
-  #   malt = pull_malt_object(malt_ary)
-  #   weight = pull_malt_amt(malt_ary)
-  #   ((weight * pg_to_ep(malt.potential) * malt.malt_yield / 5.0) / 1000.0)
-  # end
-
-  # def calc_fg(og)
-  #   1.0 + (pg_to_ep(og) * ((1.0 - (@yeast.attenuation/100.0)) / 1000.0))
-  # end
-
-  # def combine_og
-  #   combined = 0.0
-  #   malts_to_array.each do | malt_ary |
-  #     combined += calc_og(malt_ary)
-  #   end
-  #   return combined
-  # end
-
-  # def pg_to_ep(potential)
-  #   (potential - 1.0) * 1000
-  # end
-
   def calc_bitterness
     bitterness = CalculateBitterness.new(self)
     bitterness.calc_ibu
   end
-
-  # def calc_ibu
-  #   combined = 0.0
-  #   hops_to_array.each do |hop_ary|
-  #     combined += calc_indiv_ibu(hop_ary)
-  #   end
-  #   @ibu = combined.round(1)
-  # end
-
-  # def calc_indiv_ibu(hop_ary)
-  #   hop = pull_hop_object(hop_ary)
-  #   weight = pull_hop_amt(hop_ary)
-  #   time = pull_hop_time(hop_ary)
-  #   rager_ibu = ( weight * (calc_hop_util(time)) * (hop.alpha / 100) * 7462 ) / ( 5 * ( 1 + calc_hop_ga ) )
-  #   rager_to_tinseth_q_and_d(time, rager_ibu)
-  #   # comment out previous line to reset to Rager
-  # end
-
-  # def rager_to_tinseth_q_and_d(time, rager_ibu)
-  #   # needed to match BJCP IBU style guidelines
-  #   faux_tinseth = 0
-  #   if time > 30
-  #     faux_tinseth = rager_ibu * 0.78
-  #   else
-  #     faux_tinseth = rager_ibu * 1.16
-  #   end
-  #   return faux_tinseth
-  # end
-
-  # def calc_hop_util(minutes)
-  #   # rager hop utilization
-  #   (18.11 + (13.86 * Math.tanh((minutes - 31.32)/18.27))) / 100
-  # end
-
-  # def calc_hop_ga
-  #   if @og > (1.058)
-  #     (@og - 1.058) / 0.2
-  #     # rager gravity adjustment
-  #     # +0.008 added to extrapolate generic pre-boil from og
-  #   else
-  #     0
-  #   end
-  # end
-
-  # def calc_mcu(malt_ary)
-  #   # calculates malt color units
-  #   malt = pull_malt_object(malt_ary)
-  #   weight = pull_malt_amt(malt_ary)
-  #   malt.srm * weight / 5.0
-  # end
-
-  # def combine_mcu
-  #   combined = 0.0
-  #   malts_to_array.each do | malt_ary |
-  #     combined += calc_mcu(malt_ary)
-  #   end
-  #   return combined
-  # end
-
-  # def calc_srm
-  #   @srm = ((combine_mcu ** 0.69) * 1.49).round(1)
-  #   # Morey's logarithmic srm conversion
-  # end
 
   def calc_color
     color = CalculateColor.new(self)
