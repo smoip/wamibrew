@@ -17,8 +17,7 @@ class Recipe < ActiveRecord::Base
     self.calc_gravities
     self.calc_color
     self.calc_bitterness
-    self.ibu_gravity_check
-    self.extreme_ibu_check
+    self.ibu_checks
     self.assign_style
     self.generate_name
   end
@@ -241,30 +240,36 @@ class Recipe < ActiveRecord::Base
   #   key
   # end
 
-  def extreme_ibu_check
-    if @ibu > 120
-      re_assign_hops
-    end
+  def ibu_checks
+    re_hop = ReAssignHops.new(self)
+    re_hop.extreme_ibu_check
+    re_hop.ibu_gravity_check
   end
 
-  def ibu_gravity_check
-    if ( ( @abv <= 4.5 ) && ( @ibu > 60 ) )
-      re_assign_hops
-    elsif ( ( @abv <= 6 ) && ( @ibu > 90 ) )
-      re_assign_hops
-    end
-  end
+  # def extreme_ibu_check
+  #   if @ibu > 120
+  #     re_assign_hops
+  #   end
+  # end
 
-  def re_assign_hops
-    @stack_token += 1
-    self.hops = { :bittering => {}, :aroma => [] }
-    self.assign_hops
-    self.calc_bitterness
-    unless @stack_token > 15
-      self.ibu_gravity_check
-      self.extreme_ibu_check
-    end
-  end
+  # def ibu_gravity_check
+  #   if ( ( @abv <= 4.5 ) && ( @ibu > 60 ) )
+  #     re_assign_hops
+  #   elsif ( ( @abv <= 6 ) && ( @ibu > 90 ) )
+  #     re_assign_hops
+  #   end
+  # end
+
+  # def re_assign_hops
+  #   @stack_token += 1
+  #   self.hops = { :bittering => {}, :aroma => [] }
+  #   self.assign_hops
+  #   self.calc_bitterness
+  #   unless @stack_token > 15
+  #     self.ibu_gravity_check
+  #     self.extreme_ibu_check
+  #   end
+  # end
 
   def choose_yeast
     yeast = nil
