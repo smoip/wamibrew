@@ -220,13 +220,8 @@ class Recipe < ActiveRecord::Base
   end
 
   def malts_to_array
-    malt_ary = []
-    unless @malts[:specialty] == {}
-      @malts[:specialty].each do |malt_obj, amt|
-        malt_ary << [malt_obj, amt]
-      end
-    end
-    malt_ary.unshift(@malts[:base].to_a[0])
+    malt_ary = MaltsArrays.new(self)
+    malt_ary.malts_to_array
   end
 
   def pull_malt_object(malt_ary)
@@ -248,31 +243,13 @@ class Recipe < ActiveRecord::Base
   end
 
   def hops_to_array
-    hop_ary = []
-    unless @hops[:aroma].nil?
-      @hops[:aroma].each do |aroma_hash|
-        hop_ary << aroma_hash.to_a
-      end
-      hop_ary = hop_ary.flatten(1)
-    end
-    hop_ary.unshift(@hops[:bittering].to_a[0])
+    hop_ary = HopsArrays.new(self)
+    hop_ary.hops_to_array
   end
 
   def hop_names_to_array
-    hop_ary = []
-    unless @hops[:aroma].nil?
-      @hops[:aroma].each do |aroma_hash|
-        aroma_hash.each_key do |aroma|
-          hop_ary << aroma.name
-        end
-      end
-    end
-    bitter = []
-    @hops[:bittering].each_key do |bittering|
-      bitter << bittering.name
-    end
-    hop_ary.unshift(bitter)
-    hop_ary.flatten
+    hop_ary = HopsArrays.new(self)
+    hop_ary.hop_names_to_array
   end
 
   def pull_hop_object(hop_ary)
