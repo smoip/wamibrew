@@ -194,6 +194,12 @@ class Recipe < ActiveRecord::Base
     else
       if name.split(' ') == [ name ]
         index = 0
+      elsif name == 'Pale Ale'
+        index = 0
+      elsif name == 'Red Ale'
+        index = 0
+      elsif name == 'Wheat Wine'
+        index = 0
       else
         index = 1
     end
