@@ -6,4 +6,5 @@ RSpec.shared_context "shared service variables" do
   let(:yeast) { FactoryGirl.build(:yeast) }
   let(:hop) { FactoryGirl.build(:hop) }
   let(:style) { FactoryGirl.build(:style) }
+  let(:sugar) { Malt.find_by_name('honey') }
 end

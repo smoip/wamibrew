@@ -156,32 +156,37 @@ class Recipe < ActiveRecord::Base
   end
 
   def add_strength_to_name
-    if @style == nil
-      if rand(4) == 1
-        unless check_smash_name
-          add_adjective(@name, choose_strength_adjective(strength_lookup))
-        end
-      end
-    end
+    strength = AddStrength.new(self)
+    strength.add_strength
   end
 
-  def strength_lookup
-    strength = @abv.round(0).to_i
-    strength_adj = :none
-    case strength
-    when 0..2 then strength_adj = :weak
-    when 3..4 then strength_adj = :session
-    when 5..7 then strength_adj = :average
-    when 8..9 then strength_adj = :strong
-    else strength_adj = :very_strong
-    end
-    strength_adj
-  end
+  # def add_strength_to_name
+  #   if @style == nil
+  #     if rand(4) == 1
+  #       unless check_smash_name
+  #         add_adjective(@name, choose_strength_adjective(strength_lookup))
+  #       end
+  #     end
+  #   end
+  # end
 
-  def choose_strength_adjective(strength)
-    strength_hash = { :weak => [ "mild", "low gravity" ], :session => [ "sessionable", "quaffable" ], :average => [""], :strong => [ "strong" ], :very_strong => [ "high gravity", "imperial" ]  }
-    capitalize_titles(strength_hash[strength].shuffle.first)
-  end
+  # def strength_lookup
+  #   strength = @abv.round(0).to_i
+  #   strength_adj = :none
+  #   case strength
+  #   when 0..2 then strength_adj = :weak
+  #   when 3..4 then strength_adj = :session
+  #   when 5..7 then strength_adj = :average
+  #   when 8..9 then strength_adj = :strong
+  #   else strength_adj = :very_strong
+  #   end
+  #   strength_adj
+  # end
+
+  # def choose_strength_adjective(strength)
+  #   strength_hash = { :weak => [ "mild", "low gravity" ], :session => [ "sessionable", "quaffable" ], :average => [""], :strong => [ "strong" ], :very_strong => [ "high gravity", "imperial" ]  }
+  #   capitalize_titles(strength_hash[strength].shuffle.first)
+  # end
 
   def add_article
     @name = %w(a e i o u).include?(@name[0].downcase) ? "An #{@name}" : "A #{@name}"
