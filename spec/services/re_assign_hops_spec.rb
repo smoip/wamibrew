@@ -2,13 +2,13 @@ require 'service_objects_helper'
 
 describe ReAssignHops do
   include_context "shared service variables"
+  let(:re_hop) { ReAssignHops.new(@recipe) }
 
   describe "extreme_ibu_check" do
+    before { allow(re_hop).to receive(:re_assign_hops).and_return('success') }
     context "ibus > 120" do
       before { @recipe.ibu = 124 }
       it "attempts to reassign hops" do
-        re_hop = ReAssignHops.new(@recipe)
-        allow(re_hop).to receive(:re_assign_hops).and_return('success')
         expect(re_hop.extreme_ibu_check).to eq('success')
       end
     end
@@ -16,15 +16,12 @@ describe ReAssignHops do
     context "ibus < 120" do
       before { @recipe.ibu = 15 }
       it "does not attempt to resassign hops" do
-        re_hop = ReAssignHops.new(@recipe)
-        allow(re_hop).to receive(:re_assign_hops).and_return('success')
         expect(re_hop.extreme_ibu_check).not_to eq('success')
       end
     end
   end
 
   describe "ibu_gravity_check" do
-    let(:re_hop) { ReAssignHops.new(@recipe) }
     before { allow(re_hop).to receive(:re_assign_hops).and_return('assigning hops...') }
     context "abv <= 4.5 && ibu > 60" do
       before do
@@ -65,7 +62,6 @@ describe ReAssignHops do
   end
 
   describe "re_assign_hops" do
-    let(:re_hop) { ReAssignHops.new(@recipe) }
     before do
       allow(re_hop).to receive(:ibu_gravity_check).and_return('gravity check')
       allow(re_hop).to receive(:extreme_ibu_check).and_return('gravity check')

@@ -2,10 +2,11 @@ require 'service_objects_helper'
 
 describe AssignMalts do
   include_context "shared service variables"
+  let(:maltster) { AssignMalts.new(@recipe) }
 
   describe "choose_malt" do
     before do
-      maltster = AssignMalts.new(@recipe)
+      @recipe.malts = { :base => {}, :specialty => {} }
       maltster.choose_malt(true)
     end
     let(:malt_array) { @recipe.malts[:base] }
@@ -20,7 +21,6 @@ describe AssignMalts do
   end
 
   describe "num_specialty_malts" do
-    let(:maltster) { AssignMalts.new(@recipe) }
     it "should pick 0..1" do
       allow(maltster).to receive(:rand).and_return(0)
       expect(maltster.num_specialty_malts).to be_between(0, 1).inclusive
@@ -48,7 +48,6 @@ describe AssignMalts do
   end
 
   describe "malt_type_to_key" do
-    let(:maltster) { AssignMalts.new(@recipe) }
     context "type = true" do
       it "should return :base" do
         expect(maltster.malt_type_to_key(true)).to eq(:base)
@@ -65,7 +64,7 @@ describe AssignMalts do
   describe "store_malt" do
     context "malt is not already present in recipe" do
       before do
-        maltster = AssignMalts.new(@recipe)
+        @recipe.malts = { :base => {}, :specialty => {} }
         allow(maltster).to receive(:malt_amount).and_return(2.11)
         maltster.store_malt(:base, malt)
       end
@@ -80,7 +79,6 @@ describe AssignMalts do
     context "malt is already present in recipe" do
       before do
         @recipe.malts[:specialty] = { malt => 1 }
-        maltster = AssignMalts.new(@recipe)
         allow(maltster).to receive(:malt_amount).and_return(3.0)
         maltster.store_malt(:specialty, malt)
       end
@@ -97,7 +95,6 @@ describe AssignMalts do
     context "no specialty malts" do
       before { @recipe.malts[:specialty]= {} }
       it "assigns an empty hash" do
-        maltster = AssignMalts.new(@recipe)
         maltster.order_specialty_malts
         expect(@recipe.malts[:specialty]).to eq({})
       end
@@ -105,7 +102,6 @@ describe AssignMalts do
     context "specialty malts present" do
       before { @recipe.malts[:specialty]= { malt => 2, malt_1 => 2.25, malt_2 => 0.5 } }
       it "assigns @malts[:specialty] a hash ordered by malt amount" do
-        maltster = AssignMalts.new(@recipe)
         maltster.order_specialty_malts
         expect(@recipe.malts[:specialty]).to eq({ malt_1 => 2.25, malt => 2, malt_2 => 0.5 })
       end

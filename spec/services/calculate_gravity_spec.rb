@@ -3,8 +3,9 @@ require 'service_objects_helper'
 describe CalculateGravity do
   include_context "shared service variables"
 
+  let(:gravity) { CalculateGravity.new(@recipe) }
+
   describe "calc_abv" do
-    let(:gravity) { CalculateGravity.new(@recipe) }
     context "og 1050 and fg 1010" do
       it "assigns a value to @abv" do
         allow(gravity).to receive(:combine_og).and_return(0.050)
@@ -24,23 +25,21 @@ describe CalculateGravity do
   end
 
   describe "calc_og" do
-    let(:gravity) { CalculateGravity.new(@recipe) }
     context "empty malt array" do
       it "returns 0" do
         expect(gravity.calc_og(nil)).to eq(0)
       end
     end
     context "with malt array" do
+      before { allow(gravity).to receive(:pg_to_ep).and_return(37) }
       it "returns an og value for malt and weight" do
         allow(@recipe).to receive(:pull_malt_amt).and_return(10)
         allow(@recipe).to receive(:pull_malt_object).and_return(malt)
-        allow(gravity).to receive(:pg_to_ep).and_return(37)
         expect(gravity.calc_og('filler')).to eq(0.0592)
       end
       it "returns an og value for a second malt and weight" do
         allow(@recipe).to receive(:pull_malt_amt).and_return(2.5)
         allow(@recipe).to receive(:pull_malt_object).and_return(malt_1)
-        allow(gravity).to receive(:pg_to_ep).and_return(37)
         expect(gravity.calc_og('filler')).to eq(0.01295)
       end
     end
@@ -48,7 +47,6 @@ describe CalculateGravity do
 
   describe "calc_fg" do
     before { @recipe.yeast = yeast }
-    let(:gravity) { CalculateGravity.new(@recipe) }
     it "returns a final gravity" do
       allow(gravity).to receive(:pg_to_ep).and_return(50)
       expect(gravity.calc_fg(1.050)).to eq(1.0125)
@@ -60,7 +58,6 @@ describe CalculateGravity do
   end
 
   describe "combine_og" do
-    let(:gravity) { CalculateGravity.new(@recipe) }
     before { allow(gravity).to receive(:calc_og).and_return(0.0592) }
     context "one malt assigned" do
       it "returns the single og value" do
@@ -77,7 +74,6 @@ describe CalculateGravity do
   end
 
   describe "pg_to_ep" do
-    let(:gravity) { CalculateGravity.new(@recipe) }
     it "returns an ep formatted value" do
       expect(gravity.pg_to_ep(1.050)).to be_within(0.01).of(50)
     end
