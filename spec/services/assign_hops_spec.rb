@@ -11,7 +11,7 @@ describe AssignHops do
         expect(@recipe.hops[:bittering].to_a.flatten[0]).to be_kind_of(Hop)
       end
       it "should choose quantities" do
-        expect(@recipe.hops[:bittering].to_a.flatten[1]).to be_between(0.5, 3).inclusive
+        expect(@recipe.hops[:bittering].to_a.flatten[1]).to be_between(0.25, 3).inclusive
       end
       it "should choose appropriate bittering times" do
         expect(@recipe.hops[:bittering].to_a.flatten[2]).to be_between(40, 60).inclusive
