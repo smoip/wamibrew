@@ -9,7 +9,7 @@ class AssignYeast
   end
 
   def associate_yeast
-    base_malt_name = @recipe.pull_malt_name(@recipe.malts[:base].to_a[0])
+    base_malt_name = MaltHelpers.pull_malt_name(@recipe.malts[:base].to_a[0])
     if MALT_ASSOCIATIONS[base_malt_name] != nil
       yeast = Yeast.find_by(family: "#{MALT_ASSOCIATIONS[base_malt_name]}")
       return yeast

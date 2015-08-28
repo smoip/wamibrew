@@ -8,8 +8,8 @@ class CalculateColor
 
   def calc_mcu(malt_ary)
     # calculates malt color units
-    malt = @recipe.pull_malt_object(malt_ary)
-    weight = @recipe.pull_malt_amt(malt_ary)
+    malt = MaltHelpers.pull_malt_object(malt_ary)
+    weight = MaltHelpers.pull_malt_amt(malt_ary)
     malt.srm * weight / 5.0
   end
 

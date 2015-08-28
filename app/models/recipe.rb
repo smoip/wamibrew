@@ -50,7 +50,7 @@ class Recipe < ActiveRecord::Base
   end
 
   def generate_smash_name
-    malt = capitalize_titles(pull_malt_name(malts_to_array[0]))
+    malt = capitalize_titles(MaltHelpers.pull_malt_name(malts_to_array[0]))
     hop = capitalize_titles(HopsHelpers.pull_hop_name(hops_to_array[0]))
     @name = "#{malt} #{hop} SMASH"
   end
@@ -75,7 +75,7 @@ class Recipe < ActiveRecord::Base
   def choose_ingredient_adjective
     adjectives = [ 'wheat', 'rye', 'honey', 'rice', 'oats', 'corn', 'smoked' ]
     # add more desired adjectives here
-    malt_names = malts_to_array.collect {|malt| pull_malt_name(malt).split(' ')}
+    malt_names = malts_to_array.collect {|malt| MaltHelpers.pull_malt_name(malt).split(' ')}
     adjective = (malt_names.flatten & adjectives).shuffle.first
     adjective
   end
@@ -159,17 +159,17 @@ class Recipe < ActiveRecord::Base
     malt_ary.malts_to_array
   end
 
-  def pull_malt_object(malt_ary)
-    malt_ary[0]
-  end
+  # def pull_malt_object(malt_ary)
+  #   malt_ary[0]
+  # end
 
-  def pull_malt_name(malt_ary)
-    malt_ary[0].name
-  end
+  # def pull_malt_name(malt_ary)
+  #   malt_ary[0].name
+  # end
 
-  def pull_malt_amt(malt_ary)
-    malt_ary[1]
-  end
+  # def pull_malt_amt(malt_ary)
+  #   malt_ary[1]
+  # end
 
   def assign_hops
     hopster = AssignHops.new(self)
@@ -255,7 +255,7 @@ class Recipe < ActiveRecord::Base
   def display_malts
     display_array = []
     malts_to_array.each do |malt_ary|
-      display_array << "#{pull_malt_amt(malt_ary)} lb #{pull_malt_name(malt_ary)}"
+      display_array << "#{MaltHelpers.pull_malt_amt(malt_ary)} lb #{MaltHelpers.pull_malt_name(malt_ary)}"
     end
     display_array.join(", ")
   end

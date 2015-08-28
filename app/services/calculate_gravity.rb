@@ -19,8 +19,8 @@ class CalculateGravity
 
   def calc_og(malt_ary)
     return 0 if malt_ary.nil?
-    malt = @recipe.pull_malt_object(malt_ary)
-    weight = @recipe.pull_malt_amt(malt_ary)
+    malt = MaltHelpers.pull_malt_object(malt_ary)
+    weight = MaltHelpers.pull_malt_amt(malt_ary)
     ((weight * pg_to_ep(malt.potential) * malt.malt_yield / 5.0) / 1000.0)
   end
 
