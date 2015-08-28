@@ -15,10 +15,10 @@ class CalculateBitterness
   end
 
   def calc_indiv_ibu(hop_ary)
-    hop = @recipe.pull_hop_object(hop_ary)
-    weight = @recipe.pull_hop_amt(hop_ary)
-    time = @recipe.pull_hop_time(hop_ary)
-    rager_ibu = ( weight * (calc_hop_util(time)) * (hop.alpha / 100) * 7462 ) / ( 5 * ( 1 + calc_hop_ga ) )
+    hop = HopsHelpers.pull_hop_object(hop_ary)
+    weight = HopsHelpers.pull_hop_amt(hop_ary)
+    time = HopsHelpers.pull_hop_time(hop_ary)
+    rager_ibu = (weight * (calc_hop_util(time)) * (hop.alpha / 100) * 7462 ) / ( 5 * ( 1 + calc_hop_ga ) )
     rager_to_tinseth_q_and_d(time, rager_ibu)
     # comment out previous line to reset to Rager
   end

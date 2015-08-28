@@ -51,7 +51,7 @@ class Recipe < ActiveRecord::Base
 
   def generate_smash_name
     malt = capitalize_titles(pull_malt_name(malts_to_array[0]))
-    hop = capitalize_titles(pull_hop_name(hops_to_array[0]))
+    hop = capitalize_titles(HopsHelpers.pull_hop_name(hops_to_array[0]))
     @name = "#{malt} #{hop} SMASH"
   end
 
@@ -187,21 +187,21 @@ class Recipe < ActiveRecord::Base
     hop_ary.hop_names_to_array
   end
 
-  def pull_hop_object(hop_ary)
-    hop_ary[0]
-  end
+  # def pull_hop_object(hop_ary)
+  #   hop_ary[0]
+  # end
 
-  def pull_hop_name(hop_ary)
-    hop_ary[0].name
-  end
+  # def pull_hop_name(hop_ary)
+  #   hop_ary[0].name
+  # end
 
-  def pull_hop_amt(hop_ary)
-    hop_ary[1][0]
-  end
+  # def pull_hop_amt(hop_ary)
+  #   hop_ary[1][0]
+  # end
 
-  def pull_hop_time(hop_ary)
-    hop_ary[1][1]
-  end
+  # def pull_hop_time(hop_ary)
+  #   hop_ary[1][1]
+  # end
 
   def assign_yeast
     pick_yeast = AssignYeast.new(self)
