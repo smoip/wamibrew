@@ -24,17 +24,20 @@ describe CalculateBitterness do
   end
 
   describe "calc_indiv_ibu" do
-    before { allow(@recipe).to receive(:pull_hop_object).and_return(hop) }
     it "calculates a single hop addition's ibu contribution" do
-      allow(@recipe).to receive(:pull_hop_amt).and_return(2.5)
-      allow(@recipe).to receive(:pull_hop_time).and_return(60)
+      hop_ary = [ hop, [ 2.5, 60 ] ]
+      allow(HopsHelpers).to receive(:pull_hop_object).with(hop_ary).and_return(hop)
+      allow(HopsHelpers).to receive(:pull_hop_amt).with(hop_ary).and_return(2.5)
+      allow(HopsHelpers).to receive(:pull_hop_time).with(hop_ary).and_return(60)
       allow(bitterness).to receive(:calc_hop_util).and_return(0.3081950635151269)
       allow(bitterness).to receive(:calc_hop_ga).and_return(0.020000000000000018)
       expect(bitterness.calc_indiv_ibu([ hop, [ 2.5, 60 ] ])).to eq(48.362422594828296)
     end
     it "calculates another hop addition's ibu contribution" do
-      allow(@recipe).to receive(:pull_hop_amt).and_return(1.5)
-      allow(@recipe).to receive(:pull_hop_time).and_return(10)
+      hop_ary = [ hop, [ 1.5, 10 ] ]
+      allow(HopsHelpers).to receive(:pull_hop_object).with(hop_ary).and_return(hop)
+      allow(HopsHelpers).to receive(:pull_hop_amt).with(hop_ary).and_return(1.5)
+      allow(HopsHelpers).to receive(:pull_hop_time).with(hop_ary).and_return(10)
       allow(bitterness).to receive(:calc_hop_util).and_return(0.06699216655991082)
       allow(bitterness).to receive(:calc_hop_ga).and_return(0)
       expect(bitterness.calc_indiv_ibu([ hop, [ 1.5, 10 ] ])).to eq(9.568000767092846)

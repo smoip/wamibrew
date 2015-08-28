@@ -33,13 +33,15 @@ describe CalculateGravity do
     context "with malt array" do
       before { allow(gravity).to receive(:pg_to_ep).and_return(37) }
       it "returns an og value for malt and weight" do
-        allow(@recipe).to receive(:pull_malt_amt).and_return(10)
-        allow(@recipe).to receive(:pull_malt_object).and_return(malt)
+        allow(MaltHelpers).to receive(:pull_malt_amt).with('filler').and_return(10)
+        allow(MaltHelpers).to receive(:pull_malt_object).with('filler').and_return(malt)
+        # deprecated
         expect(gravity.calc_og('filler')).to eq(0.0592)
       end
       it "returns an og value for a second malt and weight" do
-        allow(@recipe).to receive(:pull_malt_amt).and_return(2.5)
-        allow(@recipe).to receive(:pull_malt_object).and_return(malt_1)
+        allow(MaltHelpers).to receive(:pull_malt_amt).with('filler').and_return(2.5)
+        allow(MaltHelpers).to receive(:pull_malt_object).with('filler').and_return(malt_1)
+        # deprecated
         expect(gravity.calc_og('filler')).to eq(0.01295)
       end
     end

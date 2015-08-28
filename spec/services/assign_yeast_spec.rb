@@ -2,8 +2,8 @@ require 'service_objects_helper'
 
 describe AssignYeast do
   include_context "shared service variables"
-
-  let(:pick_yeast) { AssignYeast.new(@recipe) }
+  let(:malts) { @recipe.malts }
+  let(:pick_yeast) { AssignYeast.new(malts) }
 
   describe "choose_yeast" do
     it "should choose a yeast" do

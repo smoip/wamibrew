@@ -204,7 +204,7 @@ class Recipe < ActiveRecord::Base
   # end
 
   def assign_yeast
-    pick_yeast = AssignYeast.new(self)
+    pick_yeast = AssignYeast.new(@malts)
     if rand(3) == 0
       @yeast = pick_yeast.associate_yeast
     else
