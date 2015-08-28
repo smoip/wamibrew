@@ -1,15 +1,15 @@
 class AssignMalts
 
-  attr_accessor :recipe
+  # attr_accessor :malts
 
-  def initialize(recipe)
-    @recipe = recipe
+  def initialize(malts)
+    @malts = malts
   end
 
   def choose_malt(malt_type)
     malt = Malt.where(base_malt?: malt_type).shuffle.first
     type_key = malt_type_to_key(malt_type)
-    store_malt(type_key, malt)
+    [ type_key, malt, malt_amount(malt) ]
   end
 
   def num_specialty_malts
@@ -22,14 +22,6 @@ class AssignMalts
     key
   end
 
-  def store_malt(type_key, malt)
-    if @recipe.malts[type_key][malt].nil?
-      @recipe.malts[type_key][malt]= malt_amount(malt)
-    else
-      @recipe.malts[type_key][malt]+= malt_amount(malt)
-    end
-  end
-
   def malt_amount(malt)
     if malt.base_malt?
       rand(10) + 5.0
@@ -38,9 +30,9 @@ class AssignMalts
     end
   end
 
-  def order_specialty_malts
-    specialty_ary = ( @recipe.malts[:specialty].sort_by { |malt, amt| amt } ).reverse
-    @recipe.malts[:specialty]= Hash[*specialty_ary.flatten]
+  def order_specialty_malts(malts)
+    specialty_ary = (malts[:specialty].sort_by { |malt, amt| amt }).reverse
+    Hash[*specialty_ary.flatten]
   end
 
 end

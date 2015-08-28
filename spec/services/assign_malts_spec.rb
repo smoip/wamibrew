@@ -7,16 +7,16 @@ describe AssignMalts do
   describe "choose_malt" do
     before do
       @recipe.malts = { :base => {}, :specialty => {} }
-      maltster.choose_malt(true)
+      # maltster.choose_malt(true)
     end
     let(:malt_array) { @recipe.malts[:base] }
 
     it "should choose a malt" do
-      expect(malt_array).not_to be_nil
-      expect(malt_array.to_a[0][0]).to be_kind_of(Malt)
+      expect(maltster.choose_malt(true)).not_to be_nil
+      expect(maltster.choose_malt(true)[1]).to be_kind_of(Malt)
     end
     it "should choose base malt quantities" do
-      expect(malt_array.to_a[0][1]).to be_between(5, 15).inclusive
+      expect(maltster.choose_malt(true)[2]).to be_between(5, 15).inclusive
     end
   end
 
@@ -65,8 +65,7 @@ describe AssignMalts do
     context "malt is not already present in recipe" do
       before do
         @recipe.malts = { :base => {}, :specialty => {} }
-        allow(maltster).to receive(:malt_amount).and_return(2.11)
-        maltster.store_malt(:base, malt)
+        @recipe.store_malt([:base, malt, 2.11])
       end
       it "creates a new entry for this malt in the malt hash according to key" do
         expect(@recipe.malts[:base]).to eq({ malt => 2.11 })
@@ -79,8 +78,7 @@ describe AssignMalts do
     context "malt is already present in recipe" do
       before do
         @recipe.malts[:specialty] = { malt => 1 }
-        allow(maltster).to receive(:malt_amount).and_return(3.0)
-        maltster.store_malt(:specialty, malt)
+        @recipe.store_malt([:specialty, malt, 3.0])
       end
       it "adds this malt to the existing entry in the malt hash" do
         expect(@recipe.malts[:specialty]).to eq({ malt => 4.0 })
@@ -95,15 +93,13 @@ describe AssignMalts do
     context "no specialty malts" do
       before { @recipe.malts[:specialty]= {} }
       it "assigns an empty hash" do
-        maltster.order_specialty_malts
-        expect(@recipe.malts[:specialty]).to eq({})
+        expect(maltster.order_specialty_malts(@recipe.malts)).to eq({})
       end
     end
     context "specialty malts present" do
       before { @recipe.malts[:specialty]= { malt => 2, malt_1 => 2.25, malt_2 => 0.5 } }
       it "assigns @malts[:specialty] a hash ordered by malt amount" do
-        maltster.order_specialty_malts
-        expect(@recipe.malts[:specialty]).to eq({ malt_1 => 2.25, malt => 2, malt_2 => 0.5 })
+        expect(maltster.order_specialty_malts(@recipe.malts)).to eq({ malt_1 => 2.25, malt => 2, malt_2 => 0.5 })
       end
     end
   end

@@ -138,9 +138,20 @@ class Recipe < ActiveRecord::Base
 
   def assign_malts
     maltster = AssignMalts.new(self)
-    maltster.choose_malt(true)
-    maltster.num_specialty_malts.times { maltster.choose_malt(false) }
-    maltster.order_specialty_malts
+    store_malt(maltster.choose_malt(true))
+    maltster.num_specialty_malts.times { store_malt(maltster.choose_malt(false)) }
+    @malts[:specialty]= maltster.order_specialty_malts(@malts)
+  end
+
+  def store_malt(arg)
+    type_key = arg[0]
+    malt = arg[1]
+    amt = arg[2]
+    if @malts[type_key][malt].nil?
+      @malts[type_key][malt]= amt
+    else
+      @malts[type_key][malt]+= amt
+    end
   end
 
   def malts_to_array
