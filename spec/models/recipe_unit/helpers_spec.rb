@@ -80,30 +80,6 @@ describe "helper methods" do
         end
       end
     end
-
-    describe "pull_hop_object" do
-      it "returns a hop object only" do
-        expect(@recipe.pull_hop_object( [ hop, [ 2.0, 60 ] ] ) ).to eq( hop )
-      end
-    end
-
-    describe "pull_hop_name" do
-      it "returns a name string" do
-        expect(@recipe.pull_hop_name( [ hop, [ 2.0, 60 ] ] ) ).to eq( 'cascade test' )
-      end
-    end
-
-    describe "pull_hop_amt" do
-      it "returns a hop weight" do
-        expect(@recipe.pull_hop_amt( [ hop, [ 2.0, 60 ] ] ) ).to eq( 2.0 )
-      end
-    end
-
-    describe"pull pull_hop_time" do
-      it "returns a hop addition time" do
-        expect(@recipe.pull_hop_time( [ hop, [ 2.0, 60 ] ] ) ).to eq( 60 )
-      end
-    end
   end
 
   describe "malt related" do
@@ -124,24 +100,6 @@ describe "helper methods" do
           @recipe.malts = { :base => { malt => 10 }, :specialty => { malt_1 => 2, malt_2 => 1 } }
           expect(@recipe.malts_to_array).to eq( [ [ malt, 10 ], [ malt_1, 2 ], [ malt_2, 1 ] ] )
         end
-      end
-    end
-
-    describe "pull_malt_object" do
-      it "returns a malt object only" do
-        expect(@recipe.pull_malt_object( [ malt, 10 ] ) ).to eq( malt )
-      end
-    end
-
-    describe "pull_malt_name" do
-      it "returns a name string only" do
-        expect(@recipe.pull_malt_name( [ malt, 10 ] ) ).to eq( '2-row test' )
-      end
-    end
-
-    describe "pull_malt_amt" do
-      it "returns a malt weight only" do
-        expect(@recipe.pull_malt_amt( [ malt, 10 ] ) ).to eq( 10 )
       end
     end
   end

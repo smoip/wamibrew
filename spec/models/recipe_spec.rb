@@ -339,38 +339,6 @@ describe Recipe do
             end
           end
         end
-
-        describe "individual hop info" do
-          let(:hop) { @recipe.hops[:bittering].to_a[0] }
-          let(:hops_ary) { @recipe.hops_to_array }
-
-          describe "pull_hop_object" do
-            it "should return a hop object" do
-              expect(@recipe.pull_hop_object(hops_ary[0])).to be_kind_of(Hop)
-            end
-          end
-
-          describe "pull_hop_name" do
-            it "should return a string" do
-              expect(@recipe.pull_hop_name(hop)).to be_kind_of(String)
-              expect(@recipe.pull_hop_name(hops_ary[1])).to be_kind_of(String)
-            end
-          end
-
-          describe "pull_hop_amt" do
-            it "should return an Float" do
-              expect(@recipe.pull_hop_amt(hop)).to be_kind_of(Float)
-              expect(@recipe.pull_hop_amt(hops_ary[0])).to be_kind_of(Float)
-            end
-          end
-
-          describe "pull_hop_time" do
-            it "should return a Integer" do
-              expect(@recipe.pull_hop_time(hop)).to be_kind_of(Integer)
-              expect(@recipe.pull_hop_time(hops_ary[2])).to be_kind_of(Integer)
-            end
-          end
-        end
       end
 
       describe "malts array helpers" do
@@ -388,29 +356,6 @@ describe Recipe do
             # base malt
             expect(@recipe.malts_to_array[0][1]).to be_kind_of(Float)
             # base malt amount
-          end
-        end
-
-        describe "individual malt info" do
-          let(:malt) { @recipe.malts[:base].to_a[0] }
-          let(:malt_ary) { @recipe.malts_to_array }
-
-          describe "pull_malt_object" do
-            it "should return a malt object" do
-              expect(@recipe.pull_malt_object(malt_ary[0])).to be_kind_of(Malt)
-            end
-          end
-
-          describe "pull_malt_name" do
-            it "should return a string" do
-              expect(@recipe.pull_malt_name(malt)).to be_kind_of(String)
-            end
-          end
-
-          describe "pull_malt_amt" do
-            it "should return a float" do
-              expect(@recipe.pull_malt_amt(malt)).to be_kind_of(Float)
-            end
           end
         end
       end
