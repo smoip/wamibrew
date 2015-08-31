@@ -9,15 +9,7 @@ class AssignHops
   def choose_hop(hop_type)
     hop = similar_hop(hop_type)
     type_key = hop_type_to_key(hop_type)
-    store_hop(type_key, hop, hop_type)
-  end
-
-  def store_hop(type_key, hop, hop_type)
-    if hop_type
-      @recipe.hops[type_key][hop]= [hop_amount, hop_time(hop_type)]
-    else
-      @recipe.hops[type_key] << { hop => [hop_amount, hop_time(hop_type)] }
-    end
+    [type_key, hop, hop_amount, hop_time(hop_type)]
   end
 
   def similar_hop(hop_type)

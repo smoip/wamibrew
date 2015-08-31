@@ -6,24 +6,31 @@ describe AssignHops do
 
   describe "choose_hop" do
     context "choose a bittering hop" do
-      before { hopster.choose_hop(true) }
-      it "should assign a hop to hops[:bittering]" do
-        expect(@recipe.hops[:bittering].to_a.flatten[0]).to be_kind_of(Hop)
+      let(:bitter_hop) { hopster.choose_hop(true) }
+      # type-key, hop, amt, time
+      it "should return a type_key" do
+        expect(bitter_hop[0]).to eq(:bittering)
+      end
+      it "should return a hop" do
+        expect(bitter_hop[1]).to be_kind_of(Hop)
       end
       it "should choose quantities" do
-        expect(@recipe.hops[:bittering].to_a.flatten[1]).to be_between(0.25, 3).inclusive
+        expect(bitter_hop[2]).to be_between(0.25, 3).inclusive
       end
       it "should choose appropriate bittering times" do
-        expect(@recipe.hops[:bittering].to_a.flatten[2]).to be_between(40, 60).inclusive
+        expect(bitter_hop[3]).to be_between(40, 60).inclusive
       end
     end
     context "choose an aroma hop" do
-      before { hopster.choose_hop(false) }
-      it "should assign a hop to hops[:aroma]" do
-        expect(@recipe.hops[:aroma][0].to_a.flatten[0]).to be_kind_of(Hop)
+      let(:aroma_hop) { hopster.choose_hop(false) }
+      it "should return a type_key" do
+        expect(aroma_hop[0]).to eq(:aroma)
+      end
+      it "should return a hop" do
+        expect(aroma_hop[1]).to be_kind_of(Hop)
       end
       it "should choose appropriate aroma times" do
-        expect(@recipe.hops[:aroma][0].to_a.flatten[2]).to be_between(0, 30).inclusive
+        expect(aroma_hop[3]).to be_between(0, 30).inclusive
       end
     end
   end
@@ -31,28 +38,22 @@ describe AssignHops do
   describe "store_hop" do
     context "type == bittering" do
       before do
-        allow(hopster).to receive(:hop_time).and_return(60)
-        allow(hopster).to receive(:hop_amount).and_return(2.0)
+        @recipe.hops = { :bittering => {}, :aroma => [] }
+        @recipe.store_hop([:bittering, hop, 2.0, 60])
       end
       it "stores a bittering hop" do
-        @recipe.hops = { :bittering => {}, :aroma => [] }
-        hopster.store_hop(:bittering, hop, true)
         expect(@recipe.hops[:bittering]).to eq({ hop => [ 2.0, 60 ] })
       end
     end
     context "type == aroma" do
-      before do
-        allow(hopster).to receive(:hop_time).and_return(10)
-        allow(hopster).to receive(:hop_amount).and_return(2.0)
-      end
       it "stores the first aroma hop" do
         @recipe.hops = { :bittering => {}, :aroma => [] }
-        hopster.store_hop(:aroma, hop, false)
+        @recipe.store_hop([:aroma, hop, 2.0, 10])
         expect(@recipe.hops[:aroma]).to eq([ { hop => [ 2.0, 10 ] } ])
       end
       it "stores subsequent aroma hops" do
         @recipe.hops = { :bittering => {}, :aroma => [ { hop => [ 1.5, 5 ] } ] }
-        hopster.store_hop(:aroma, hop, false)
+        @recipe.store_hop([:aroma, hop, 2.0, 10])
         expect(@recipe.hops[:aroma]).to eq([ { hop => [ 1.5, 5 ] }, { hop => [ 2.0, 10 ] } ])
       end
     end

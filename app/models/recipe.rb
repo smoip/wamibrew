@@ -173,8 +173,20 @@ class Recipe < ActiveRecord::Base
 
   def assign_hops
     hopster = AssignHops.new(self)
-    hopster.choose_hop(true)
-    hopster.num_aroma_hops.times { hopster.choose_hop(false) }
+    store_hop(hopster.choose_hop(true))
+    hopster.num_aroma_hops.times { store_hop(hopster.choose_hop(false)) }
+  end
+
+  def store_hop(arg)
+    type_key = arg[0]
+    hop = arg[1]
+    amt = arg[2]
+    time = arg[3]
+    if type_key == :bittering
+      @hops[type_key][hop]= [amt, time]
+    else
+      @hops[type_key] << { hop => [amt, time] }
+    end
   end
 
   def hops_to_array
