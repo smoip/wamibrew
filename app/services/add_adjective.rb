@@ -1,14 +1,14 @@
 class AddAdjective
 
-  attr_accessor :recipe
+  attr_accessor :style
 
-  def initialize(recipe)
-    @recipe = recipe
+  def initialize(style)
+    @style = style
   end
 
   def add_adjective(name, adjective)
-    if @recipe.style == nil
-      @recipe.name = "#{adjective} #{name}"
+    if @style == nil
+      return "#{adjective} #{name}"
     else
       if name.split(' ') == [ name ]
         index = 0
@@ -20,8 +20,8 @@ class AddAdjective
         index = 0
       else
         index = 1
-    end
-    @recipe.name = name.split(' ').insert(index, adjective).join(' ')
+      end
+    name.split(' ').insert(index, adjective).join(' ')
     end
   end
 end

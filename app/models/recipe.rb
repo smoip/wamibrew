@@ -126,8 +126,8 @@ class Recipe < ActiveRecord::Base
   end
 
   def add_adjective(name, adjective)
-    adjective_adder = AddAdjective.new(self)
-    adjective_adder.add_adjective(name, adjective)
+    adjective_adder = AddAdjective.new(@style)
+    @name = adjective_adder.add_adjective(name, adjective)
   end
 
   def ibu_checks
