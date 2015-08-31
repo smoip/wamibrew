@@ -7,7 +7,6 @@ describe AssignHops do
   describe "choose_hop" do
     context "choose a bittering hop" do
       let(:bitter_hop) { hopster.choose_hop(true) }
-      # type-key, hop, amt, time
       it "should return a type_key" do
         expect(bitter_hop[0]).to eq(:bittering)
       end
@@ -35,29 +34,29 @@ describe AssignHops do
     end
   end
 
-  describe "store_hop" do
-    context "type == bittering" do
-      before do
-        @recipe.hops = { :bittering => {}, :aroma => [] }
-        @recipe.store_hop([:bittering, hop, 2.0, 60])
-      end
-      it "stores a bittering hop" do
-        expect(@recipe.hops[:bittering]).to eq({ hop => [ 2.0, 60 ] })
-      end
-    end
-    context "type == aroma" do
-      it "stores the first aroma hop" do
-        @recipe.hops = { :bittering => {}, :aroma => [] }
-        @recipe.store_hop([:aroma, hop, 2.0, 10])
-        expect(@recipe.hops[:aroma]).to eq([ { hop => [ 2.0, 10 ] } ])
-      end
-      it "stores subsequent aroma hops" do
-        @recipe.hops = { :bittering => {}, :aroma => [ { hop => [ 1.5, 5 ] } ] }
-        @recipe.store_hop([:aroma, hop, 2.0, 10])
-        expect(@recipe.hops[:aroma]).to eq([ { hop => [ 1.5, 5 ] }, { hop => [ 2.0, 10 ] } ])
-      end
-    end
-  end
+  # describe "store_hop" do
+  #   context "type == bittering" do
+  #     before do
+  #       @recipe.hops = { :bittering => {}, :aroma => [] }
+  #       @recipe.store_hop([:bittering, hop, 2.0, 60])
+  #     end
+  #     it "stores a bittering hop" do
+  #       expect(@recipe.hops[:bittering]).to eq({ hop => [ 2.0, 60 ] })
+  #     end
+  #   end
+  #   context "type == aroma" do
+  #     it "stores the first aroma hop" do
+  #       @recipe.hops = { :bittering => {}, :aroma => [] }
+  #       @recipe.store_hop([:aroma, hop, 2.0, 10])
+  #       expect(@recipe.hops[:aroma]).to eq([ { hop => [ 2.0, 10 ] } ])
+  #     end
+  #     it "stores subsequent aroma hops" do
+  #       @recipe.hops = { :bittering => {}, :aroma => [ { hop => [ 1.5, 5 ] } ] }
+  #       @recipe.store_hop([:aroma, hop, 2.0, 10])
+  #       expect(@recipe.hops[:aroma]).to eq([ { hop => [ 1.5, 5 ] }, { hop => [ 2.0, 10 ] } ])
+  #     end
+  #   end
+  # end
 
   describe "hop_type_to_key" do
     it "returns :bittering" do

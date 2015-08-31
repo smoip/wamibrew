@@ -61,33 +61,33 @@ describe AssignMalts do
     end
   end
 
-  describe "store_malt" do
-    context "malt is not already present in recipe" do
-      before do
-        @recipe.malts = { :base => {}, :specialty => {} }
-        @recipe.store_malt([:base, malt, 2.11])
-      end
-      it "creates a new entry for this malt in the malt hash according to key" do
-        expect(@recipe.malts[:base]).to eq({ malt => 2.11 })
-      end
-      it "does not add this malt to the wrong key in the malt hash" do
-        expect(@recipe.malts[:specialty]).not_to eq({ malt => 2.11 })
-      end
-    end
+  # describe "store_malt" do
+  #   context "malt is not already present in recipe" do
+  #     before do
+  #       @recipe.malts = { :base => {}, :specialty => {} }
+  #       @recipe.store_malt([:base, malt, 2.11])
+  #     end
+  #     it "creates a new entry for this malt in the malt hash according to key" do
+  #       expect(@recipe.malts[:base]).to eq({ malt => 2.11 })
+  #     end
+  #     it "does not add this malt to the wrong key in the malt hash" do
+  #       expect(@recipe.malts[:specialty]).not_to eq({ malt => 2.11 })
+  #     end
+  #   end
 
-    context "malt is already present in recipe" do
-      before do
-        @recipe.malts[:specialty] = { malt => 1 }
-        @recipe.store_malt([:specialty, malt, 3.0])
-      end
-      it "adds this malt to the existing entry in the malt hash" do
-        expect(@recipe.malts[:specialty]).to eq({ malt => 4.0 })
-      end
-      it "does not create a new entry for this malt in the malt hash" do
-        expect(@recipe.malts[:base]).not_to eq({ malt => 3.0 })
-      end
-    end
-  end
+  #   context "malt is already present in recipe" do
+  #     before do
+  #       @recipe.malts[:specialty] = { malt => 1 }
+  #       @recipe.store_malt([:specialty, malt, 3.0])
+  #     end
+  #     it "adds this malt to the existing entry in the malt hash" do
+  #       expect(@recipe.malts[:specialty]).to eq({ malt => 4.0 })
+  #     end
+  #     it "does not create a new entry for this malt in the malt hash" do
+  #       expect(@recipe.malts[:base]).not_to eq({ malt => 3.0 })
+  #     end
+  #   end
+  # end
 
   describe "order_specialty_malts"do
     context "no specialty malts" do

@@ -197,6 +197,7 @@ describe Recipe do
     end
 
     describe "malt" do
+      let(:malt) { FactoryGirl.build(:malt) }
       describe "assign malts" do
         before do
           # needs to be properly stubbed at service object...
@@ -216,9 +217,38 @@ describe Recipe do
           expect(@recipe.malts[:specialty].to_a[0][0].base_malt?).to eq(false)
         end
       end
+
+      describe "store_malt" do
+        context "malt is not already present in recipe" do
+          before do
+            @recipe.malts = { :base => {}, :specialty => {} }
+            @recipe.store_malt([:base, malt, 2.11])
+          end
+          it "creates a new entry for this malt in the malt hash according to key" do
+            expect(@recipe.malts[:base]).to eq({ malt => 2.11 })
+          end
+          it "does not add this malt to the wrong key in the malt hash" do
+            expect(@recipe.malts[:specialty]).not_to eq({ malt => 2.11 })
+          end
+        end
+
+        context "malt is already present in recipe" do
+          before do
+            @recipe.malts[:specialty] = { malt => 1 }
+            @recipe.store_malt([:specialty, malt, 3.0])
+          end
+          it "adds this malt to the existing entry in the malt hash" do
+            expect(@recipe.malts[:specialty]).to eq({ malt => 4.0 })
+          end
+          it "does not create a new entry for this malt in the malt hash" do
+            expect(@recipe.malts[:base]).not_to eq({ malt => 3.0 })
+          end
+        end
+      end
     end
 
     describe "hops" do
+      let(:hop) { FactoryGirl.build(:hop) }
       describe "assign hops" do
         context "choose three aroma additions" do
           before do
@@ -250,6 +280,30 @@ describe Recipe do
           end
           it "should have no aroma hops" do
             expect(@recipe.hops[:aroma].length).to eq(0)
+          end
+        end
+      end
+
+      describe "store_hop" do
+        context "type == bittering" do
+          before do
+            @recipe.hops = { :bittering => {}, :aroma => [] }
+            @recipe.store_hop([:bittering, hop, 2.0, 60])
+          end
+          it "stores a bittering hop" do
+            expect(@recipe.hops[:bittering]).to eq({ hop => [ 2.0, 60 ] })
+          end
+        end
+        context "type == aroma" do
+          it "stores the first aroma hop" do
+            @recipe.hops = { :bittering => {}, :aroma => [] }
+            @recipe.store_hop([:aroma, hop, 2.0, 10])
+            expect(@recipe.hops[:aroma]).to eq([ { hop => [ 2.0, 10 ] } ])
+          end
+          it "stores subsequent aroma hops" do
+            @recipe.hops = { :bittering => {}, :aroma => [ { hop => [ 1.5, 5 ] } ] }
+            @recipe.store_hop([:aroma, hop, 2.0, 10])
+            expect(@recipe.hops[:aroma]).to eq([ { hop => [ 1.5, 5 ] }, { hop => [ 2.0, 10 ] } ])
           end
         end
       end
