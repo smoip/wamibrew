@@ -10,7 +10,6 @@ describe AddAdjective do
 
       it "should prepend an adjective to the name" do
         expect(adjective_adder.add_adjective('Beer', 'Viscous')).to eq('Viscous Beer')
-        # expect(@recipe.name).to eq('Viscous Beer')
       end
     end
 
@@ -18,7 +17,6 @@ describe AddAdjective do
       before { @recipe.style = style }
       it "should insert an adjective between words in the name" do
         expect(adjective_adder.add_adjective('American IPA', 'Viscous')).to eq('American Viscous IPA')
-        # expect(@recipe.name).to eq('American Viscous IPA')
       end
     end
 
@@ -26,7 +24,6 @@ describe AddAdjective do
       before { @recipe.style = Style.find_by_name('Pale Ale') }
       it "should insert the adjective before the protected name" do
         expect(adjective_adder.add_adjective('Pale Ale', 'Viscous')).to eq('Viscous Pale Ale')
-        # expect(@recipe.name).to eq('Viscous Pale Ale')
       end
     end
   end
