@@ -5,6 +5,11 @@ describe AddAdjective do
 
   describe "add_adjective" do
     let(:adjective_adder) { AddAdjective.new(@recipe.style) }
+    context "adjective == nil" do
+      it "should return the name alone" do
+        expect(adjective_adder.add_adjective('Beer', nil)).to eq('Beer')
+      end
+    end
     context "with no style" do
       before { @recipe.style = nil }
 

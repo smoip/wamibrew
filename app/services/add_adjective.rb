@@ -7,6 +7,7 @@ class AddAdjective
   end
 
   def add_adjective(name, adjective)
+    return name if adjective == nil
     if @style == nil
       return "#{adjective} #{name}"
     else
