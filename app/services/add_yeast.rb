@@ -1,18 +1,22 @@
 class AddYeast
 
-  attr_accessor :recipe
+  attr_accessor :style, :name, :yeast
 
-  def initialize(recipe)
-    @recipe = recipe
+  def initialize(style, name, yeast)
+    @style = style
+    @name = name
+    @yeast = yeast
   end
 
   def add_yeast
-    if @recipe.style == nil
-      if (rand(4) == 1) & (@recipe.name.include?("Beer"))
-        unless @recipe.yeast.family == 'wheat'
-          @recipe.name = ((@recipe.name.split(' ') - ["Beer"]) + [ NameHelpers.capitalize_titles(@recipe.yeast.family) ] ).join(' ')
+    yst = nil
+    if @style == nil
+      if (rand(4) == 1) & (@name.include?("Beer"))
+        unless @yeast.family == 'wheat'
+          yst = ((@name.split(' ') - ["Beer"]) + [ NameHelpers.capitalize_titles(@yeast.family) ] ).join(' ')
         end
       end
     end
+    yst
   end
 end

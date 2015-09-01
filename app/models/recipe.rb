@@ -98,8 +98,9 @@ class Recipe < ActiveRecord::Base
   end
 
   def add_yeast_family
-    yeast = AddYeast.new(self)
-    yeast.add_yeast
+    yeast = AddYeast.new(@style, @name, @yeast)
+    with_yeast = yeast.add_yeast
+    @name = with_yeast if with_yeast != nil
   end
 
   def nationality_check
