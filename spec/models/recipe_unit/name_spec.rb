@@ -106,15 +106,15 @@
       end
     end
 
-    describe "capitalize_titles" do
-      it "should capitalize multi-word titles" do
-        expect( @recipe.capitalize_titles( 'delicious red wheat' ) ).to eq( 'Delicious Red Wheat' )
-      end
+    # describe "capitalize_titles" do
+    #   it "should capitalize multi-word titles" do
+    #     expect( @recipe.capitalize_titles( 'delicious red wheat' ) ).to eq( 'Delicious Red Wheat' )
+    #   end
 
-      it "should capitalize one-word titles" do
-        expect( @recipe.capitalize_titles( 'wheat' ) ).to eq( 'Wheat' )
-      end
-    end
+    #   it "should capitalize one-word titles" do
+    #     expect( @recipe.capitalize_titles( 'wheat' ) ).to eq( 'Wheat' )
+    #   end
+    # end
 
     describe "add_ingredient_to_name" do
       let(:malt_3) { Malt.find_by_name( 'rye malt' ) }

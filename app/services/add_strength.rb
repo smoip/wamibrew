@@ -32,6 +32,6 @@ class AddStrength
   end
 
   def choose_strength_adjective(strength)
-    @recipe.capitalize_titles(STRENGTH_HASH[strength].shuffle.first)
+    NameHelpers.capitalize_titles(STRENGTH_HASH[strength].shuffle.first)
   end
 end

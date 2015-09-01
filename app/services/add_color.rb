@@ -35,7 +35,7 @@ class AddColor
   end
 
   def choose_color_adjective(color)
-    @recipe.capitalize_titles(COLOR_HASH[color].shuffle.first)
+    NameHelpers.capitalize_titles(COLOR_HASH[color].shuffle.first)
   end
 
 end

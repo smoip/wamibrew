@@ -50,23 +50,23 @@ class Recipe < ActiveRecord::Base
   end
 
   def generate_smash_name
-    malt = capitalize_titles(MaltHelpers.pull_malt_name(malts_to_array[0]))
-    hop = capitalize_titles(HopsHelpers.pull_hop_name(hops_to_array[0]))
+    malt = NameHelpers.capitalize_titles(MaltHelpers.pull_malt_name(malts_to_array[0]))
+    hop = NameHelpers.capitalize_titles(HopsHelpers.pull_hop_name(hops_to_array[0]))
     @name = "#{malt} #{hop} SMASH"
   end
 
-  def capitalize_titles(title)
-    (title.split(" ").collect { |word| word.capitalize }).join(" ")
-  end
+  # def NameHelpers.capitalize_titles(title)
+  #   (title.split(" ").collect { |word| word.capitalize }).join(" ")
+  # end
 
   def add_ingredient_to_name
     adjective = choose_ingredient_adjective
     unless adjective == nil
       if ([ adjective ] & get_required_malts) == []
         # no overlap between usuable malt names and adjective
-        unless @name.include?(capitalize_titles(adjective))
+        unless @name.include?(NameHelpers.capitalize_titles(adjective))
           # no redundant adjectives
-          add_adjective(@name, capitalize_titles(oatmeal_check(adjective)))
+          add_adjective(@name, NameHelpers.capitalize_titles(oatmeal_check(adjective)))
         end
       end
     end
