@@ -117,8 +117,8 @@ class Recipe < ActiveRecord::Base
   # end
 
   def add_strength_to_name
-    strength = AddStrength.new(self)
-    strength.add_strength
+    strength = AddStrength.new(@style, @name, @abv)
+    add_adjective(@name, strength.add_strength)
   end
 
   def add_article
