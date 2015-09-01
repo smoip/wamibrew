@@ -1,17 +1,18 @@
 class AddColor
 
-  attr_accessor :recipe
+  attr_accessor :recipe, :name
 
   COLOR_HASH = { :yellow => [ "very pale", "blonde", "light" ], :gold => [ "gold", "golden", "blonde" ], :amber => [ "amber", "copper" ], :red => [ "red", "amber" ], :brown => [ "brown", "chestnut" ], :dark_brown => [ "dark brown", "brown" ], :black => [ "black", "dark brown", "dark" ], :dark_black => [ "very dark", "black", "jet black" ]  }
 
-  def initialize(recipe)
+  def initialize(recipe, name)
     @recipe = recipe
+    @name = name
   end
 
   def add_color
     if @recipe.style == nil
       if rand(4) == 1
-        unless @recipe.check_smash_name
+        unless NameHelpers.check_smash_name(@name)
           @recipe.add_adjective(@recipe.name, choose_color_adjective(color_lookup))
         end
       end

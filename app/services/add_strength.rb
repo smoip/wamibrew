@@ -1,17 +1,18 @@
 class AddStrength
 
-  attr_accessor :recipe
+  attr_accessor :recipe, :name
 
   STRENGTH_HASH = { :weak => [ "mild", "low gravity" ], :session => [ "sessionable", "quaffable" ], :average => [""], :strong => [ "strong" ], :very_strong => [ "high gravity", "imperial" ]  }
 
-  def initialize(recipe)
+  def initialize(recipe, name)
     @recipe = recipe
+    @name = name
   end
 
   def add_strength
     if @recipe.style == nil
       if rand(4) == 1
-        unless @recipe.check_smash_name
+        unless NameHelpers.check_smash_name(@name)
           @recipe.add_adjective(@recipe.name, choose_strength_adjective(strength_lookup))
         end
       end

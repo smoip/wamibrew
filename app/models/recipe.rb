@@ -112,9 +112,9 @@ class Recipe < ActiveRecord::Base
     color.add_color
   end
 
-  def check_smash_name
-    @name.include?("SMASH") ? true : false
-  end
+  # def check_smash_name
+  #   @name.include?("SMASH") ? true : false
+  # end
 
   def add_strength_to_name
     strength = AddStrength.new(self)

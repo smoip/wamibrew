@@ -305,22 +305,22 @@
       #   end
       # end
 
-      describe "check_smash_name" do
-        context "includes \'SMASH\'" do
-          before { @recipe.name = 'Golden Promise Saaz SMASH' }
-          after { @recipe.name = nil }
-          it "should be true" do
-            expect( @recipe.check_smash_name ).to be( true )
-          end
-        end
-        context "does not include \'SMASH\'" do
-          before { @recipe.name = 'Red Ale' }
-          after { @recipe.name = nil }
-          it "should be false" do
-            expect( @recipe.check_smash_name ).to be( false )
-          end
-        end
-      end
+      # describe "check_smash_name" do
+      #   context "includes \'SMASH\'" do
+      #     before { @recipe.name = 'Golden Promise Saaz SMASH' }
+      #     after { @recipe.name = nil }
+      #     it "should be true" do
+      #       expect( @recipe.check_smash_name ).to be( true )
+      #     end
+      #   end
+      #   context "does not include \'SMASH\'" do
+      #     before { @recipe.name = 'Red Ale' }
+      #     after { @recipe.name = nil }
+      #     it "should be false" do
+      #       expect( @recipe.check_smash_name ).to be( false )
+      #     end
+      #   end
+      # end
 
       # describe "color_lookup" do
       #   after { @recipe.srm = nil }
