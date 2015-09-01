@@ -108,8 +108,8 @@ class Recipe < ActiveRecord::Base
   end
 
   def add_color_to_name
-    color = AddColor.new(self)
-    color.add_color
+    color = AddColor.new(@style, @name, @srm)
+    add_adjective(@name, color.add_color)
   end
 
   # def check_smash_name
