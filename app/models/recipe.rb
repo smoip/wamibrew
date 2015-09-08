@@ -236,7 +236,7 @@ class Recipe < ActiveRecord::Base
   end
 
   def calc_color
-    color = CalculateColor.new(self)
+    color = CalculateColor.new(malts_to_array)
     @srm = color.calc_srm
   end
 

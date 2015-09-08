@@ -1,9 +1,9 @@
 class CalculateColor
 
-  attr_accessor :recipe
+  attr_accessor :malts_ary
 
-  def initialize(recipe)
-    @recipe = recipe
+  def initialize(malts_ary)
+    @malts_ary = malts_ary
   end
 
   def calc_mcu(malt_ary)
@@ -15,7 +15,7 @@ class CalculateColor
 
   def combine_mcu
     combined = 0.0
-    @recipe.malts_to_array.each do | malt_ary |
+    @malts_ary.each do | malt_ary |
       combined += calc_mcu(malt_ary)
     end
     return combined
