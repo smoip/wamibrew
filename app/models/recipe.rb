@@ -231,8 +231,8 @@ class Recipe < ActiveRecord::Base
   end
 
   def calc_bitterness
-    bitterness = CalculateBitterness.new(self)
-    bitterness.calc_ibu
+    bitterness = CalculateBitterness.new(hops_to_array, @og)
+    @ibu = bitterness.calc_ibu
   end
 
   def calc_color

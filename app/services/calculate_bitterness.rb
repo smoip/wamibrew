@@ -1,24 +1,25 @@
 class CalculateBitterness
 
-  attr_accessor :recipe
+  attr_accessor :hops_ary, :og
 
-  def initialize(recipe)
-    @recipe = recipe
+  def initialize(hops_ary, og)
+    @hops_ary = hops_ary
+    @og = og
   end
 
   def calc_ibu
     combined = 0.0
-    @recipe.hops_to_array.each do |hop_ary|
+    @hops_ary.each do |hop_ary|
       combined += calc_indiv_ibu(hop_ary)
     end
-    @recipe.ibu = combined.round(1)
+    combined.round(1)
   end
 
   def calc_indiv_ibu(hop_ary)
     hop = HopsHelpers.pull_hop_object(hop_ary)
     weight = HopsHelpers.pull_hop_amt(hop_ary)
     time = HopsHelpers.pull_hop_time(hop_ary)
-    rager_ibu = (weight * (calc_hop_util(time)) * (hop.alpha / 100) * 7462 ) / ( 5 * ( 1 + calc_hop_ga ) )
+    rager_ibu = (weight * (calc_hop_util(time)) * (hop.alpha / 100) * 7462) / (5 * (1 + calc_hop_ga))
     rager_to_tinseth_q_and_d(time, rager_ibu)
     # comment out previous line to reset to Rager
   end
@@ -41,8 +42,8 @@ class CalculateBitterness
   end
 
   def calc_hop_ga
-    if @recipe.og > (1.058)
-      (@recipe.og - 1.058) / 0.2
+    if @og > (1.058)
+      (@og - 1.058) / 0.2
       # rager gravity adjustment
       # +0.008 added to extrapolate generic pre-boil from og
     else
