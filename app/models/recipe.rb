@@ -156,7 +156,7 @@ class Recipe < ActiveRecord::Base
   end
 
   def malts_to_array
-    malt_ary = MaltsArrays.new(self)
+    malt_ary = MaltsArrays.new(@malts)
     malt_ary.malts_to_array
   end
 
