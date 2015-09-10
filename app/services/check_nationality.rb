@@ -1,18 +1,19 @@
 class CheckNationality
 
-  attr_accessor :recipe
+  attr_accessor :name
 
-  def initialize(recipe)
-    @recipe = recipe
+  def initialize(name)
+    @name = name
   end
 
   def check
-    if @recipe.name.include?('German')
-      @recipe.name = swap_yeast_adjective_order(@recipe.name, 'German')
+    if @name.include?('German')
+      @name = swap_yeast_adjective_order(@name, 'German')
     end
-    if @recipe.name.include?('Belgian')
-      @recipe.name = swap_yeast_adjective_order(@recipe.name, 'Belgian')
+    if @name.include?('Belgian')
+      @name = swap_yeast_adjective_order(@name, 'Belgian')
     end
+    @name
   end
 
   def swap_yeast_adjective_order(name, adjective)

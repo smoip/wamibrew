@@ -2,22 +2,20 @@ require 'service_objects_helper'
 
 describe CheckNationality do
   include_context "shared service variables"
-  let(:nationality) { CheckNationality.new(@recipe) }
+  let(:nationality) { CheckNationality.new(@recipe.name) }
 
   describe "nationality_check" do
     before { allow(nationality).to receive(:swap_yeast_adjective_order).and_return('Success!') }
     context "name includes German" do
       it "calls swap_yeast_adjective_order" do
-        @recipe.name = 'Rye German Ale'
-        nationality.check
-        expect(@recipe.name).to eq('Success!')
+        nationality.name = 'Rye German Ale'
+        expect(nationality.check).to eq('Success!')
       end
     end
     context "name includes Belgian" do
       it "calls swap_yeast_adjective_order" do
-        @recipe.name = 'Wheat Belgian Ale'
-        nationality.check
-        expect(@recipe.name).to eq('Success!')
+        nationality.name = 'Wheat Belgian Ale'
+        expect(nationality.check).to eq('Success!')
       end
     end
   end

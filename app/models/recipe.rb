@@ -104,8 +104,8 @@ class Recipe < ActiveRecord::Base
   end
 
   def nationality_check
-    nationality = CheckNationality.new(self)
-    nationality.check
+    nationality = CheckNationality.new(@name)
+    @name = nationality.check
   end
 
   def add_color_to_name
