@@ -46,65 +46,65 @@
       end
     end
 
-    describe "check_smash" do
-      context "with assigned style present" do
-        before do
-          @recipe.name = 'IPA'
-          @recipe.style = 'IPA'
-        end
-        it "should not change name" do
-          expect { @recipe.check_smash }.not_to raise_error
-          expect( @recipe.name ).to eq( 'IPA' )
-        end
-      end
+    # describe "check_smash" do
+    #   context "with assigned style present" do
+    #     before do
+    #       @recipe.name = 'IPA'
+    #       @recipe.style = 'IPA'
+    #     end
+    #     it "should not change name" do
+    #       expect { @recipe.check_smash }.not_to raise_error
+    #       expect( @recipe.name ).to eq( 'IPA' )
+    #     end
+    #   end
 
-      context "without assigned style" do
-        before { @recipe.style = nil }
-        it "should attempt to generate smash name" do
-          allow( @recipe ).to receive( :single_malt? ).and_return( true )
-          allow( @recipe ).to receive( :single_hop? ).and_return( true )
-          expect { @recipe.check_smash }.to raise_error
-        end
-      end
-    end
+    #   context "without assigned style" do
+    #     before { @recipe.style = nil }
+    #     it "should attempt to generate smash name" do
+    #       allow( @recipe ).to receive( :single_malt? ).and_return( true )
+    #       allow( @recipe ).to receive( :single_hop? ).and_return( true )
+    #       expect { @recipe.check_smash }.to raise_error
+    #     end
+    #   end
+    # end
 
-    describe "single_hop?" do
-      context "single type of hop in hop instance variable" do
-        let(:single_hop) { { :bittering => {  hop => [ 1.5, 60 ] }, :aroma=> [] } }
-        before { @recipe.hops = single_hop }
-        it "should be true" do
-          expect( @recipe.single_hop? ).to be( true )
-        end
-      end
+    # describe "single_hop?" do
+    #   context "single type of hop in hop instance variable" do
+    #     let(:single_hop) { { :bittering => {  hop => [ 1.5, 60 ] }, :aroma=> [] } }
+    #     before { @recipe.hops = single_hop }
+    #     it "should be true" do
+    #       expect( @recipe.single_hop? ).to be( true )
+    #     end
+    #   end
 
-      context "multiple types of hops in hop instance variable" do
-        let(:hop_2) { FactoryGirl.build(:hop, name: 'centennial test') }
-        let(:multi_hop) { { :bittering => {  hop => [ 1.5, 60 ] }, :aroma=> [ { hop_2 => [1, 5] } ] } }
-        before { @recipe.hops = multi_hop }
-        it "should be false" do
-          expect( @recipe.single_hop? ).to be( false )
-        end
-      end
+    #   context "multiple types of hops in hop instance variable" do
+    #     let(:hop_2) { FactoryGirl.build(:hop, name: 'centennial test') }
+    #     let(:multi_hop) { { :bittering => {  hop => [ 1.5, 60 ] }, :aroma=> [ { hop_2 => [1, 5] } ] } }
+    #     before { @recipe.hops = multi_hop }
+    #     it "should be false" do
+    #       expect( @recipe.single_hop? ).to be( false )
+    #     end
+    #   end
 
-    end
+    # end
 
-    describe "single_malt?" do
-      context "single type of malt in malt instance variable" do
-        let(:single_malt)  { { :base => { malt => 9 }, :specialty => {} } }
-        before { @recipe.malts = single_malt }
-        it "should be true" do
-          expect( @recipe.single_malt? ).to be( true )
-        end
-      end
+    # describe "single_malt?" do
+    #   context "single type of malt in malt instance variable" do
+    #     let(:single_malt)  { { :base => { malt => 9 }, :specialty => {} } }
+    #     before { @recipe.malts = single_malt }
+    #     it "should be true" do
+    #       expect( @recipe.single_malt? ).to be( true )
+    #     end
+    #   end
 
-      context "multiple types of malts in malt instance variable" do
-        let(:multi_malt) { { :base => { malt => 9 }, :specialty => { malt_2 => 1 } } }
-        before { @recipe.malts = multi_malt }
-        it "should be false" do
-          expect( @recipe.single_malt? ).to be( false )
-        end
-      end
-    end
+    #   context "multiple types of malts in malt instance variable" do
+    #     let(:multi_malt) { { :base => { malt => 9 }, :specialty => { malt_2 => 1 } } }
+    #     before { @recipe.malts = multi_malt }
+    #     it "should be false" do
+    #       expect( @recipe.single_malt? ).to be( false )
+    #     end
+    #   end
+    # end
 
     # describe "capitalize_titles" do
     #   it "should capitalize multi-word titles" do

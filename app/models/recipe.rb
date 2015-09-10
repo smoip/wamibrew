@@ -34,73 +34,15 @@ class Recipe < ActiveRecord::Base
   end
 
   def check_smash
-    if @style == nil
-      if single_malt? && single_hop?
-        generate_smash_name
-      end
-    end
+    smash = CheckSmash.new(@style, hop_names_to_array, @malts, malts_to_array, hops_to_array)
+    smash_name = smash.check
+    @name = smash_name unless smash_name == nil
   end
-
-  def single_hop?
-    ( hop_names_to_array.uniq == [ hop_names_to_array[0] ] ) ? true : false
-  end
-
-  def single_malt?
-    ( @malts[:specialty] == {} ) ? true : false
-  end
-
-  def generate_smash_name
-    malt = NameHelpers.capitalize_titles(MaltHelpers.pull_malt_name(malts_to_array[0]))
-    hop = NameHelpers.capitalize_titles(HopsHelpers.pull_hop_name(hops_to_array[0]))
-    @name = "#{malt} #{hop} SMASH"
-  end
-
-  # def NameHelpers.capitalize_titles(title)
-  #   (title.split(" ").collect { |word| word.capitalize }).join(" ")
-  # end
 
   def add_ingredient_to_name
     ingredient = AddIngredient.new(@name, malts_to_array, @style)
     add_adjective(@name, ingredient.add_ingredient)
   end
-
-  # def add_ingredient_to_name
-  #   adjective = choose_ingredient_adjective
-  #   unless adjective == nil
-  #     if ([ adjective ] & get_required_malts) == []
-  #       # no overlap between usuable malt names and adjective
-  #       unless @name.include?(NameHelpers.capitalize_titles(adjective))
-  #         # no redundant adjectives
-  #         add_adjective(@name, NameHelpers.capitalize_titles(oatmeal_check(adjective)))
-  #       end
-  #     end
-  #   end
-  # end
-
-  # def choose_ingredient_adjective
-  #   adjectives = [ 'wheat', 'rye', 'honey', 'rice', 'oats', 'corn', 'smoked' ]
-  #   # add more desired adjectives here
-  #   malt_names = malts_to_array.collect {|malt| MaltHelpers.pull_malt_name(malt).split(' ')}
-  #   adjective = (malt_names.flatten & adjectives).shuffle.first
-  #   adjective
-  # end
-
-  # def oatmeal_check(adjective)
-  #   if adjective == 'oats'
-  #     adjective = 'oatmeal'
-  #   end
-  #   adjective
-  # end
-
-  # def get_required_malts
-  #   required_malts = []
-  #   unless @style == nil
-  #     if @style.required_malts != nil
-  #       required_malts = @style.required_malts.collect {|name| name.split(' ')}
-  #     end
-  #   end
-  #   required_malts.flatten
-  # end
 
   def add_yeast_family
     yeast = AddYeast.new(@style, @name, @yeast)
@@ -117,10 +59,6 @@ class Recipe < ActiveRecord::Base
     color = AddColor.new(@style, @name, @srm)
     add_adjective(@name, color.add_color)
   end
-
-  # def check_smash_name
-  #   @name.include?("SMASH") ? true : false
-  # end
 
   def add_strength_to_name
     strength = AddStrength.new(@style, @name, @abv)
@@ -165,18 +103,6 @@ class Recipe < ActiveRecord::Base
     malt_ary.malts_to_array
   end
 
-  # def pull_malt_object(malt_ary)
-  #   malt_ary[0]
-  # end
-
-  # def pull_malt_name(malt_ary)
-  #   malt_ary[0].name
-  # end
-
-  # def pull_malt_amt(malt_ary)
-  #   malt_ary[1]
-  # end
-
   def assign_hops
     hopster = AssignHops.new(self)
     store_hop(hopster.choose_hop(true))
@@ -204,22 +130,6 @@ class Recipe < ActiveRecord::Base
     hop_ary = HopsArrays.new(@hops)
     hop_ary.hop_names_to_array
   end
-
-  # def pull_hop_object(hop_ary)
-  #   hop_ary[0]
-  # end
-
-  # def pull_hop_name(hop_ary)
-  #   hop_ary[0].name
-  # end
-
-  # def pull_hop_amt(hop_ary)
-  #   hop_ary[1][0]
-  # end
-
-  # def pull_hop_time(hop_ary)
-  #   hop_ary[1][1]
-  # end
 
   def assign_yeast
     pick_yeast = AssignYeast.new(@malts)
