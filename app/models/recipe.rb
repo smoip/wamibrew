@@ -191,12 +191,12 @@ class Recipe < ActiveRecord::Base
   end
 
   def hops_to_array
-    hop_ary = HopsArrays.new(self)
+    hop_ary = HopsArrays.new(@hops)
     hop_ary.hops_to_array
   end
 
   def hop_names_to_array
-    hop_ary = HopsArrays.new(self)
+    hop_ary = HopsArrays.new(@hops)
     hop_ary.hop_names_to_array
   end
 
