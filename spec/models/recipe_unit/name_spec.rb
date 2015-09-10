@@ -116,134 +116,134 @@
     #   end
     # end
 
-    describe "add_ingredient_to_name" do
-      let(:malt_3) { Malt.find_by_name( 'rye malt' ) }
-      let(:malt_4) { Malt.find_by_name( 'white wheat' ) }
-      before { @recipe.malts = { :base => { malt => 10 }, :specialty => {} } }
-      # above three lines can be removed once 'multiple adjective-able malts' is moved to integration
-      context "recipe includes one adjective-able malt" do
-        before do
-          allow( @recipe ).to receive( :get_required_malts ).and_return( [] )
-          @recipe.name = 'Beer'
-        end
-        it "adds \'rye\' to the name" do
-          allow( @recipe ).to receive( :choose_ingredient_adjective ).and_return( 'rye' )
-          @recipe.add_ingredient_to_name
-          expect( @recipe.name ).to eq( 'Rye Beer' )
-        end
-        it "adds \'honey\' to the name" do
-          allow( @recipe ).to receive( :choose_ingredient_adjective ).and_return( 'honey' )
-          @recipe.add_ingredient_to_name
-          expect( @recipe.name ).to eq( 'Honey Beer' )
-        end
-      end
-      context "recipe includes multiple adjective-able malts" do
-        # move this context to integration tests
-        before do
-          @recipe.name = 'Beer'
-          @recipe.malts[:specialty] = { malt_3 => 2.5, malt_4 => 2 }
-        end
-        it "adds an adjective to the name" do
-          adjectives = [ "Rye", "Wheat" ]
-          @recipe.add_ingredient_to_name
-          expect( ( @recipe.name.split(' ') & adjectives )[0] ).to be_truthy
-        end
-        it "does not add multiple adjectives to the name" do
-          @recipe.name = 'Beer'
-          @recipe.add_ingredient_to_name
-          expect( @recipe.name ).not_to eq( 'Rye Wheat Beer' )
-          expect( @recipe.name ).not_to eq( 'Wheat Rye Beer' )
-        end
-      end
-      context "recipe includes no adjective-able malts" do
-        before { @recipe.name = 'Beer' }
-        it "does not add an adjective to the name" do
-          allow( @recipe ).to receive( :choose_ingredient_adjective ).and_return( nil )
-          allow( @recipe ).to receive( :get_required_malts ).and_return( [ 'wheat' ] )
-          @recipe.add_ingredient_to_name
-          expect( @recipe.name ).to eq( 'Beer' )
-        end
-      end
-      context "recipe includes an adjective-able malt which is also a required malt for style" do
-        before { @recipe.name = 'Beer' }
-        it "does not add an adjective to the name" do
-          allow( @recipe ).to receive( :choose_ingredient_adjective ).and_return( 'wheat' )
-          allow( @recipe ).to receive( :get_required_malts ).and_return( [ 'wheat' ] )
-          @recipe.add_ingredient_to_name
-          expect( @recipe.name ).to eq( 'Beer' )
-        end
-      end
-      context "recipe includes oats" do
-        before { @recipe.name = 'Beer' }
-        it "adds \'oatmeal\' rather than \'oats\'" do
-          allow( @recipe ).to receive( :choose_ingredient_adjective ).and_return( 'oats' )
-          allow( @recipe ).to receive( :get_required_malts ).and_return( [] )
-          @recipe.add_ingredient_to_name
-          expect( @recipe.name ).to eq( 'Oatmeal Beer' )
-        end
-      end
-    end
+    # describe "add_ingredient_to_name" do
+    #   let(:malt_3) { Malt.find_by_name( 'rye malt' ) }
+    #   let(:malt_4) { Malt.find_by_name( 'white wheat' ) }
+    #   before { @recipe.malts = { :base => { malt => 10 }, :specialty => {} } }
+    #   # above three lines can be removed once 'multiple adjective-able malts' is moved to integration
+    #   context "recipe includes one adjective-able malt" do
+    #     before do
+    #       allow( @recipe ).to receive( :get_required_malts ).and_return( [] )
+    #       @recipe.name = 'Beer'
+    #     end
+    #     it "adds \'rye\' to the name" do
+    #       allow( @recipe ).to receive( :choose_ingredient_adjective ).and_return( 'rye' )
+    #       @recipe.add_ingredient_to_name
+    #       expect( @recipe.name ).to eq( 'Rye Beer' )
+    #     end
+    #     it "adds \'honey\' to the name" do
+    #       allow( @recipe ).to receive( :choose_ingredient_adjective ).and_return( 'honey' )
+    #       @recipe.add_ingredient_to_name
+    #       expect( @recipe.name ).to eq( 'Honey Beer' )
+    #     end
+    #   end
+    #   context "recipe includes multiple adjective-able malts" do
+    #     # move this context to integration tests
+    #     before do
+    #       @recipe.name = 'Beer'
+    #       @recipe.malts[:specialty] = { malt_3 => 2.5, malt_4 => 2 }
+    #     end
+    #     it "adds an adjective to the name" do
+    #       adjectives = [ "Rye", "Wheat" ]
+    #       @recipe.add_ingredient_to_name
+    #       expect( ( @recipe.name.split(' ') & adjectives )[0] ).to be_truthy
+    #     end
+    #     it "does not add multiple adjectives to the name" do
+    #       @recipe.name = 'Beer'
+    #       @recipe.add_ingredient_to_name
+    #       expect( @recipe.name ).not_to eq( 'Rye Wheat Beer' )
+    #       expect( @recipe.name ).not_to eq( 'Wheat Rye Beer' )
+    #     end
+    #   end
+    #   context "recipe includes no adjective-able malts" do
+    #     before { @recipe.name = 'Beer' }
+    #     it "does not add an adjective to the name" do
+    #       allow( @recipe ).to receive( :choose_ingredient_adjective ).and_return( nil )
+    #       allow( @recipe ).to receive( :get_required_malts ).and_return( [ 'wheat' ] )
+    #       @recipe.add_ingredient_to_name
+    #       expect( @recipe.name ).to eq( 'Beer' )
+    #     end
+    #   end
+    #   context "recipe includes an adjective-able malt which is also a required malt for style" do
+    #     before { @recipe.name = 'Beer' }
+    #     it "does not add an adjective to the name" do
+    #       allow( @recipe ).to receive( :choose_ingredient_adjective ).and_return( 'wheat' )
+    #       allow( @recipe ).to receive( :get_required_malts ).and_return( [ 'wheat' ] )
+    #       @recipe.add_ingredient_to_name
+    #       expect( @recipe.name ).to eq( 'Beer' )
+    #     end
+    #   end
+    #   context "recipe includes oats" do
+    #     before { @recipe.name = 'Beer' }
+    #     it "adds \'oatmeal\' rather than \'oats\'" do
+    #       allow( @recipe ).to receive( :choose_ingredient_adjective ).and_return( 'oats' )
+    #       allow( @recipe ).to receive( :get_required_malts ).and_return( [] )
+    #       @recipe.add_ingredient_to_name
+    #       expect( @recipe.name ).to eq( 'Oatmeal Beer' )
+    #     end
+    #   end
+    # end
 
-    describe "choose_ingredient_adjective" do
-      let(:malt_3) { Malt.find_by_name( 'rye malt' ) }
-      let(:malt_4) { Malt.find_by_name( 'white wheat' ) }
-      before { @recipe.malts = { :base => { malt => 10 }, :specialty => {} } }
-      context "recipe includes one adjective-able malt" do
-        it "returns \'rye\'" do
-          @recipe.malts[:specialty] = { malt_3 => 2 }
-          expect( @recipe.choose_ingredient_adjective ).to eq( 'rye' )
-        end
-        it "returns \'honey\'" do
-          @recipe.malts[:specialty] = { sugar => 2 }
-          expect( @recipe.choose_ingredient_adjective ).to eq( 'honey' )
-        end
-      end
-      context "recipe includes multiple adjective-able malts" do
-        it "returns only one adjective" do
-          @recipe.malts[:specialty] = { malt_3 => 2 }
-          adjs = [ 'honey', 'rye' ]
-          expect( ( [ @recipe.choose_ingredient_adjective ] & adjs )[0] ).not_to eq( nil )
-          expect( ( [ @recipe.choose_ingredient_adjective ] & adjs )[0] ).to be_truthy
-        end
-      end
-      context "recipe includes no adjective-able malts" do
-        it "returns nothing" do
-          @recipe.malts[:specialty] = {}
-          expect( @recipe.choose_ingredient_adjective ).to eq( nil )
-        end
-      end
-    end
+    # describe "choose_ingredient_adjective" do
+    #   let(:malt_3) { Malt.find_by_name( 'rye malt' ) }
+    #   let(:malt_4) { Malt.find_by_name( 'white wheat' ) }
+    #   before { @recipe.malts = { :base => { malt => 10 }, :specialty => {} } }
+    #   context "recipe includes one adjective-able malt" do
+    #     it "returns \'rye\'" do
+    #       @recipe.malts[:specialty] = { malt_3 => 2 }
+    #       expect( @recipe.choose_ingredient_adjective ).to eq( 'rye' )
+    #     end
+    #     it "returns \'honey\'" do
+    #       @recipe.malts[:specialty] = { sugar => 2 }
+    #       expect( @recipe.choose_ingredient_adjective ).to eq( 'honey' )
+    #     end
+    #   end
+    #   context "recipe includes multiple adjective-able malts" do
+    #     it "returns only one adjective" do
+    #       @recipe.malts[:specialty] = { malt_3 => 2 }
+    #       adjs = [ 'honey', 'rye' ]
+    #       expect( ( [ @recipe.choose_ingredient_adjective ] & adjs )[0] ).not_to eq( nil )
+    #       expect( ( [ @recipe.choose_ingredient_adjective ] & adjs )[0] ).to be_truthy
+    #     end
+    #   end
+    #   context "recipe includes no adjective-able malts" do
+    #     it "returns nothing" do
+    #       @recipe.malts[:specialty] = {}
+    #       expect( @recipe.choose_ingredient_adjective ).to eq( nil )
+    #     end
+    #   end
+    # end
 
-    describe "get_required_malts" do
-      context "assigned style has no required malts" do
-        before { @recipe.style = nil }
-        it "returns an empty array" do
-          expect( @recipe.get_required_malts ).to eq( [] )
-        end
-      end
-      context "assigned style has one required malt" do
-        let(:style_2) { FactoryGirl.build(:style, required_malts: [ '2-row' ] ) }
-        before { @recipe.style = style_2 }
-        it "returns an array containing the test malt name" do
-          expect( @recipe.get_required_malts ).to eq( [ '2-row' ] )
-        end
-      end
-      context "assigned style has multiple required malts" do
-        let(:style_3) { FactoryGirl.build(:style, required_malts: [ '2-row', 'black malt' ] ) }
-        before { @recipe.style = style_3 }
-        it "returns an array containing two test malt names" do
-          expect( @recipe.get_required_malts ).to eq( [ '2-row', 'black', 'malt' ] )
-        end
-      end
-    end
-    describe "oatmeal_check" do
-      it "should change oats to oatmeal" do
-        expect( @recipe.oatmeal_check('oats') ).to eq( 'oatmeal' )
-      end
-      it "does not change non-oat words" do
-        expect( @recipe.oatmeal_check('rye') ).to eq( 'rye' )
-      end
-    end
+    # describe "get_required_malts" do
+    #   context "assigned style has no required malts" do
+    #     before { @recipe.style = nil }
+    #     it "returns an empty array" do
+    #       expect( @recipe.get_required_malts ).to eq( [] )
+    #     end
+    #   end
+    #   context "assigned style has one required malt" do
+    #     let(:style_2) { FactoryGirl.build(:style, required_malts: [ '2-row' ] ) }
+    #     before { @recipe.style = style_2 }
+    #     it "returns an array containing the test malt name" do
+    #       expect( @recipe.get_required_malts ).to eq( [ '2-row' ] )
+    #     end
+    #   end
+    #   context "assigned style has multiple required malts" do
+    #     let(:style_3) { FactoryGirl.build(:style, required_malts: [ '2-row', 'black malt' ] ) }
+    #     before { @recipe.style = style_3 }
+    #     it "returns an array containing two test malt names" do
+    #       expect( @recipe.get_required_malts ).to eq( [ '2-row', 'black', 'malt' ] )
+    #     end
+    #   end
+    # end
+    # describe "oatmeal_check" do
+    #   it "should change oats to oatmeal" do
+    #     expect( @recipe.oatmeal_check('oats') ).to eq( 'oatmeal' )
+    #   end
+    #   it "does not change non-oat words" do
+    #     expect( @recipe.oatmeal_check('rye') ).to eq( 'rye' )
+    #   end
+    # end
 
     # describe "add_yeast_family" do
     #   before do

@@ -60,42 +60,47 @@ class Recipe < ActiveRecord::Base
   # end
 
   def add_ingredient_to_name
-    adjective = choose_ingredient_adjective
-    unless adjective == nil
-      if ([ adjective ] & get_required_malts) == []
-        # no overlap between usuable malt names and adjective
-        unless @name.include?(NameHelpers.capitalize_titles(adjective))
-          # no redundant adjectives
-          add_adjective(@name, NameHelpers.capitalize_titles(oatmeal_check(adjective)))
-        end
-      end
-    end
+    ingredient = AddIngredient.new(@name, malts_to_array, @style)
+    add_adjective(@name, ingredient.add_ingredient)
   end
 
-  def choose_ingredient_adjective
-    adjectives = [ 'wheat', 'rye', 'honey', 'rice', 'oats', 'corn', 'smoked' ]
-    # add more desired adjectives here
-    malt_names = malts_to_array.collect {|malt| MaltHelpers.pull_malt_name(malt).split(' ')}
-    adjective = (malt_names.flatten & adjectives).shuffle.first
-    adjective
-  end
+  # def add_ingredient_to_name
+  #   adjective = choose_ingredient_adjective
+  #   unless adjective == nil
+  #     if ([ adjective ] & get_required_malts) == []
+  #       # no overlap between usuable malt names and adjective
+  #       unless @name.include?(NameHelpers.capitalize_titles(adjective))
+  #         # no redundant adjectives
+  #         add_adjective(@name, NameHelpers.capitalize_titles(oatmeal_check(adjective)))
+  #       end
+  #     end
+  #   end
+  # end
 
-  def oatmeal_check(adjective)
-    if adjective == 'oats'
-      adjective = 'oatmeal'
-    end
-    adjective
-  end
+  # def choose_ingredient_adjective
+  #   adjectives = [ 'wheat', 'rye', 'honey', 'rice', 'oats', 'corn', 'smoked' ]
+  #   # add more desired adjectives here
+  #   malt_names = malts_to_array.collect {|malt| MaltHelpers.pull_malt_name(malt).split(' ')}
+  #   adjective = (malt_names.flatten & adjectives).shuffle.first
+  #   adjective
+  # end
 
-  def get_required_malts
-    required_malts = []
-    unless @style == nil
-      if @style.required_malts != nil
-        required_malts = @style.required_malts.collect {|name| name.split(' ')}
-      end
-    end
-    required_malts.flatten
-  end
+  # def oatmeal_check(adjective)
+  #   if adjective == 'oats'
+  #     adjective = 'oatmeal'
+  #   end
+  #   adjective
+  # end
+
+  # def get_required_malts
+  #   required_malts = []
+  #   unless @style == nil
+  #     if @style.required_malts != nil
+  #       required_malts = @style.required_malts.collect {|name| name.split(' ')}
+  #     end
+  #   end
+  #   required_malts.flatten
+  # end
 
   def add_yeast_family
     yeast = AddYeast.new(@style, @name, @yeast)
