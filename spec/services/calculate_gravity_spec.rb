@@ -3,23 +3,21 @@ require 'service_objects_helper'
 describe CalculateGravity do
   include_context "shared service variables"
 
-  let(:gravity) { CalculateGravity.new(@recipe) }
+  let(:gravity) { CalculateGravity.new(@recipe.yeast, @recipe.malts_to_array) }
 
   describe "calc_abv" do
     context "og 1050 and fg 1010" do
       it "assigns a value to @abv" do
         allow(gravity).to receive(:combine_og).and_return(0.050)
         allow(gravity).to receive(:calc_fg).and_return(1.010)
-        gravity.calc_abv
-        expect(@recipe.abv).to eq(5.3)
+        expect(gravity.calc_abv[1]).to eq(5.3)
       end
     end
     context "og 1072 and fg 1021" do
       it "assigns a value to @abv" do
         allow(gravity).to receive(:combine_og).and_return(0.072)
         allow(gravity).to receive(:calc_fg).and_return(1.021)
-        gravity.calc_abv
-        expect(@recipe.abv).to eq(6.6)
+        expect(gravity.calc_abv[1]).to eq(6.6)
       end
     end
   end
@@ -35,20 +33,18 @@ describe CalculateGravity do
       it "returns an og value for malt and weight" do
         allow(MaltHelpers).to receive(:pull_malt_amt).with('filler').and_return(10)
         allow(MaltHelpers).to receive(:pull_malt_object).with('filler').and_return(malt)
-        # deprecated
         expect(gravity.calc_og('filler')).to eq(0.0592)
       end
       it "returns an og value for a second malt and weight" do
         allow(MaltHelpers).to receive(:pull_malt_amt).with('filler').and_return(2.5)
         allow(MaltHelpers).to receive(:pull_malt_object).with('filler').and_return(malt_1)
-        # deprecated
         expect(gravity.calc_og('filler')).to eq(0.01295)
       end
     end
   end
 
   describe "calc_fg" do
-    before { @recipe.yeast = yeast }
+    before { gravity.yeast = yeast }
     it "returns a final gravity" do
       allow(gravity).to receive(:pg_to_ep).and_return(50)
       expect(gravity.calc_fg(1.050)).to eq(1.0125)
@@ -63,13 +59,13 @@ describe CalculateGravity do
     before { allow(gravity).to receive(:calc_og).and_return(0.0592) }
     context "one malt assigned" do
       it "returns the single og value" do
-        allow(@recipe).to receive(:malts_to_array).and_return([[malt, 10]])
+        gravity.malts_ary = [[malt, 10]]
         expect(gravity.combine_og).to eq(0.0592)
       end
     end
     context "multiple malts assigned" do
       it "combines all individual og values" do
-        allow(@recipe).to receive(:malts_to_array).and_return([[malt, 10], [malt_1, 1]])
+        gravity.malts_ary = [[malt, 10], [malt_1, 1]]
         expect(gravity.combine_og).to eq(0.1184)
       end
     end

@@ -226,8 +226,10 @@ class Recipe < ActiveRecord::Base
   end
 
   def calc_gravities
-    gravity = CalculateGravity.new(self)
-    gravity.calc_abv
+    gravity = CalculateGravity.new(@yeast, malts_to_array)
+    gravity_ary = gravity.calc_abv
+    @og = gravity_ary[0]
+    @abv = gravity_ary[1]
   end
 
   def calc_bitterness
