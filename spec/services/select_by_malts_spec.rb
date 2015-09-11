@@ -5,14 +5,10 @@ describe SelectByMalts do
 
   let(:by_malts) { SelectByMalts.new([]) }
   let(:style_1) { FactoryGirl.build(:style, name: 'malt match test', required_malts: ['malt_match_1']) }
-  let(:malt_4) { FactoryGirl.create(:malt, name: 'malt_match_1') }
+  let(:malt_4) { FactoryGirl.build(:malt, name: 'malt_match_1') }
 
-  before do
-    malt_4.save!
-    by_malts.malt_names_ary = [malt_4.name]
-  end
+  before { by_malts.malt_names_ary = [malt_4.name] }
 
-  after { malt_4.destroy! }
   context "includes a style which requires present malt" do
     it "returns one style" do
       expect(by_malts.select([style_1])).to eq([style_1])
