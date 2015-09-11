@@ -15,4 +15,9 @@ class MaltsArrays
     end
     malt_ary.unshift(@malts[:base].to_a[0])
   end
+
+  def malt_names_to_array
+    malts_ary = malts_to_array.flatten.keep_if { |x| x.class == Malt }
+    malts_ary.collect { |malt| malt.name }
+  end
 end

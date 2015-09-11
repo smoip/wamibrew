@@ -17,20 +17,25 @@ class HopsArrays
     hop_ary.unshift(@hops[:bittering].to_a[0])
   end
 
+  # def hop_names_to_array
+  #   hop_ary = []
+  #   unless @hops[:aroma].nil?
+  #     @hops[:aroma].each do |aroma_hash|
+  #       aroma_hash.each_key do |aroma|
+  #         hop_ary << aroma.name
+  #       end
+  #     end
+  #   end
+  #   bitter = []
+  #   @hops[:bittering].each_key do |bittering|
+  #     bitter << bittering.name
+  #   end
+  #   hop_ary.unshift(bitter)
+  #   hop_ary.flatten
+  # end
+
   def hop_names_to_array
-    hop_ary = []
-    unless @hops[:aroma].nil?
-      @hops[:aroma].each do |aroma_hash|
-        aroma_hash.each_key do |aroma|
-          hop_ary << aroma.name
-        end
-      end
-    end
-    bitter = []
-    @hops[:bittering].each_key do |bittering|
-      bitter << bittering.name
-    end
-    hop_ary.unshift(bitter)
-    hop_ary.flatten
+    hops_ary = hops_to_array.flatten.keep_if { |x| x.class == Hop }
+    hops_ary.collect { |hop| hop.name }
   end
 end

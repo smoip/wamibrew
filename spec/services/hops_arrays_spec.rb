@@ -21,7 +21,7 @@ describe HopsArrays do
 
     context "without aroma hops" do
       it "returns bittering hops only" do
-        hops_arrays.hops = { :bittering => { hop => [ 1.5, 60 ] }, :specialty => nil }
+        hops_arrays.hops = { :bittering => { hop => [ 1.5, 60 ] }, :aroma => [] }
         expect(hops_arrays.hops_to_array).to eq([ [ hop, [ 1.5, 60 ] ] ])
       end
     end
@@ -37,7 +37,7 @@ describe HopsArrays do
     end
     context "does not have aroma hops" do
       it "returns only bittering hops names in an array" do
-        hops_arrays.hops = { :bittering => { hop => [ 1.5, 60 ] }, :specialty => nil }
+        hops_arrays.hops = { :bittering => { hop => [ 1.5, 60 ] }, :aroma => [] }
         expect(hops_arrays.hop_names_to_array).to eq([ 'cascade test' ])
       end
     end
