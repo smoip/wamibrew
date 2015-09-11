@@ -141,26 +141,26 @@ describe "style determination" do
   #   end
   # end
 
-  describe "select_by_srm" do
-    context "no styles cover @srm" do
-      it "returns an empty array" do
-        @recipe.srm = 19
-        expect(@recipe.select_by_srm(style_list)).to eq([])
-      end
-    end
-    context "one style covers @srm" do
-      it "returns a single style in an array" do
-        @recipe.srm = 13
-        expect(@recipe.select_by_srm(style_list)).to eq([ style ])
-      end
-    end
-    context "multiple styles cover @srm" do
-      it "returns a list of multiple styles" do
-        @recipe.srm = 10
-        expect(@recipe.select_by_srm(style_list)).to eq([ style, style_1 ])
-      end
-    end
-  end
+  # describe "select_by_srm" do
+  #   context "no styles cover @srm" do
+  #     it "returns an empty array" do
+  #       @recipe.srm = 19
+  #       expect(@recipe.select_by_srm(style_list)).to eq([])
+  #     end
+  #   end
+  #   context "one style covers @srm" do
+  #     it "returns a single style in an array" do
+  #       @recipe.srm = 13
+  #       expect(@recipe.select_by_srm(style_list)).to eq([ style ])
+  #     end
+  #   end
+  #   context "multiple styles cover @srm" do
+  #     it "returns a list of multiple styles" do
+  #       @recipe.srm = 10
+  #       expect(@recipe.select_by_srm(style_list)).to eq([ style, style_1 ])
+  #     end
+  #   end
+  # end
 
   describe "filter_possible_styles" do
     before do

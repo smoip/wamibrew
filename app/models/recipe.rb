@@ -221,11 +221,8 @@ class Recipe < ActiveRecord::Base
   end
 
   def select_by_srm(style_list)
-    subset = []
-    style_list.each do |style|
-      subset << style if ((style.srm_lower)..(style.srm_upper)).cover?(@srm)
-    end
-    return subset
+    by_srm = SelectBySrm.new(@srm)
+    by_srm.select(style_list)
   end
 
   def filter_possible_styles
