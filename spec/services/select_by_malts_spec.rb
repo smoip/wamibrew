@@ -9,7 +9,7 @@ describe SelectByMalts do
 
   before do
     malt_4.save!
-    by_malts.malts_ary = [[malt_4, 5]]
+    by_malts.malt_names_ary = [malt_4.name]
   end
 
   after { malt_4.destroy! }
@@ -37,7 +37,3 @@ describe SelectByMalts do
   end
 
 end
-
-# includes a style which requires present malt
-# does not include styles which requires an absent malt
-# includes a style which has no required malts

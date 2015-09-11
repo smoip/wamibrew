@@ -201,7 +201,7 @@ class Recipe < ActiveRecord::Base
   end
 
   def select_by_malt(style_list)
-    by_malts = SelectByMalts.new(malts_to_array)
+    by_malts = SelectByMalts.new(malt_names_to_array)
     by_malts.select(style_list)
   end
 
