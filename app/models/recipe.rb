@@ -103,6 +103,11 @@ class Recipe < ActiveRecord::Base
     malt_ary.malts_to_array
   end
 
+  def malt_names_to_array
+    malt_ary = MaltsArrays.new(@malts)
+    malt_ary.malt_names_to_array
+  end
+
   def assign_hops
     hopster = AssignHops.new(self)
     store_hop(hopster.choose_hop(true))
