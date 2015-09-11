@@ -4,7 +4,6 @@ describe SelectByMalts do
   include_context "shared service variables"
 
   let(:by_malts) { SelectByMalts.new([]) }
-  let(:style_1) { FactoryGirl.build(:style, name: 'malt match test', required_malts: ['malt_match_1']) }
   let(:malt_4) { FactoryGirl.build(:malt, name: 'malt_match_1') }
 
   before { by_malts.malt_names_ary = [malt_4.name] }

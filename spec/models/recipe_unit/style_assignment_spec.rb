@@ -38,66 +38,66 @@ describe "style determination" do
   #   # learn how to mock database entries to unit test this method
   # end
 
-  describe "select_by_aroma" do
-    let(:style_aroma_true) { FactoryGirl.build(:style, name: 'aroma needed', aroma_required?: true) }
-    let(:style_aroma_false) { FactoryGirl.build(:style, name: 'aroma not needed', aroma_required?: false) }
-    let(:style_list_1) { [ style_aroma_true, style_aroma_false ] }
-    context "style_list includes aroma required style, aroma hops not present" do
-      before { allow(@recipe).to receive(:aroma_present?).and_return(false) }
-      it "returns at least one style" do
-        expect(@recipe.select_by_aroma(style_list_1)).not_to eq( [] )
-      end
-      it "returns only aroma not required styles" do
-        expect(@recipe.select_by_aroma(style_list_1)).not_to include( style_aroma_true )
-      end
-    end
-    context "style_list includes aroma required style, aroma hops present" do
-      it "returns at least one style" do
-        expect(@recipe.select_by_aroma(style_list_1)).not_to eq( [] )
-      end
-      it "returns both aroma required styles and aroma not required styles" do
-        allow(@recipe).to receive(:aroma_present?).and_return(true)
-        expect(@recipe.select_by_aroma(style_list_1)).to (include( style_aroma_true ) && include(style_aroma_false))
-      end
-    end
-    context "style_list does not include aroma required style, aroma hops not present" do
-      before { allow(@recipe).to receive(:aroma_present?).and_return(false) }
-      it "returns at least one style" do
-        style_list_1 = [ style_aroma_false ]
-        expect(@recipe.select_by_aroma(style_list_1)).not_to eq( [] )
-      end
-      it "returns only aroma not required styles" do
-        style_list_1 = [ style_aroma_false ]
-        expect(@recipe.select_by_aroma(style_list_1)).not_to include( style_aroma_true )
-      end
-    end
-    context "style_list does not include aroma required style, aroma hops present" do
-      before { allow(@recipe).to receive(:aroma_present?).and_return(true) }
-      it "returns at least one style" do
-        style_list_1 = [ style_aroma_false ]
-        expect(@recipe.select_by_aroma(style_list)).not_to eq( [] )
-      end
-      it "returns only aroma not required styles" do
-        style_list_1 = [ style_aroma_false ]
-        expect(@recipe.select_by_aroma(style_list_1)).not_to include( style_aroma_true )
-      end
-    end
-  end
+  # describe "select_by_aroma" do
+  #   let(:style_aroma_true) { FactoryGirl.build(:style, name: 'aroma needed', aroma_required?: true) }
+  #   let(:style_aroma_false) { FactoryGirl.build(:style, name: 'aroma not needed', aroma_required?: false) }
+  #   let(:style_list_1) { [ style_aroma_true, style_aroma_false ] }
+  #   context "style_list includes aroma required style, aroma hops not present" do
+  #     before { allow(@recipe).to receive(:aroma_present?).and_return(false) }
+  #     it "returns at least one style" do
+  #       expect(@recipe.select_by_aroma(style_list_1)).not_to eq( [] )
+  #     end
+  #     it "returns only aroma not required styles" do
+  #       expect(@recipe.select_by_aroma(style_list_1)).not_to include( style_aroma_true )
+  #     end
+  #   end
+  #   context "style_list includes aroma required style, aroma hops present" do
+  #     it "returns at least one style" do
+  #       expect(@recipe.select_by_aroma(style_list_1)).not_to eq( [] )
+  #     end
+  #     it "returns both aroma required styles and aroma not required styles" do
+  #       allow(@recipe).to receive(:aroma_present?).and_return(true)
+  #       expect(@recipe.select_by_aroma(style_list_1)).to (include( style_aroma_true ) && include(style_aroma_false))
+  #     end
+  #   end
+  #   context "style_list does not include aroma required style, aroma hops not present" do
+  #     before { allow(@recipe).to receive(:aroma_present?).and_return(false) }
+  #     it "returns at least one style" do
+  #       style_list_1 = [ style_aroma_false ]
+  #       expect(@recipe.select_by_aroma(style_list_1)).not_to eq( [] )
+  #     end
+  #     it "returns only aroma not required styles" do
+  #       style_list_1 = [ style_aroma_false ]
+  #       expect(@recipe.select_by_aroma(style_list_1)).not_to include( style_aroma_true )
+  #     end
+  #   end
+  #   context "style_list does not include aroma required style, aroma hops present" do
+  #     before { allow(@recipe).to receive(:aroma_present?).and_return(true) }
+  #     it "returns at least one style" do
+  #       style_list_1 = [ style_aroma_false ]
+  #       expect(@recipe.select_by_aroma(style_list)).not_to eq( [] )
+  #     end
+  #     it "returns only aroma not required styles" do
+  #       style_list_1 = [ style_aroma_false ]
+  #       expect(@recipe.select_by_aroma(style_list_1)).not_to include( style_aroma_true )
+  #     end
+  #   end
+  # end
 
-  describe "aroma_present?" do
-    context "aroma hops present" do
-      it "returns true" do
-        @recipe.hops[:aroma]= [ { hop => [ 1.25, 20 ] } ]
-        expect(@recipe.aroma_present?).to be( true )
-      end
-    end
-    context "aroma hops not present" do
-      it "returns false" do
-        @recipe.hops[:aroma]= []
-        expect(@recipe.aroma_present?).to be( false )
-      end
-    end
-  end
+  # describe "aroma_present?" do
+  #   context "aroma hops present" do
+  #     it "returns true" do
+  #       @recipe.hops[:aroma]= [ { hop => [ 1.25, 20 ] } ]
+  #       expect(@recipe.aroma_present?).to be( true )
+  #     end
+  #   end
+  #   context "aroma hops not present" do
+  #     it "returns false" do
+  #       @recipe.hops[:aroma]= []
+  #       expect(@recipe.aroma_present?).to be( false )
+  #     end
+  #   end
+  # end
 
   describe "select_by_abv" do
     context "no styles cover @abv" do
