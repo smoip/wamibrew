@@ -120,26 +120,26 @@ describe "style determination" do
   #   end
   # end
 
-  describe "select_by_ibu" do
-    context "no styles cover @ibu" do
-      it "returns an empty array" do
-        @recipe.ibu = 99
-        expect(@recipe.select_by_ibu(style_list)).to eq([])
-      end
-    end
-    context "one style covers @ibu" do
-      it "returns a single style in an array" do
-        @recipe.ibu = 60
-        expect(@recipe.select_by_ibu(style_list)).to eq([ style ])
-      end
-    end
-    context "multiple styles cover @ibu" do
-      it "returns a list of multiple styles" do
-        @recipe.ibu = 45
-        expect(@recipe.select_by_ibu(style_list)).to eq([ style, style_1 ])
-      end
-    end
-  end
+  # describe "select_by_ibu" do
+  #   context "no styles cover @ibu" do
+  #     it "returns an empty array" do
+  #       @recipe.ibu = 99
+  #       expect(@recipe.select_by_ibu(style_list)).to eq([])
+  #     end
+  #   end
+  #   context "one style covers @ibu" do
+  #     it "returns a single style in an array" do
+  #       @recipe.ibu = 60
+  #       expect(@recipe.select_by_ibu(style_list)).to eq([ style ])
+  #     end
+  #   end
+  #   context "multiple styles cover @ibu" do
+  #     it "returns a list of multiple styles" do
+  #       @recipe.ibu = 45
+  #       expect(@recipe.select_by_ibu(style_list)).to eq([ style, style_1 ])
+  #     end
+  #   end
+  # end
 
   describe "select_by_srm" do
     context "no styles cover @srm" do

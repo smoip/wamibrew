@@ -215,12 +215,9 @@ class Recipe < ActiveRecord::Base
     by_abv.select(style_list)
   end
 
-    def select_by_ibu(style_list)
-    subset = []
-    style_list.each do |style|
-      subset << style if ((style.ibu_lower)..(style.ibu_upper)).cover?(@ibu)
-    end
-    return subset
+  def select_by_ibu(style_list)
+    by_ibu = SelectByIbu.new(@ibu)
+    by_ibu.select(style_list)
   end
 
   def select_by_srm(style_list)
