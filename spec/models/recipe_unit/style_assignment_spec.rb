@@ -34,9 +34,9 @@ describe "style determination" do
   #   end
   # end
 
-  describe "select_by_malt" do
-    # learn how to mock database entries to unit test this method
-  end
+  # describe "select_by_malt" do
+  #   # learn how to mock database entries to unit test this method
+  # end
 
   describe "select_by_aroma" do
     let(:style_aroma_true) { FactoryGirl.build(:style, name: 'aroma needed', aroma_required?: true) }
