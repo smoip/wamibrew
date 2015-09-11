@@ -99,26 +99,26 @@ describe "style determination" do
   #   end
   # end
 
-  describe "select_by_abv" do
-    context "no styles cover @abv" do
-      it "returns an empty array" do
-        @recipe.abv = 3.0
-        expect(@recipe.select_by_abv(style_list)).to eq([])
-      end
-    end
-    context "one style covers @abv" do
-      it "returns a single style in an array" do
-        @recipe.abv = 7.0
-        expect(@recipe.select_by_abv(style_list)).to eq([ style ])
-      end
-    end
-    context "multiple styles cover @abv" do
-      it "returns a list of multiple styles" do
-        @recipe.abv = 5.6
-        expect(@recipe.select_by_abv(style_list)).to eq([ style, style_1 ])
-      end
-    end
-  end
+  # describe "select_by_abv" do
+  #   context "no styles cover @abv" do
+  #     it "returns an empty array" do
+  #       @recipe.abv = 3.0
+  #       expect(@recipe.select_by_abv(style_list)).to eq([])
+  #     end
+  #   end
+  #   context "one style covers @abv" do
+  #     it "returns a single style in an array" do
+  #       @recipe.abv = 7.0
+  #       expect(@recipe.select_by_abv(style_list)).to eq([ style ])
+  #     end
+  #   end
+  #   context "multiple styles cover @abv" do
+  #     it "returns a list of multiple styles" do
+  #       @recipe.abv = 5.6
+  #       expect(@recipe.select_by_abv(style_list)).to eq([ style, style_1 ])
+  #     end
+  #   end
+  # end
 
   describe "select_by_ibu" do
     context "no styles cover @ibu" do
