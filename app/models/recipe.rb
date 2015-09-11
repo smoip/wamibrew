@@ -191,11 +191,8 @@ class Recipe < ActiveRecord::Base
   end
 
   def select_by_yeast
-    style_list = []
-    Style.find_each do |style|
-      style_list << style if (style.yeast_family == "#{@yeast.family}")
-    end
-    return style_list
+    by_yeast = SelectByYeast.new(@yeast)
+    by_yeast.select
   end
 
   def select_by_malt(style_list)

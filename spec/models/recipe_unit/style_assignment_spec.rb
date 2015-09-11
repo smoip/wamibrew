@@ -16,23 +16,23 @@ describe "style determination" do
   let(:hop) { FactoryGirl.build(:hop) }
   let(:style_list) { [ style, style_1 ] }
 
-  # select_by_yeast
-  describe "select_by_yeast" do
-    # learn how to mock database entries to unit test this method
-    context "one matching style" do
-      before do
-        @recipe.yeast = yeast_1
-      end
-      after { style_1.destroy! }
-      it "returns one style" do
-        # expect(@recipe.select_by_yeast).to eq( [ style_1 ] )
-      end
-    end
-    context "multiple matching styles" do
-    end
-    context "no matching styles" do
-    end
-  end
+  # # select_by_yeast
+  # describe "select_by_yeast" do
+  #   # learn how to mock database entries to unit test this method
+  #   context "one matching style" do
+  #     before do
+  #       @recipe.yeast = yeast_1
+  #     end
+  #     after { style_1.destroy! }
+  #     it "returns one style" do
+  #       # expect(@recipe.select_by_yeast).to eq( [ style_1 ] )
+  #     end
+  #   end
+  #   context "multiple matching styles" do
+  #   end
+  #   context "no matching styles" do
+  #   end
+  # end
 
   describe "select_by_malt" do
     # learn how to mock database entries to unit test this method
