@@ -237,15 +237,15 @@ describe "style determination" do
   describe "filter_style_by_ingredients" do
   end
   # tally_common_ingredients
-  describe "tally_common_ingredients" do
-  end
+  # describe "tally_common_ingredients" do
+  # end
 
-  describe "tally_common_malts" do
-    # learn how to mock database entries to unit test this method
-  end
+  # describe "tally_common_malts" do
+  #   # learn how to mock database entries to unit test this method
+  # end
 
-  describe "tally_common_hops" do
-    # learn how to mock database entries to unit test this method
-  end
+  # describe "tally_common_hops" do
+  #   # learn how to mock database entries to unit test this method
+  # end
 
 end

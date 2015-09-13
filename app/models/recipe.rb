@@ -245,43 +245,48 @@ class Recipe < ActiveRecord::Base
     malt_tally = tally_table[0]
     hop_tally = tally_table[1]
     tally = malt_tally.merge(hop_tally) { |style, m_count, h_count| m_count + h_count }
-    tally = ( tally.sort_by { |style, count| -count } )
+    tally = (tally.sort_by { |style, count| -count })
     tally = tally.first
     return tally[0]
   end
 
   def tally_common_ingredients(style_list)
-    malt_tally = {}
-    hop_tally = {}
-    style_list.each do |style|
-      malt_tally.merge!(tally_common_malts(style)) { |style, old_tally, new_tally| old_tally + new_tally }
-      hop_tally.merge!(tally_common_hops(style)) { |style, old_tally, new_tally| old_tally + new_tally }
-    end
-    return [ malt_tally, hop_tally ]
+    ingredients = TallyIngredients.new(malt_names_to_array, hop_names_to_array)
+    ingredients.tally_common(style_list)
   end
 
-  def tally_common_malts(style)
-    tally = { style => 0 }
-    unless style.common_malts.nil?
-      style.common_malts.each do |malt|
-        if malts_to_array.flatten.include?(Malt.find_by_name(malt))
-          tally[style]+= 1
-        end
-      end
-    end
-    return tally
-  end
+  # def tally_common_ingredients(style_list)
+  #   malt_tally = {}
+  #   hop_tally = {}
+  #   style_list.each do |style|
+  #     malt_tally.merge!(tally_common_malts(style)) { |style, old_tally, new_tally| old_tally + new_tally }
+  #     hop_tally.merge!(tally_common_hops(style)) { |style, old_tally, new_tally| old_tally + new_tally }
+  #   end
+  #   return [ malt_tally, hop_tally ]
+  # end
 
-  def tally_common_hops(style)
-    tally = { style => 0 }
-    unless style.common_hops.nil?
-      style.common_hops.each do |hop|
-        if hops_to_array.flatten.include?(Hop.find_by_name(hop))
-          tally[style]+= 1
-        end
-      end
-    end
-    return tally
-  end
+  # def tally_common_malts(style)
+  #   tally = { style => 0 }
+  #   unless style.common_malts.nil?
+  #     style.common_malts.each do |malt|
+  #       if malts_to_array.flatten.include?(Malt.find_by_name(malt))
+  #         tally[style]+= 1
+  #       end
+  #     end
+  #   end
+  #   return tally
+  # end
+
+  # def tally_common_hops(style)
+  #   tally = { style => 0 }
+  #   unless style.common_hops.nil?
+  #     style.common_hops.each do |hop|
+  #       if hops_to_array.flatten.include?(Hop.find_by_name(hop))
+  #         tally[style]+= 1
+  #       end
+  #     end
+  #   end
+  #   return tally
+  # end
 
 end
