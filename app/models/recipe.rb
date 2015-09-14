@@ -168,11 +168,8 @@ class Recipe < ActiveRecord::Base
   end
 
   def display_malts
-    display_array = []
-    malts_to_array.each do |malt_ary|
-      display_array << "#{MaltHelpers.pull_malt_amt(malt_ary)} lb #{MaltHelpers.pull_malt_name(malt_ary)}"
-    end
-    display_array.join(", ")
+    show_malts = DisplayMalts.new(malts_to_array)
+    show_malts.display
   end
 
   def select_by_yeast
@@ -234,39 +231,5 @@ class Recipe < ActiveRecord::Base
     ingredients = TallyIngredients.new(malt_names_to_array, hop_names_to_array)
     ingredients.tally_common(style_list)
   end
-
-  # def tally_common_ingredients(style_list)
-  #   malt_tally = {}
-  #   hop_tally = {}
-  #   style_list.each do |style|
-  #     malt_tally.merge!(tally_common_malts(style)) { |style, old_tally, new_tally| old_tally + new_tally }
-  #     hop_tally.merge!(tally_common_hops(style)) { |style, old_tally, new_tally| old_tally + new_tally }
-  #   end
-  #   return [ malt_tally, hop_tally ]
-  # end
-
-  # def tally_common_malts(style)
-  #   tally = { style => 0 }
-  #   unless style.common_malts.nil?
-  #     style.common_malts.each do |malt|
-  #       if malts_to_array.flatten.include?(Malt.find_by_name(malt))
-  #         tally[style]+= 1
-  #       end
-  #     end
-  #   end
-  #   return tally
-  # end
-
-  # def tally_common_hops(style)
-  #   tally = { style => 0 }
-  #   unless style.common_hops.nil?
-  #     style.common_hops.each do |hop|
-  #       if hops_to_array.flatten.include?(Hop.find_by_name(hop))
-  #         tally[style]+= 1
-  #       end
-  #     end
-  #   end
-  #   return tally
-  # end
 
 end
