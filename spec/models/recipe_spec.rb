@@ -524,157 +524,78 @@ describe Recipe do
   end
 
   describe "style determination" do
-    let(:style) { Style.find_by_name("IPA") }
-    let(:stout) { Style.find_by_name("Stout") }
-    let(:style_list) { [ style, stout ] }
-    let(:hop) { FactoryGirl.create(:hop) }
-    before do
-      @recipe.abv = 6
-      @recipe.ibu = 60
-      @recipe.srm = 10
-      @recipe.yeast = Yeast.find_by_name('WY1056 - American Ale')
-      style_list = [ style ]
-    end
-    # need to index anything you'll be searching (GIN?)
-    # you need to be able to select styles by these values
-    # Refactor later to include 'closest-to' calculations
-
-    describe "select_by_yeast" do
-      it "should return all styles whose yeast_family matches the supplied value" do
-        expect(@recipe.select_by_yeast).to include(style)
-        expect(@recipe.select_by_yeast).to include(stout)
-      end
-    end
-
-    describe "select_by_aroma" do
-
-      describe "recipe has aroma hops" do
-        before { @recipe.hops = { :bittering => { hop => [2, 60] }, :aroma => [ { hop => [1, 10] } ] } }
-
-        it "should return the input array unchanged" do
-          expect(@recipe.select_by_aroma(style_list)).to include(stout)
-        end
-      end
-
-      describe "recipe does not have aroma hops" do
-        before { @recipe.hops = { :bittering => { hop => [2, 60] }, :aroma => [] } }
-
-        it "should return return a subset minus styles which require aroma hops" do
-          expect(@recipe.select_by_aroma(style_list)).not_to include(style)
-        end
-      end
-    end
-
-    describe "select_by_malt" do
-      let(:pilsner) { Style.find_by_name("Pilsner") }
-      let(:style_list) { [ style, stout, pilsner ] }
-
-      describe "recipe includes a malt required by a style" do
-        before { @recipe.malts = { :base => { Malt.find_by_name("pilsen") => 10 }, :specialty => {} } }
-
-        it "should return the style which requires that malt" do
-          expect(@recipe.select_by_malt(style_list)).to include(pilsner)
-        end
-      end
-
-      describe "recipe does not include a malt required by a style" do
-        before { @recipe.malts = { :base => { Malt.find_by_name("2-row") => 10 }, :specialty => {} } }
-
-        it "should NOT return the style which requires that malt" do
-          expect(@recipe.select_by_malt(style_list)).not_to include(pilsner)
-        end
-      end
-    end
-
-    describe "select_by_abv" do
-      it "should return a style whose range covers the supplied abv" do
-        expect(@recipe.select_by_abv(style_list)).to include(style)
-      end
-      it "should return ALL styles whose range covers the supplied abv" do
-        # test once there are multiple styles
-      end
-      it "should return ONLY styles whose range covers the supplied abv" do
-        #  ditto
-      end
-    end
-
-    describe "select_by_ibu" do
-      it "should return a style whose range covers the supplied ibu" do
-        expect(@recipe.select_by_ibu(style_list)).to include(style)
-      end
-      it "should return ALL styles whose range covers the supplied ibu"
-        # test once there are multiple styles
-      it "should return ONLY styles whose range covers the supplied ibu"
-        #  ditto
-    end
-
-    describe "select_by_srm" do
-      it "should return a style whose range covers the supplied srm" do
-        expect(@recipe.select_by_srm(style_list)).to include(style)
-      end
-      it "should return ALL styles whose range covers the supplied srm" do
-        # test once there are multiple styles
-      end
-      it "should return ONLY styles whose range covers the supplied srm" do
-        expect(@recipe.select_by_srm(style_list)).not_to include(stout)
-      end
-    end
+    let(:style) { FactoryGirl.build(:style) }
+    let(:style_b) { FactoryGirl.build(:style, name: 'another style') }
+    let(:style_list) { [ style, style_b ] }
 
     describe "filter_possible_styles" do
-      before { @recipe.hops = { :bittering => { hop => [2, 60] }, :aroma => [ { hop => [1, 10] } ] } }
-
-      it "should return an array of only styles which match yeast, aroma, and malt stipulations, and abv, ibu, and srm ranges" do
-        expect(@recipe.filter_possible_styles).to include(style)
-        expect(@recipe.filter_possible_styles).not_to include(stout)
+      before do
+        allow(@recipe).to receive(:select_by_yeast).and_return(nil)
+        allow(@recipe).to receive(:select_by_malt).and_return(nil)
+      end
+      context "no style by aroma, malt, or yeast" do
+        before { allow(@recipe).to receive(:select_by_aroma).and_return([]) }
+        it "returns an empty array" do
+          expect(@recipe.filter_possible_styles).to eq([])
+        end
+      end
+      context "possible styles by aroma, malt, and yeast" do
+        before do
+          allow(@recipe).to receive(:select_by_aroma).and_return( style_list )
+          allow(@recipe).to receive(:select_by_abv).and_return([ style ])
+        end
+        context "one of three matches" do
+          it "returns an empty array" do
+            expect(@recipe.filter_possible_styles).to eq([])
+          end
+        end
+        context "two of three matches" do
+          it "returns an empty array" do
+            allow(@recipe).to receive(:select_by_ibu).and_return([ style ])
+            expect(@recipe.filter_possible_styles).to eq([])
+          end
+        end
+        context "all three matches, one possible style" do
+          it "returns a style" do
+            allow(@recipe).to receive(:select_by_ibu).and_return([ style ])
+            allow(@recipe).to receive(:select_by_srm).and_return([ style ])
+            expect(@recipe.filter_possible_styles).to eq([ style ])
+          end
+        end
+        context "all three matches, multiple possible styles" do
+          it "returns multiple styles" do
+            allow(@recipe).to receive(:select_by_abv).and_return( style_list )
+            allow(@recipe).to receive(:select_by_ibu).and_return( style_list )
+            allow(@recipe).to receive(:select_by_srm).and_return( style_list )
+            expect(@recipe.filter_possible_styles).to eq( style_list )
+          end
+        end
       end
     end
 
     describe "assign_style" do
-      before { @recipe.hops = { :bittering => { hop => [2, 60] }, :aroma => [ { hop => [1, 10] } ] } }
-
-      it "should assign a style" do
-        @recipe.assign_style
-        expect(@recipe.style).to eq(style)
+      context "no style matches" do
+        before { allow(@recipe).to receive(:filter_possible_styles).and_return([]) }
+        it "does not assign a style" do
+          @recipe.assign_style
+          expect(@recipe.style).to eq(nil)
+        end
       end
-
-      describe "choose between overlapping styles" do
+      context "one possible style" do
+        before { allow(@recipe).to receive(:filter_possible_styles).and_return([style]) }
+        it "assigns that style" do
+          @recipe.assign_style
+          expect(@recipe.style).to eq(style)
+        end
+      end
+      context "multiple possible styles" do
         before do
-          # should fit both IPA and Pale
-          @recipe.malts = { :base => { Malt.find_by_name("2-row") => 10 }, :specialty => { Malt.find_by_name("caramel 60") => 0.5 } }
-          @recipe.hops = { :bittering => { Hop.find_by_name("cascade") => [2, 60] }, :aroma => [ { Hop.find_by_name("cascade") => [1, 5] } ] }
-          @recipe.yeast = Yeast.find_by_name("WY1056 - American Ale")
-          @recipe.calc_gravities
-          @recipe.calc_bitterness
-          @recipe.calc_color
+          allow(@recipe).to receive(:filter_possible_styles).and_return(style_list)
+          allow(@recipe).to receive(:filter_style_by_ingredients).and_return(style)
         end
-
-        let(:style2) { Style.find_by_name("Pale Ale") }
-        let(:two_styles) { [ style2, style ] }
-
-        describe "tally_common_malts" do
-          it "should return a tally of 1 for matching styles" do
-            expect(@recipe.tally_common_malts(style )).to eq({ style => 1 })
-            expect(@recipe.tally_common_malts(style2)).to eq({ style2 => 1 })
-          end
-        end
-
-        describe "tally_common_hops" do
-          it "should return a tally of 1 for matching styles" do
-            expect(@recipe.tally_common_hops(style )).to eq({ style => 1 })
-            expect(@recipe.tally_common_hops(style2)).not_to eq({ style2 => 1 })
-          end
-        end
-
-        describe "tally_common_ingredients" do
-          it "should return an array of two hashes with appropriate tally values" do
-            expect(@recipe.tally_common_ingredients(two_styles)).to eq([ { style2 => 1, style => 1 }, { style2 => 0, style => 1 } ])
-          end
-        end
-
-        describe "filter_style_by_ingredients" do
-          it "should choose the style with the most matching 'common ingredients'" do
-            expect(@recipe.filter_style_by_ingredients(two_styles)).to eq(Style.find_by_name("IPA"))
-          end
+        it "assigns a style" do
+          @recipe.assign_style
+          expect(@recipe.style).to eq(style)
         end
       end
     end
