@@ -6,8 +6,14 @@ describe TallyIngredients do
   let(:ingredients) { TallyIngredients.new(@recipe.malt_names_to_array, @recipe.hop_names_to_array) }
   let(:style_2) { FactoryGirl.build(:style, common_malts: ['common_malt'], common_hops: ['common_hop']) }
 
-  describe "tally_common_ingredients" do
-    # needs testing
+  describe "tally_common" do
+    it "returns hashes with tallies for each style called" do
+      allow(ingredients).to receive(:tally_common_malts).with(:style_key_1).and_return({ :style_key_1 => 1 })
+      allow(ingredients).to receive(:tally_common_malts).with(:style_key_2).and_return({ :style_key_2 => 1 })
+      allow(ingredients).to receive(:tally_common_hops).with(:style_key_1).and_return({ :style_key_1 => 1 })
+      allow(ingredients).to receive(:tally_common_hops).with(:style_key_2).and_return({ :style_key_2 => 0 })
+      expect(ingredients.tally_common([:style_key_1, :style_key_2])).to eq([{ :style_key_1 => 1, :style_key_2 => 1 }, { :style_key_1 => 1, :style_key_2 => 0 }])
+    end
   end
 
   describe "tally_common_malts" do
