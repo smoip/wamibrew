@@ -66,7 +66,7 @@ class Recipe < ActiveRecord::Base
   end
 
   def add_article
-    @name = %w(a e i o u).include?(@name.strip[0].downcase) ? "An #{@name}" : "A #{@name}"
+    @name = %w(a e i o u).include?(@name.strip[0].downcase) ? "An #{@name.strip}" : "A #{@name.strip}"
   end
 
   def add_adjective(name, adjective)
